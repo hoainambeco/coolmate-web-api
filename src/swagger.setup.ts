@@ -6,7 +6,6 @@ export function setupSwagger(app: INestApplication) {
     .setTitle('CoolMate API')
     .setDescription('The API document to use for development')
     .setVersion('1.0')
-    .addTag('CoolMate')
     .addBearerAuth()
     .build();
 

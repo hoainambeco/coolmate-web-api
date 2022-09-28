@@ -1,12 +1,27 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, HttpCode, HttpStatus } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Put,
+  HttpCode,
+  HttpStatus,
+  UseInterceptors
+} from "@nestjs/common";
 import { UsersService } from "./users.service";
-import { ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { UserDto } from "./dto/user.dto";
 import { User } from "./entities/user.entity";
 import { UserCreatDto } from "./dto/user-data.dto";
+import { AuthUserInterceptor } from "../interceptors/auth-user.interceptor";
 
 @Controller("users")
 @ApiTags("Users")
+@UseInterceptors(AuthUserInterceptor)
+@ApiBearerAuth()
 export class UsersController {
   constructor(private readonly usersService: UsersService) {
   }

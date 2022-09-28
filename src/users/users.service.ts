@@ -47,4 +47,24 @@ constructor(
   async remove(id: string) {
     return await this.userRepository.delete(id);
   }
+
+  async isUserExist(options: Partial<{ username: string; email: string }>) {
+    const querybuilder = this.userRepository.findBy({email: options.email});
+
+    return ((await querybuilder).length) > 0;
+  }
+
+  async registerUser(userData: UserCreatDto): Promise<UserDto> {
+  if(await this.isUserExist({ email: userData.email })) {
+    throw new ErrorException(HttpStatus.CONFLICT, "User already exists");
+  }
+  const newUser = this.userRepository.create({ ...userData });
+  newUser.password = await bcrypt.hashSync(userData.password, 10);
+  newUser.createdAt = new Date();
+  newUser.updatedAt = new Date();
+  newUser.deletedAt = null;
+  newUser.isDeleted = false;
+  newUser.role = "user";
+  return await this.userRepository.save(newUser);
+  }
 }
