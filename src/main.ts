@@ -18,7 +18,6 @@ async function bootstrap() {
   loadEnviroment();
   const app = await NestFactory.create(AppModule);
   app.enableCors();
-  app.use(helmet());
   app.use(compression());
   app.use(morgan('combined'));
 
@@ -38,6 +37,8 @@ async function bootstrap() {
         exceptionFactory: (errors) => new BadRequestException(errors),
       }),
   );
+
+  app.use(helmet());
   await app.listen(3000);
   Logger.debug(`Application is running on: ${await app.getUrl()}`, 'Main');
 }
