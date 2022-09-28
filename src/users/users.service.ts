@@ -38,6 +38,9 @@ constructor(
   async findOne(id: string): Promise<User> {
     return await this.userRepository.findOneBy(id);
   }
+  async findOneByEmail(email: string): Promise<User> {
+    return await this.userRepository.findOneBy({ email: email });
+  }
   async update(id: string, user: UserDto) {
     return await this.userRepository.update(id, user);
   }

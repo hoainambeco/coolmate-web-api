@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { GenderEnum } from "../../enum/gender";
+import { Field } from "mysql2";
 
 export class UserDto {
   @ApiProperty()
