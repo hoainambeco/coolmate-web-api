@@ -13,7 +13,7 @@ import * as morgan from 'morgan';
 import { AppModule } from './app.module';
 import { loadEnviroment } from './env';
 import { setupSwagger } from './swagger.setup';
-import helmet from "helmet";
+import helmet, { fastifyHelmet } from "@fastify/helmet";
 
 async function bootstrap() {
 
@@ -39,13 +39,14 @@ async function bootstrap() {
         exceptionFactory: (errors) => new BadRequestException(errors),
       }),
   );
-
-
   app.useStaticAssets(join(__dirname, '..', 'public'));
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
   app.setViewEngine('hbs');
 
-  app.use(helmet());
+  // app.use(helmet());
+  await app.use(fastifyHelmet, {
+    contentSecurityPolicy: false,
+  });
   await app.listen(3000);
   Logger.debug(`Application is running on: ${await app.getUrl()}`, 'Main');
 }
