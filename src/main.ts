@@ -13,7 +13,7 @@ import * as morgan from 'morgan';
 import { AppModule } from './app.module';
 import { loadEnviroment } from './env';
 import { setupSwagger } from './swagger.setup';
-import helmet, { fastifyHelmet } from "@fastify/helmet";
+import helmet from '@fastify/helmet'
 
 async function bootstrap() {
 
@@ -43,8 +43,7 @@ async function bootstrap() {
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
   app.setViewEngine('hbs');
 
-  // app.use(helmet());
-  await app.use(fastifyHelmet, {
+  app.use(helmet(),{
     contentSecurityPolicy: false,
   });
   await app.listen(3000);
