@@ -43,9 +43,9 @@ async function bootstrap() {
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
   app.setViewEngine('hbs');
 
-  app.use(helmet(),{
+  app.use(helmet({
     contentSecurityPolicy: false,
-  });
+  }));
   await app.listen(3000);
   Logger.debug(`Application is running on: ${await app.getUrl()}`, 'Main');
 }
