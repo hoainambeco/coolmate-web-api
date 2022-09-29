@@ -13,7 +13,7 @@ import * as morgan from 'morgan';
 import { AppModule } from './app.module';
 import { loadEnviroment } from './env';
 import { setupSwagger } from './swagger.setup';
-import helmet from '@fastify/helmet'
+import helmet from 'helmet'
 
 async function bootstrap() {
 
