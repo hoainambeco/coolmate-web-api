@@ -5,6 +5,8 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
 import * as compression from 'compression';
 import * as express from 'express';
 import * as morgan from 'morgan';
@@ -16,7 +18,7 @@ import helmet from "helmet";
 async function bootstrap() {
 
   loadEnviroment();
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.enableCors();
   app.use(compression());
   app.use(morgan('combined'));
@@ -37,6 +39,11 @@ async function bootstrap() {
         exceptionFactory: (errors) => new BadRequestException(errors),
       }),
   );
+
+
+  app.useStaticAssets(join(__dirname, '..', 'public'));
+  app.setBaseViewsDir(join(__dirname, '..', 'views'));
+  app.setViewEngine('hbs');
 
   app.use(helmet());
   await app.listen(3000);
