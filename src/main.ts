@@ -45,9 +45,18 @@ async function bootstrap() {
 
   await app.listen(3000);
 
-  app.use(helmet({
-    contentSecurityPolicy: false,
-  }));
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: [`'self'`],
+          styleSrc: [`'self'`, `'unsafe-inline'`],
+          imgSrc: [`'self'`, 'data:', 'validator.swagger.io'],
+          scriptSrc: [`'self'`, `https: 'unsafe-inline'`],
+        },
+      },
+    }),
+  );
   Logger.debug(`Application is running on: ${await app.getUrl()}`, 'Main');
 }
 bootstrap();
