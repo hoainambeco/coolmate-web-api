@@ -101,6 +101,7 @@ export class UsersService {
     if (isOtpValid) {
       user.isCreate = false;
       user.otp = null;
+      await this.userRepository.update(user.id.toString(), user);
       return {
         ...user,
         id: user.id.toString()
