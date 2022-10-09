@@ -77,3 +77,9 @@ export class UserUpdateDto{
   @ApiPropertyOptional()
   password: string;
 }
+export class OtpDto{
+  @IsString()
+  @IsOptional()
+  @ApiPropertyOptional()
+  otp: string;
+}

@@ -11,6 +11,7 @@ import { sendMail } from "../utils/sendMail.util";
 import { newUserMailTemplate2, resetPasswordSubject, resetPasswordTemplate } from "./mail.template";
 import * as OtpGenerator from "otp-generator";
 import { UserResetPasswordDto } from "../auth/dto/user-change-password.dto";
+import { IFile } from "./file.interface";
 
 @Injectable()
 export class UsersService {
@@ -235,6 +236,22 @@ export class UsersService {
     user.otp = null;
     await this.userRepository.update(user.id, user);
 
+    return {
+      ...user,
+      id: user.id.toString()
+    };
+  }
+
+  async changeAvatar(fileInfo: IFile): Promise<UserDto> {
+    const user = AuthService.getAuthUser();
+    if (!fileInfo) {
+      throw new ErrorException(
+        HttpStatus.BAD_REQUEST,
+        "FILE_NOT_FOUND"
+      );
+    }
+    user.avatar = fileInfo.path;
+    await this.userRepository.update(user.id.toString(), user);
     return {
       ...user,
       id: user.id.toString()
