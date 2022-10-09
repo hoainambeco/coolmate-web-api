@@ -4,67 +4,239 @@ import { User } from "./entities/user.entity";
 import { MongoRepository } from "typeorm";
 import { UserDto } from "./dto/user.dto";
 import { ErrorException } from "../exceptions/error.exception";
-import * as bcrypt from 'bcrypt';
-import { UserCreatDto } from "./dto/user-data.dto";
+import * as bcrypt from "bcrypt";
+import { UserCreatDto, UserUpdateDto } from "./dto/user-data.dto";
+import { AuthService } from "../auth/auth.service";
+import { sendMail } from "../utils/sendMail.util";
+import { newUserMailTemplate2, resetPasswordSubject, resetPasswordTemplate } from "./mail.template";
+import * as OtpGenerator from "otp-generator";
+import { UserResetPasswordDto } from "../auth/dto/user-change-password.dto";
 
 @Injectable()
 export class UsersService {
-constructor(
-  @InjectRepository(User)
-  private readonly userRepository: MongoRepository<User>,
-) {}
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: MongoRepository<User>
+  ) {
+  }
 
   async create(userData: UserCreatDto): Promise<UserDto> {
     const user = await this.userRepository.findOneBy({ email: userData.email });
-    if ( user) {
+    if (user) {
       throw new ErrorException(HttpStatus.CONFLICT, "User already exists");
     }
+
+    const otp = await OtpGenerator.generate(6, {
+      digits: true,
+      lowerCaseAlphabets: false,
+      upperCaseAlphabets: false,
+      specialChars: false
+    });
+
     const newUser = this.userRepository.create({ ...userData });
     newUser.password = await bcrypt.hashSync(userData.password, 10);
     newUser.createdAt = new Date();
     newUser.updatedAt = new Date();
     newUser.deletedAt = null;
     newUser.isDeleted = false;
+    newUser.isCreate = true;
     newUser.role = "user";
     newUser.phone = "";
     newUser.avatar = "";
-    return await this.userRepository.save(newUser);
+    newUser.otp = await bcrypt.hashSync(otp, 10);
+
+    const mailContent = newUserMailTemplate2(userData.fullName, userData.email, otp);
+    newUser.role = "user";
+    try {
+      await sendMail(userData.email, "[CoolMate] THÔNG BÁO KÍCH HOẠT TÀI KHOẢN THÀNH CÔNG", mailContent);
+    } catch (error) {
+      console.log(error);
+    }
+
+    return {
+      ...await this.userRepository.save(newUser),
+      id: newUser.id.toString()
+    };
   }
 
-  async findAll(): Promise<User[]> {
-    return await this.userRepository.find();
+  async findAll(): Promise<UserDto[]> {
+    const users = await this.userRepository.find();
+    return users.map((user) => {
+      return {
+        ...user,
+        id: user.id.toString()
+      };
+    });
   }
 
-  async findOne(id: string): Promise<User> {
-    return await this.userRepository.findOneBy(id);
+  async findOne(id: string): Promise<UserDto> {
+    const user = await this.userRepository.findOneBy(id);
+
+    return {
+      ...user,
+      id: user.id.toString()
+    };
   }
-  async findOneByEmail(email: string): Promise<User> {
-    return await this.userRepository.findOneBy({ email: email });
+
+  async findOneByEmail(email: string): Promise<UserDto> {
+    const user = await this.userRepository.findOneBy({ email });
+    return {
+      ...user,
+      id: user.id.toString()
+    };
   }
-  async update(id: string, user: UserDto) {
-    return await this.userRepository.update(id, user);
+
+  async update(user: UserUpdateDto): Promise<UserDto> {
+    const users = AuthService.getAuthUser();
+    await this.userRepository.update(users.id.toString(), user);
+    return {
+      ...Object.assign(users, user),
+      id: users.id.toString()
+    };
   }
+
+  async verifyOtp(otp: { otp: string }): Promise<UserDto> {
+    const user = AuthService.getAuthUser();
+    const isOtpValid = await bcrypt.compare(otp.otp, user.otp);
+    if (isOtpValid) {
+      user.isCreate = false;
+      user.otp = null;
+      return {
+        ...user,
+        id: user.id.toString()
+      };
+    }
+    throw new ErrorException(HttpStatus.BAD_REQUEST, "OTP is not valid");
+  }
+
   async remove(id: string) {
-    return await this.userRepository.delete(id);
+    const userAdmin = AuthService.getAuthUser();
+
+    if (userAdmin.role !== "admin") {
+      throw new ErrorException(HttpStatus.FORBIDDEN, "You are not admin");
+    }
+
+    const user = await this.userRepository.findOneBy(id);
+    if (!user) {
+      throw new ErrorException(HttpStatus.NOT_FOUND, "User not found");
+    }
+    user.isDeleted = true;
+    user.deletedAt = new Date();
+
+    return {
+      ...await this.userRepository.save(user),
+      id: user.id.toString()
+    };
   }
 
   async isUserExist(options: Partial<{ username: string; email: string }>) {
-    const querybuilder = this.userRepository.findBy({email: options.email});
+    const querybuilder = this.userRepository.findBy({ email: options.email });
 
     return ((await querybuilder).length) > 0;
   }
 
   async registerUser(userData: UserCreatDto): Promise<UserDto> {
-  if(await this.isUserExist({ email: userData.email })) {
-    throw new ErrorException(HttpStatus.CONFLICT, "User already exists");
+    if (await this.isUserExist({ email: userData.email })) {
+      throw new ErrorException(HttpStatus.CONFLICT, "User already exists");
+    }
+    const otp = await OtpGenerator.generate(6, {
+      digits: true,
+      lowerCaseAlphabets: false,
+      upperCaseAlphabets: false,
+      specialChars: false
+    });
+    const newUser = this.userRepository.create({ ...userData });
+    newUser.password = await bcrypt.hashSync(userData.password, 10);
+    newUser.otp = await bcrypt.hashSync(otp, 10);
+    newUser.createdAt = new Date();
+    newUser.updatedAt = new Date();
+    newUser.deletedAt = null;
+    newUser.isDeleted = false;
+    newUser.isCreate = true;
+
+    const mailContent = newUserMailTemplate2(userData.fullName, userData.email, otp);
+    newUser.role = "user";
+    try {
+      await sendMail(userData.email, "[CoolMate] THÔNG BÁO KÍCH HOẠT TÀI KHOẢN THÀNH CÔNG", mailContent);
+    } catch (error) {
+      console.log(error);
+    }
+    return {
+      ...await this.userRepository.save(newUser),
+      id: newUser.id.toString()
+    };
   }
-  const newUser = this.userRepository.create({ ...userData });
-  newUser.password = await bcrypt.hashSync(userData.password, 10);
-  newUser.createdAt = new Date();
-  newUser.updatedAt = new Date();
-  newUser.deletedAt = null;
-  newUser.isDeleted = false;
-  newUser.role = "user";
-  return await this.userRepository.save(newUser);
+
+  async createResetOtp(email: string) {
+    const user = await this.userRepository.findOne({
+      where: { email: email }
+    });
+
+    if (!user) {
+      throw new ErrorException(
+        HttpStatus.NOT_FOUND,
+        "USER_NOT_EXIST"
+      );
+    }
+    const otp =
+      await OtpGenerator.generate(6, {
+        digits: true,
+        lowerCaseAlphabets: false,
+        upperCaseAlphabets: false,
+        specialChars: false
+      });
+    user.otp = await bcrypt.hashSync(otp, 10);
+    await this.userRepository.update(user.id, user);
+
+    const mailContent = resetPasswordTemplate(user.fullName, otp);
+
+    try {
+      await sendMail(user.email, resetPasswordSubject, mailContent);
+    } catch (error) {
+      console.log(error);
+      throw new ErrorException(
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        "OTP_SEND_MAIL_ERROR"
+      );
+    }
+  }
+
+  async userResetPassword(userData: UserResetPasswordDto): Promise<UserDto> {
+    if (
+      userData.newPassword !==
+      userData.confirmPassword
+    ) {
+      throw new ErrorException(
+        HttpStatus.BAD_REQUEST,
+        "NEW_PASSWORD_AND_CONFIRM_PASSWORD_NOT_MATCH"
+      );
+    }
+    const user = await this.userRepository.findOne({
+      where: { email: userData.email }
+    });
+
+    if (!user) {
+      throw new ErrorException(
+        HttpStatus.NOT_FOUND,
+        "USER_NOT_EXIST"
+      );
+    }
+
+    const isOtpValid = await bcrypt.compare(userData.otp, user.otp);
+    if (!isOtpValid) {
+      throw new ErrorException(
+        HttpStatus.BAD_REQUEST,
+        "OTP_INVALID"
+      );
+    }
+
+    user.password = await bcrypt.hashSync(userData.newPassword, 10);
+    user.otp = null;
+    await this.userRepository.update(user.id, user);
+
+    return {
+      ...user,
+      id: user.id.toString()
+    };
   }
 }

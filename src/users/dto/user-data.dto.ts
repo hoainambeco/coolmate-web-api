@@ -53,7 +53,8 @@ export class UserUpdateDto{
   gender: string;
 
   @IsDateString()
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   birthday: Date;
 
   @IsString()

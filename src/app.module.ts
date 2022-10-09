@@ -4,15 +4,14 @@ import { AppService } from './app.service';
 import { AuthController } from './auth/auth.controller';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
-import { MongooseModule } from "@nestjs/mongoose";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { SharedModule } from "./shared/shared.module";
 import { AuthService } from "./auth/auth.service";
 import { ContextMiddleware } from "./middlewares/context.middleware";
 import { UsersService } from "./users/users.service";
 import { JwtStrategy } from "./auth/jwt.strategy";
-import { PassportModule } from "@nestjs/passport";
 import { JwtService } from "@nestjs/jwt";
+import { ProductModule } from './product/product.module';
 
 @Module({
   imports: [TypeOrmModule.forRoot(
@@ -28,7 +27,8 @@ import { JwtService } from "@nestjs/jwt";
   ),
     AuthModule,
     UsersModule,
-    SharedModule],
+    SharedModule,
+    ProductModule],
   controllers: [AppController, AuthController],
   providers: [AppService, AuthService, UsersService, JwtStrategy, JwtService],
 })

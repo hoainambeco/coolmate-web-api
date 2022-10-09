@@ -19,7 +19,7 @@ export class AuthService {
     private configService: ConfigService,
     private jwtService: JwtService,
   ) {}
-  async validateUser(userLoginDto: UserLoginDto): Promise<User> {
+  async validateUser(userLoginDto: UserLoginDto): Promise<UserDto> {
     const user = await this.UserService.findOneByEmail(userLoginDto.email);
     if (!user) {
       throw new ErrorException(
@@ -27,18 +27,24 @@ export class AuthService {
         'USER_NOT_EXIST',
       );
     }
-    const isPasswordValid = await UtilsService.validateHash(
-      userLoginDto.password,
-      user.password,
-    );
-
-    if (!isPasswordValid) {
-      throw new ErrorException(
-        HttpStatus.BAD_REQUEST,
-        'PASSWORD_NOT_MATCH',
+    if(!user.isDeleted) {
+      const isPasswordValid = await UtilsService.validateHash(
+        userLoginDto.password,
+        user.password,
       );
+
+      if (!isPasswordValid) {
+        throw new ErrorException(
+          HttpStatus.BAD_REQUEST,
+          'PASSWORD_NOT_MATCH',
+        );
+      }
+      return user;
     }
-    return user;
+    throw new ErrorException(
+      HttpStatus.BAD_REQUEST,
+      'USER_IS_DELETED',
+    )
   }
 
   static setAuthUser(user: User) {
@@ -63,7 +69,7 @@ export class AuthService {
   async createToken(user: User | UserDto): Promise<TokenPayloadDto> {
     return new TokenPayloadDto({
       expiresIn: this.configService.getNumber('JWT_EXPIRATION_TIME'),
-      accessToken: await this.jwtService.signAsync({ id: user.email }),
+      accessToken: await this.jwtService.signAsync({ id: user.id }, { secret: this.configService.get('JWT_SECRET_KEY') }),
     });
   }
 }

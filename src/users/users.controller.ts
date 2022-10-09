@@ -3,20 +3,20 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   Put,
   HttpCode,
   HttpStatus,
-  UseInterceptors
+  UseInterceptors, UseGuards, Req
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { UserDto } from "./dto/user.dto";
-import { User } from "./entities/user.entity";
-import { UserCreatDto } from "./dto/user-data.dto";
+import { UserCreatDto, UserUpdateDto } from "./dto/user-data.dto";
 import { AuthUserInterceptor } from "../interceptors/auth-user.interceptor";
+import { JwtAuthGuard } from "../guards/jwt-auth.guard";
+import { AuthGuard } from "@nestjs/passport";
 
 @Controller("users")
 @ApiTags("Users")
@@ -49,15 +49,24 @@ export class UsersController {
     return this.usersService.findOne(id);
   }
 
-  @Put(":id")
+  @Put()
+  @UseGuards(JwtAuthGuard)
   @ApiResponse({ status: 200, description: "The found record", type: UserDto })
-  update(@Param("id") id: string, @Body() updateUserDto: any) {
-    return this.usersService.update(id, updateUserDto);
+  update(@Body() updateUserDto: UserUpdateDto) {
+    return this.usersService.update(updateUserDto);
+  }
+
+  @Put('verify-otp')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiResponse({ status: 200, description: "The found record", type: UserDto })
+  verify(@Body() otp: {  otp: string }) {
+    return this.usersService.verifyOtp(otp);
   }
 
   @Delete(":id")
+  @UseGuards(JwtAuthGuard)
   @ApiResponse({ status: 200, description: "The found record", type: UserDto })
-  remove(@Param("id") id: string) {
+  remove(@Param("id") id: string ) {
     return this.usersService.remove(id);
   }
 }

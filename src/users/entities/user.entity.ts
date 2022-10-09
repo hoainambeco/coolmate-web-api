@@ -7,11 +7,13 @@ export class User {
   @Column() fullName: string;
   @Column() email: string;
   @Column() password: string;
+  @Column() otp: string;
   @Column() role: string;
   @Column() createdAt: Date;
   @Column() updatedAt: Date;
   @Column() deletedAt: Date;
   @Column() isDeleted: boolean;
+  @Column() isCreate: boolean;
   @Column({type: 'enum', enum: GenderEnum, nullable: true}) gender: string;
   @Column() birthday: Date;
   @Column() address: string;
