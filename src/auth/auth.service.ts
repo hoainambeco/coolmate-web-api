@@ -72,4 +72,15 @@ export class AuthService {
       accessToken: await this.jwtService.signAsync({ id: user.id }, { secret: this.configService.get('JWT_SECRET_KEY') }),
     });
   }
+
+  async googleLogin(req){
+    if (!req.user) {
+      return 'No user from google'
+    }
+
+    return {
+      message: 'User information from google',
+      user: req.user
+    }
+  }
 }

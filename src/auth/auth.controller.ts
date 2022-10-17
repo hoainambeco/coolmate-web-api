@@ -5,7 +5,7 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  Query,
+  Query, Req,
   UseGuards,
   UseInterceptors,
   ValidationPipe
@@ -23,6 +23,7 @@ import { AuthUserInterceptor } from "../interceptors/auth-user.interceptor";
 import { AuthUser } from "../decorators/auth-user.decorator";
 import { User } from "../users/entities/user.entity";
 import { UserResetPasswordDto, UserResetPasswordQueryDto } from "./dto/user-change-password.dto";
+import { AuthGuard } from "@nestjs/passport";
 
 @Controller("auth")
 @ApiTags("Auth")
@@ -77,5 +78,15 @@ export class AuthController {
     @Body() userResetPasswordDto: UserResetPasswordDto,
   ): Promise<UserDto> {
     return this.userService.userResetPassword(userResetPasswordDto);
+  }
+
+  @Get('google')
+  @UseGuards(AuthGuard('google'))
+  async googleAuth(@Req() req) {}
+
+  @Get('google/redirect')
+  @UseGuards(AuthGuard('google'))
+  googleAuthRedirect(@Req() req) {
+    return this.AuthService.googleLogin(req)
   }
 }
