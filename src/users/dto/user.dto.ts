@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { GenderEnum } from "../../enum/gender";
 import { User } from "../entities/user.entity";
+import { StatusAccount } from "../../enum/status-account";
 
 export class UserDto {
   @ApiProperty()
@@ -27,8 +28,8 @@ export class UserDto {
   @ApiProperty()
   deletedAt: Date;
 
-  @ApiProperty()
-  isDeleted: boolean;
+  @ApiPropertyOptional({type: 'enum', enum: StatusAccount})
+  status: string;
 
   @ApiPropertyOptional({type: 'enum', enum: GenderEnum})
   gender: string;
@@ -59,7 +60,7 @@ export class UserDto {
     this.createdAt = entity.createdAt;
     this.updatedAt = entity.updatedAt;
     this.deletedAt = entity.deletedAt;
-    this.isDeleted = entity.isDeleted
+    this.status = entity.status
     this.gender= entity.gender;
     this.birthday = entity.birthday;
     this.address = entity.address;

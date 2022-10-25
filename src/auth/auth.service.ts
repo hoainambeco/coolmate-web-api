@@ -10,6 +10,7 @@ import { RequestContext } from "../providers/request-context.service";
 import { UserDto } from "../users/dto/user.dto";
 import { TokenPayloadDto } from "./dto/token-payload.dto";
 import { ConfigService } from "../shared/service/config.service";
+import { StatusAccount } from "../enum/status-account";
 
 @Injectable()
 export class AuthService {
@@ -27,7 +28,7 @@ export class AuthService {
         'USER_NOT_EXIST',
       );
     }
-    if(!user.isDeleted) {
+    if(user.status !== StatusAccount.DELETED) {
       const isPasswordValid = await UtilsService.validateHash(
         userLoginDto.password,
         user.password,

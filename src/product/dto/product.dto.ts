@@ -6,6 +6,9 @@ export class ProductDto{
   id: string;
 
   @ApiProperty()
+  modelID: string;
+
+  @ApiProperty()
   type: string;
 
   @ApiProperty()
@@ -15,13 +18,25 @@ export class ProductDto{
   image: string[];
 
   @ApiProperty()
-  price: number;
+  status: string;
 
   @ApiProperty()
-  description: string;
+  cmtCount: number;
 
   @ApiProperty()
   createdAt: Date;
+
+  @ApiProperty()
+  specialSale: number;
+
+  @ApiProperty()
+  price: number;
+
+  @ApiProperty()
+  rebate: number;
+
+  @ApiProperty()
+  description: string;
 
   @ApiProperty()
   updatedAt: Date;
@@ -33,25 +48,26 @@ export class ProductDto{
   isDeleted: boolean;
 
   @ApiProperty()
-  status: string;
+  promotionalPrice: number;
 
   @ApiProperty()
-  PromotionalPrice: number;
+  likeCount: number;
 
   @ApiProperty()
-  size: [{
+  color: [{
     name: string;
-    color: [{
+    image : string[];
+    size: [{
       name: string;
-      colorCode: string
+      productCount: number
     }];
-    quantity: number;
   }];
 
   @ApiProperty()
   rating: [{
     userId: string;
-    rating: number;
+    modelID: string;
+    score: number;
     comment: string;
     image: string[];
     date: Date;
@@ -59,6 +75,11 @@ export class ProductDto{
 
   constructor(entity : Product) {
     this.id = entity.id.toString();
+    this.modelID = entity.modelID;
+    this.cmtCount = entity.cmtCount;
+    this.specialSale = entity.specialSale;
+    this.rebate = entity.rebate;
+    this.likeCount = entity.likeCount;
     this.type = entity.type;
     this.productName = entity.productName;
     this.image = entity.image;
@@ -69,8 +90,8 @@ export class ProductDto{
     this.deletedAt = entity.deletedAt;
     this.isDeleted = entity.isDeleted;
     this.status = entity.status;
-    this.PromotionalPrice = entity.PromotionalPrice;
-    this.size = entity.size;
+    this.promotionalPrice = entity.promotionalPrice;
+    this.color = entity.color;
     this.rating = entity.rating;
   }
 }

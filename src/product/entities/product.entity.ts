@@ -3,32 +3,37 @@ import { Column, Entity, ObjectID, ObjectIdColumn } from "typeorm";
 @Entity("product")
 export class Product {
   @ObjectIdColumn() id: ObjectID;
+  @Column() modelID: string;
   @Column() type: string;
   @Column() productName: string;
   @Column() image: string[];
+  @Column() status: string;
+  @Column() cmtCount: number;
+  @Column() createdAt: Date;
+  @Column() specialSale: number;
+  @Column() promotionalPrice: number;
+  @Column() rebate: number;
   @Column() price: number;
   @Column() description: string;
-  @Column() createdAt: Date;
   @Column() updatedAt: Date;
   @Column() deletedAt: Date;
   @Column() isDeleted: boolean;
-  @Column() status: string;
-  @Column() PromotionalPrice: number;
-  @Column() size: [{
+  @Column() likeCount: number;
+  @Column() color: [{
     name: string;
-    color: [{
+    image: string[];
+    size: [{
       name: string;
-      colorCode: string
+      productCount: number
     }];
-    quantity: number;
   }];
   @Column() rating: [{
     userId: string;
-    rating: number;
+    modelID: string;
+    score: number;
     comment: string;
     image: string[];
     date: Date;
-
   }];
 
   constructor(product?: Partial<Product>) {

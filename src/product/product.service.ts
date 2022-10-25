@@ -24,6 +24,11 @@ export class ProductService {
     products = listProducts.map((product) => {
       return {
         id: product.id.toString(),
+        modelID: product.modelID,
+        cmtCount: product.cmtCount,
+        rebate: product.rebate,
+        specialSale: product.specialSale,
+        likeCount: product.likeCount,
         type: product.type,
         productName: product.productName,
         image: product.image,
@@ -34,8 +39,8 @@ export class ProductService {
         deletedAt: product.deletedAt,
         isDeleted: product.isDeleted,
         status: product.status,
-        PromotionalPrice: product.PromotionalPrice,
-        size: product.size,
+        promotionalPrice: product.promotionalPrice,
+        color: product.color,
         rating: product.rating
       };
     });

@@ -40,19 +40,15 @@ export class CreateProductDto {
   @IsNumber()
   PromotionalPrice: number;
 
-  @ApiProperty({type: () => [Size]})
+  @ApiProperty({type: () => [Color]})
   @IsNotEmpty()
-  size: [Size];
+  color: [Color];
 }
 export class Size {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
   name: string;
-
-  @ApiProperty({type: () => [Color]})
-  @IsObject()
-  color: [Color];
 
   @ApiProperty()
   @IsNumber()
@@ -93,7 +89,12 @@ export class Color {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  colorCode: string;
+  image: string[];
+
+  @ApiProperty({type: () => [Size]})
+  @IsObject()
+  @IsNotEmpty()
+  size: [Size];
 }
 
 export class UpdateProductDto extends PartialType(CreateProductDto) {}

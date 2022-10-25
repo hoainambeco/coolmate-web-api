@@ -12,6 +12,7 @@ import { newUserMailTemplate2, resetPasswordSubject, resetPasswordTemplate } fro
 import * as OtpGenerator from "otp-generator";
 import { UserResetPasswordDto } from "../auth/dto/user-change-password.dto";
 import { IFile } from "./file.interface";
+import { StatusAccount } from "../enum/status-account";
 
 @Injectable()
 export class UsersService {
@@ -34,12 +35,13 @@ export class UsersService {
       specialChars: false
     });
 
+    // @ts-ignore
     const newUser = this.userRepository.create({ ...userData });
     newUser.password = await bcrypt.hashSync(userData.password, 10);
     newUser.createdAt = new Date();
     newUser.updatedAt = new Date();
     newUser.deletedAt = null;
-    newUser.isDeleted = false;
+    newUser.status = StatusAccount.INACTIVE;
     newUser.isCreate = true;
     newUser.role = "user";
     newUser.phone = "";
@@ -54,6 +56,7 @@ export class UsersService {
       console.log(error);
     }
 
+    // @ts-ignore
     return {
       ...await this.userRepository.save(newUser),
       id: newUser.id.toString()
@@ -88,10 +91,12 @@ export class UsersService {
   }
 
   async update(user: UserUpdateDto): Promise<UserDto> {
-    const users = AuthService.getAuthUser();
+    let users = AuthService.getAuthUser();
+    users = await Object.assign(users, user);
+    users.password = await bcrypt.hashSync(user.password, 10);
     await this.userRepository.update(users.id.toString(), user);
     return {
-      ...Object.assign(users, user),
+      ...users,
       id: users.id.toString()
     };
   }
@@ -102,6 +107,7 @@ export class UsersService {
     if (isOtpValid) {
       user.isCreate = false;
       user.otp = null;
+      user.status = StatusAccount.ACTIVE;
       await this.userRepository.update(user.id.toString(), user);
       return {
         ...user,
@@ -122,7 +128,7 @@ export class UsersService {
     if (!user) {
       throw new ErrorException(HttpStatus.NOT_FOUND, "User not found");
     }
-    user.isDeleted = true;
+    user.status = StatusAccount.DELETED;
     user.deletedAt = new Date();
 
     return {
@@ -153,7 +159,7 @@ export class UsersService {
     newUser.createdAt = new Date();
     newUser.updatedAt = new Date();
     newUser.deletedAt = null;
-    newUser.isDeleted = false;
+    newUser.status = StatusAccount.INACTIVE;
     newUser.isCreate = true;
 
     const mailContent = newUserMailTemplate2(userData.fullName, userData.email, otp);
