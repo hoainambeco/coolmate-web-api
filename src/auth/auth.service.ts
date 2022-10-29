@@ -10,6 +10,7 @@ import { RequestContext } from "../providers/request-context.service";
 import { UserDto } from "../users/dto/user.dto";
 import { TokenPayloadDto } from "./dto/token-payload.dto";
 import { ConfigService } from "../shared/service/config.service";
+import { StatusAccount } from "../enum/status-account";
 
 @Injectable()
 export class AuthService {
@@ -19,7 +20,7 @@ export class AuthService {
     private configService: ConfigService,
     private jwtService: JwtService,
   ) {}
-  async validateUser(userLoginDto: UserLoginDto): Promise<User> {
+  async validateUser(userLoginDto: UserLoginDto): Promise<UserDto> {
     const user = await this.UserService.findOneByEmail(userLoginDto.email);
     if (!user) {
       throw new ErrorException(
@@ -27,18 +28,24 @@ export class AuthService {
         'USER_NOT_EXIST',
       );
     }
-    const isPasswordValid = await UtilsService.validateHash(
-      userLoginDto.password,
-      user.password,
-    );
-
-    if (!isPasswordValid) {
-      throw new ErrorException(
-        HttpStatus.BAD_REQUEST,
-        'PASSWORD_NOT_MATCH',
+    if(user.status !== StatusAccount.DELETED) {
+      const isPasswordValid = await UtilsService.validateHash(
+        userLoginDto.password,
+        user.password,
       );
+
+      if (!isPasswordValid) {
+        throw new ErrorException(
+          HttpStatus.BAD_REQUEST,
+          'PASSWORD_NOT_MATCH',
+        );
+      }
+      return user;
     }
-    return user;
+    throw new ErrorException(
+      HttpStatus.BAD_REQUEST,
+      'USER_IS_DELETED',
+    )
   }
 
   static setAuthUser(user: User) {
@@ -63,7 +70,18 @@ export class AuthService {
   async createToken(user: User | UserDto): Promise<TokenPayloadDto> {
     return new TokenPayloadDto({
       expiresIn: this.configService.getNumber('JWT_EXPIRATION_TIME'),
-      accessToken: await this.jwtService.signAsync({ id: user.email }),
+      accessToken: await this.jwtService.signAsync({ id: user.id }, { secret: this.configService.get('JWT_SECRET_KEY') }),
     });
+  }
+
+  async googleLogin(req){
+    if (!req.user) {
+      return 'No user from google'
+    }
+
+    return {
+      message: 'User information from google',
+      user: req.user
+    }
   }
 }

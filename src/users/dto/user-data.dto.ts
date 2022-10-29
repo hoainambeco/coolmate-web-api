@@ -53,7 +53,8 @@ export class UserUpdateDto{
   gender: string;
 
   @IsDateString()
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   birthday: Date;
 
   @IsString()
@@ -75,4 +76,10 @@ export class UserUpdateDto{
   @IsOptional()
   @ApiPropertyOptional()
   password: string;
+}
+export class OtpDto{
+  @IsString()
+  @IsOptional()
+  @ApiPropertyOptional()
+  otp: string;
 }

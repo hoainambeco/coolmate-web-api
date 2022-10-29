@@ -1,5 +1,5 @@
 export enum GenderEnum {
-  NAM ,
-  NU,
-  KHAC,
+  NAM='NAM' ,
+  NU='NU',
+  KHAC='KHAC',
 }

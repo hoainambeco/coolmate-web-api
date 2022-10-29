@@ -1,4 +1,15 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, UseGuards, UseInterceptors } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Query, Req,
+  UseGuards,
+  UseInterceptors,
+  ValidationPipe
+} from "@nestjs/common";
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { AuthService } from "./auth.service";
 import { UserLoginDto } from "./dto/user-login.dto";
@@ -11,6 +22,8 @@ import { JwtAuthGuard } from "../guards/jwt-auth.guard";
 import { AuthUserInterceptor } from "../interceptors/auth-user.interceptor";
 import { AuthUser } from "../decorators/auth-user.decorator";
 import { User } from "../users/entities/user.entity";
+import { UserResetPasswordDto, UserResetPasswordQueryDto } from "./dto/user-change-password.dto";
+import { AuthGuard } from "@nestjs/passport";
 
 @Controller("auth")
 @ApiTags("Auth")
@@ -46,5 +59,34 @@ export class AuthController {
   @ApiOkResponse({ type: UserDto, description: 'current user info' })
   getCurrentUser(@AuthUser() user: User) {
     return user;
+  }
+
+  @Get('reset-password-get-otp')
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({ description: 'Request send otp mail for reset password' })
+  async createResetOtp(@Query(new ValidationPipe({ transform: true }))
+      input: UserResetPasswordQueryDto,
+  ): Promise<void> {
+    return this.userService.createResetOtp(input.email);
+  }
+
+  @Post('reset-password-confirm')
+  @UseInterceptors(AuthUserInterceptor)
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({ type: UserDto, description: 'Reset password' })
+  userResetPassword(
+    @Body() userResetPasswordDto: UserResetPasswordDto,
+  ): Promise<UserDto> {
+    return this.userService.userResetPassword(userResetPasswordDto);
+  }
+
+  @Get('google')
+  @UseGuards(AuthGuard('google'))
+  async googleAuth(@Req() req) {}
+
+  @Get('google/redirect')
+  @UseGuards(AuthGuard('google'))
+  googleAuthRedirect(@Req() req) {
+    return this.AuthService.googleLogin(req)
   }
 }

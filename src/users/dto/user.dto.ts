@@ -1,8 +1,12 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { GenderEnum } from "../../enum/gender";
-import { Field } from "mysql2";
+import { User } from "../entities/user.entity";
+import { StatusAccount } from "../../enum/status-account";
 
 export class UserDto {
+  @ApiProperty()
+  id: string;
+
   @ApiProperty()
   fullName: string;
 
@@ -24,8 +28,8 @@ export class UserDto {
   @ApiProperty()
   deletedAt: Date;
 
-  @ApiProperty()
-  isDeleted: boolean;
+  @ApiPropertyOptional({type: 'enum', enum: StatusAccount})
+  status: string;
 
   @ApiPropertyOptional({type: 'enum', enum: GenderEnum})
   gender: string;
@@ -41,4 +45,28 @@ export class UserDto {
 
   @ApiProperty()
   avatar: string;
+
+  @ApiProperty()
+  otp: string;
+
+  @ApiProperty()
+  isCreate: boolean;
+
+  constructor(entity : User) {
+    this.id = entity.id.toString();
+    this.fullName = entity.fullName;
+    this.email = entity.email;
+    this.role = entity.role;
+    this.createdAt = entity.createdAt;
+    this.updatedAt = entity.updatedAt;
+    this.deletedAt = entity.deletedAt;
+    this.status = entity.status
+    this.gender= entity.gender;
+    this.birthday = entity.birthday;
+    this.address = entity.address;
+    this.phone = entity.phone;
+    this.avatar = entity.avatar;
+    this.isCreate = entity.isCreate;
+    this.otp = entity.otp;
+  }
 }
