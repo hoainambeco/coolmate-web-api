@@ -15,7 +15,7 @@ export class ProductService {
   }
 
   async create(createProductDto: CreateProductDto): Promise<Product> {
-    return this.productRepository.create(createProductDto);
+    return this.productRepository.save(createProductDto);
   }
 
   async findAll() {

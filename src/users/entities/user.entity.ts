@@ -4,7 +4,7 @@ import { StatusAccount } from "../../enum/status-account";
 
 @Entity('users')
 export class User {
-  @ObjectIdColumn() id: ObjectID;
+  @ObjectIdColumn() id: string;
   @Column() fullName: string;
   @Column() email: string;
   @Column() password: string;

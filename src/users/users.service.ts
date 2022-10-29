@@ -94,7 +94,7 @@ export class UsersService {
     let users = AuthService.getAuthUser();
     users = await Object.assign(users, user);
     users.password = await bcrypt.hashSync(user.password, 10);
-    await this.userRepository.update(users.id.toString(), user);
+    await this.userRepository.update(users.id.toString(), users);
     return {
       ...users,
       id: users.id.toString()
