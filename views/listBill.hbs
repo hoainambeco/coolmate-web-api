@@ -32,19 +32,20 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/product" id="nav-btn" class="nav-link align-middle px-0 align-self-center">
+                        <a href="/product" id="nav-btn" class="nav-link align-middle px-0 align-self-center"
+                           >
                             <img src="image/icon/product-icon.svg" width="30" height="30"> <span
                                 class="ms-1 d-none d-sm-inline" style="color: black">Product</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/users" id="nav-btn" class="nav-link align-middle px-0 align-self-center" style="background-color: #b6b6b6">
+                        <a href="/users" id="nav-btn" class="nav-link align-middle px-0 align-self-center">
                             <img src="image/icon/customer-icon.svg" width="30" height="30"> <span
                                 class="ms-1 d-none d-sm-inline" style="color: black">Customer</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/bills" id="nav-btn" class="nav-link align-middle px-0 align-self-center">
+                        <a href="/bills" id="nav-btn" class="nav-link align-middle px-0 align-self-center"style="background-color: #b6b6b6">
                             <img src="image/icon/bill-icon.svg" width="30" height="30"> <span
                                 class="ms-1 d-none d-sm-inline" style="color: black">Bill</span>
                         </a>
@@ -88,15 +89,13 @@
         <!-- end Navbar -->
 
 
-        <div class="col py-3 text-lg-center">
-            <h2>List user</h2>
+        <div class="col py-3">
             <div style="width: 100%">
                 <form action="/#" class="d-flex" method="POST" style="width: 60%;margin: auto" autocomplete="off">
                     <div class="me-2" style="margin: auto">
                         <select style="margin: auto;height: 38px;border-radius: 5px">
                             <option value="1">Name</option>
                             <option value="2">ID</option>
-                            <option value="3">Email</option>
                         </select>
                     </div>
                     <input class="form-control me-2" type="search" placeholder="Search here" aria-label="Search"
@@ -104,44 +103,83 @@
                     <button class="btn btn-outline-secondary" type="submit" style="width: 150px">Search</button>
                 </form>
             </div>
-            <div class=" mt-4" style="width: 100%;text-align: end">
-                <button class="btn btn-outline-secondary" type="submit" style="width: 150px">Add User</button>
-            </div>
             <div class="panel panel-default mt-2" style="width: 100%">
-                <div class="panel-body table-responsive" style="max-height: 500px;min-height: 200px">
+                <div class="panel-body table-responsive" style="max-height: 500px; min-height: 200px">
                     <table class="table table-bordered">
                         <thead>
                         <tr>
                             <th class="col-1" scope="col">ID</th>
-                            <th class="col-2" scope="col">FullName</th>
-                            <th class="col-2" scope="col">Email</th>
-                            <th class="col-1" scope="col">Avatar</th>
-                            <th class="col-1" scope="col">Gender</th>
-                            <th class="col-1" scope="col">DateOfBirth</th>
-                            <th class="col-1" scope="col">PhoneNumber</th>
-                            <th class="col-1" scope="col">Place</th>
+                            <th class="col-1" scope="col">DateTime</th>
                             <th class="col-1" scope="col">Status</th>
+                            <th class="col-1" scope="col">Name Customer</th>
+                            <th class="col-1" scope="col">Product</th>
+                            <th class="col-1" scope="col">Count</th>
+                            <th class="col-1" scope="col">Type</th>
+                            <th class="col-1" scope="col">Price</th>
+                            <th class="col-1" scope="col">Total</th>
+                            <th class="col-2" scope="col">Place</th>
+                            <th class="col-1" scope="col">Action</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr>
-                            <th scope="row">sdvasdf-adsf-01</th>
-
-                            <td>Phạm Văn A</td>
-                            <td>pva@gmail.com</td>
-                            <td><img src="image/chengwei-pan-2.jpg"  width="30" height="30" ></td>
-                            <td>Nam</td>
-                            <td>10/2/1999</td>
-                            <td>0321521320</td>
+                            <th scope="row">Bill001</th>
+                            <td>10/5/2020 - 19:20:03</td>
+                            <td>Chưa xác nhận</td>
+                            <td>Huy Đỗ</td>
+                            <td>Áo dài</td>
+                            <td>1</td>
+                            <td>M-đen</td>
+                            <td>100.000</td>
+                            <td>100.000</td>
                             <td>Hà Nội</td>
-                            <td>Bình thường</td>
                             <td><div class="dropdown">
                                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                     Action
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                    <li><a class="dropdown-item" href="/user-Info">Xem thông tin chi tiết</a></li>
-                                    <li><a class="dropdown-item" href="#">Xóa người dùng</a></li>
+                                    <li><a class="dropdown-item" href="#">Xem thông tin chi tiết</a></li>
+                                    <li><a class="dropdown-item" href="#">Xóa sản phẩm</a></li>
+                                </ul>
+                            </div></td>
+                        </tr><tr>
+                            <th scope="row">Bill001</th>
+                            <td>10/5/2020 - 19:20:03</td>
+                            <td>Chưa xác nhận</td>
+                            <td>Huy Đỗ</td>
+                            <td>Áo dài</td>
+                            <td>1</td>
+                            <td>M-đen</td>
+                            <td>100.000</td>
+                            <td>100.000</td>
+                            <td>Hà Nội</td>
+                            <td><div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Action
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                    <li><a class="dropdown-item" href="#">Xem thông tin chi tiết</a></li>
+                                    <li><a class="dropdown-item" href="#">Xóa sản phẩm</a></li>
+                                </ul>
+                            </div></td>
+                        </tr><tr>
+                            <th scope="row">Bill001</th>
+                            <td>10/5/2020 - 19:20:03</td>
+                            <td>Chưa xác nhận</td>
+                            <td>Huy Đỗ</td>
+                            <td>Áo dài</td>
+                            <td>1</td>
+                            <td>M-đen</td>
+                            <td>100.000</td>
+                            <td>100.000</td>
+                            <td>Hà Nội</td>
+                            <td><div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Action
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                    <li><a class="dropdown-item" href="#">Xem thông tin chi tiết</a></li>
+                                    <li><a class="dropdown-item" href="#">Xóa sản phẩm</a></li>
                                 </ul>
                             </div></td>
                         </tr>
@@ -149,11 +187,13 @@
                     </table>
                 </div>
             </div>
-
         </div>
-
-
     </div>
+
+</div>
+
+
+</div>
 </div>
 </body>
 </html>

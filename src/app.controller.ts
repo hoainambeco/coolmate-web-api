@@ -1,4 +1,4 @@
-import { Controller, Get, Render } from "@nestjs/common";
+import {Controller, Get, Post, Render, Req, Res} from "@nestjs/common";
 import { AppService } from './app.service';
 
 @Controller()
@@ -6,7 +6,7 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  @Render('addProduct')
+  @Render('listProduct')
   root() {
     return this.appService.getHello();
   }
@@ -25,14 +25,40 @@ export class AppController {
   getProfile() {
     return this.appService.getHello();
   }
+  //user
   @Get('users')
   @Render('listUser')
   getListUser() {
     return this.appService.getHello();
   }
+  @Get('user-Info')
+  @Render('userInfo')
+  showUserInfo() {
+    return this.appService.getHello();
+  }
+  //login
   @Get('login')
   @Render('login')
-  getlogin() {
+  getlogin(@Req() req,@Res() res
+  ) {
+    return this.appService.getLogin(req, res);
+  }
+  @Post('login')
+  @Render('login')
+  postlogin(@Req() req,@Res() res
+  ) {
+    return this.appService.postLogin(req, res);
+  }
+  //dashboard
+  @Get('dashboard')
+  @Render('dashboard')
+  getDashboard() {
+    return this.appService.getHello();
+  }
+//bil
+  @Get('bills')
+  @Render('listBill')
+  getListBill() {
     return this.appService.getHello();
   }
 }
