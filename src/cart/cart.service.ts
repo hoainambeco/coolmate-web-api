@@ -62,11 +62,10 @@ export class CartService {
 
   async update(id: string, updateCartDto: UpdateCartDto) {
     const cart = this.findByUserId(id);
-    return
-    await this.cartRepository.update(id, updateCartDto);;
+    return await this.cartRepository.update(id, updateCartDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} cart`;
+  async remove(id: string) {
+    return await this.cartRepository.delete(id);
   }
 }

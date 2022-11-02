@@ -12,6 +12,8 @@ import { UsersService } from "./users/users.service";
 import { JwtStrategy } from "./auth/jwt.strategy";
 import { JwtService } from "@nestjs/jwt";
 import { ProductModule } from './product/product.module';
+import { CartModule } from './cart/cart.module';
+import { OdersModule } from './oders/oders.module';
 
 @Module({
   imports: [TypeOrmModule.forRoot(
@@ -28,7 +30,9 @@ import { ProductModule } from './product/product.module';
     AuthModule,
     UsersModule,
     SharedModule,
-    ProductModule],
+    ProductModule,
+    CartModule,
+    OdersModule],
   controllers: [AppController, AuthController],
   providers: [AppService, AuthService, UsersService, JwtStrategy, JwtService],
 })

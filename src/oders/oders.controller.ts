@@ -1,7 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Put,
+} from '@nestjs/common';
 import { OdersService } from './oders.service';
 import { CreateOderDto } from './dto/create-oder.dto';
-import { UpdateOderDto } from './dto/update-oder.dto';
 
 @Controller('oders')
 export class OdersController {
@@ -19,16 +27,16 @@ export class OdersController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.odersService.findOne(+id);
+    return this.odersService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateOderDto: UpdateOderDto) {
-    return this.odersService.update(+id, updateOderDto);
+  @Put(':id')
+  update(@Param('id') id: string, @Body() updateOderDto: CreateOderDto) {
+    return this.odersService.update(id, updateOderDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.odersService.remove(+id);
+    return this.odersService.remove(id);
   }
 }
