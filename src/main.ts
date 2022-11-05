@@ -15,7 +15,7 @@ import {loadEnviroment} from './env';
 import {setupSwagger} from './swagger.setup';
 import helmet from 'helmet'
 import * as session from "express-session";
-import passport from "passport";
+import * as passport from "passport";
 
 
 async function bootstrap() {
@@ -45,16 +45,16 @@ async function bootstrap() {
     app.useStaticAssets(join(__dirname, '..', 'public'));
     app.setBaseViewsDir(join(__dirname, '..', 'views'));
     app.setViewEngine('hbs');
-
+  app.use(
+    session({
+      secret: 'datn-secret',
+      resave: true,
+      saveUninitialized: true,
+    }),
+  );
+  app.use(passport.initialize());
+  app.use(passport.session());
     await app.listen(process.env.PORT || 3000);
-
-    app.use(
-        session({
-            secret: 'datn-secret',
-            resave: true,
-            saveUninitialized: true,
-        }),
-    );
     app.use(
         helmet({
             contentSecurityPolicy: {

@@ -14,6 +14,7 @@ import { JwtService } from "@nestjs/jwt";
 import { ProductModule } from './product/product.module';
 import { CartModule } from './cart/cart.module';
 import { OdersModule } from './oders/oders.module';
+import { PassportModule } from "@nestjs/passport";
 
 @Module({
   imports: [TypeOrmModule.forRoot(
@@ -32,7 +33,10 @@ import { OdersModule } from './oders/oders.module';
     SharedModule,
     ProductModule,
     CartModule,
-    OdersModule],
+    OdersModule,
+    PassportModule.register({
+      session: true
+    })],
   controllers: [AppController, AuthController],
   providers: [AppService, AuthService, UsersService, JwtStrategy, JwtService],
 })

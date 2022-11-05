@@ -1,6 +1,6 @@
-import { Column, Entity, ObjectID, ObjectIdColumn } from "typeorm";
+import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
 
-@Entity("product")
+@Entity('product')
 export class Product {
   @ObjectIdColumn() id: ObjectID;
   @Column() modelID: string;
@@ -19,22 +19,28 @@ export class Product {
   @Column() deletedAt: Date;
   @Column() isDeleted: boolean;
   @Column() likeCount: number;
-  @Column() color: [{
-    name: string;
-    image: string[];
-    size: [{
+  @Column() color: [
+    {
       name: string;
-      productCount: number
-    }];
-  }];
-  @Column() rating: [{
-    userId: string;
-    modelID: string;
-    score: number;
-    comment: string;
-    image: string[];
-    date: Date;
-  }];
+      image: string[];
+      size: [
+        {
+          name: string;
+          productCount: number;
+        },
+      ];
+    },
+  ];
+  @Column() rating: [
+    {
+      userId: string;
+      modelID: string;
+      score: number;
+      comment: string;
+      image: string[];
+      date: Date;
+    },
+  ];
 
   constructor(product?: Partial<Product>) {
     if (product) {

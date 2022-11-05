@@ -35,8 +35,8 @@ export class AppService {
         if (user && (await bcrypt.compare(req.body.password, user.password))) {
             const payload = {username: user.email, sub: user.id};
             const access_token = await this.jwtService.signAsync({id: user.id}, {secret: this.configService.get('JWT_SECRET_KEY')})
-            /*req.session={user: {...user , access_token: access_token}}
-            console.log(req.session)*/
+            req.session.user ={...user , access_token: access_token}
+            console.log(req.session)
             res.redirect('/product');
         } else {
             return res.render('./login', {

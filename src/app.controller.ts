@@ -8,7 +8,7 @@ export class AppController {
   @Get()
   @Render('listProduct')
   root(@Req() req,@Res() res) {
-    if(!req.session.user){
+    if(!req.session){
       res.redirect('/login')
     }
     return this.appService.getProduct(req,res);
@@ -17,6 +17,7 @@ export class AppController {
   @Render('listProduct')
   getListProduct(@Req() req,@Res() res) {
     console.log(req)
+    console.log(req.session)
     if (!req.session){
       res.redirect('login')
     }
