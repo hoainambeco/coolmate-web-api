@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>App</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="css/hover.css" rel="stylesheet"/>
+    <script src="js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        <!-- Navbar -->
+        <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0" style="box-shadow: 4px 4px 40px rgba(0, 0, 0, 0.06);">
+            <div class="d-flex flex-column align-items-center  px-3 pt-2 text-black min-vh-100">
+                <a href="/" class="d-flex align-items-center  mb-md-3 mt-md-3 text-black text-decoration-none">
+                    <img src="image/logo-app.svg" width="126" height="45">
+                </a>
+                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu"
+                    style="width: 126px">
+                    <li class="nav-item">
+                        <a href="/dashboard" class="nav-link align-middle px-0 align-self-center" id="nav-btn" style=" background-color: #b6b6b6">
+                            <img src="image/icon/dashboard-icon.svg" width="30" height="30"> <span
+                                class="ms-1 d-none d-sm-inline " style="color: black">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link align-middle px-0 align-self-center" id="nav-btn">
+                            <img src="image/icon/Chat-icon.svg" width="30" height="30"> <span
+                                class="ms-1 d-none d-sm-inline" style="color: black">Messenger</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/product" id="nav-btn" class="nav-link align-middle px-0 align-self-center">
+                            <img src="image/icon/product-icon.svg" width="30" height="30"> <span
+                                class="ms-1 d-none d-sm-inline" style="color: black">Product</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/users" id="nav-btn" class="nav-link align-middle px-0 align-self-center">
+                            <img src="image/icon/customer-icon.svg" width="30" height="30"> <span
+                                class="ms-1 d-none d-sm-inline" style="color: black">Customer</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/bills" id="nav-btn" class="nav-link align-middle px-0 align-self-center">
+                            <img src="image/icon/bill-icon.svg" width="30" height="30"> <span
+                                class="ms-1 d-none d-sm-inline" style="color: black">Bill</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" id="nav-btn" class="nav-link align-middle px-0 align-self-center">
+                            <img src="image/icon/voucher-icon.svg" width="30" height="30"> <span
+                                class="ms-1 d-none d-sm-inline" style="color: black">Voucher</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" id="nav-btn" class="nav-link align-middle px-0 align-self-center">
+                            <img src="image/icon/notifi-icon.svg" width="30" height="30"> <span
+                                class="ms-1 d-none d-sm-inline" style="color: black">Notification</span>
+                        </a>
+                    </li>
+                </ul>
+                <hr style="width: 100%; color: black;margin-bottom: 12px">
+                <div class="dropdown align-items-center" style="width: 100% ;height: 60px;padding-bottom: 10px">
+                    <a href="#"
+                       class=" rounded d-flex align-items-center text-black text-decoration-none dropdown-toggle"
+                       id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false"
+                       style="width: 100%; height: 100%;margin-bottom: 20px">
+                        <img src="image/chengwei-pan-2.jpg" width="30" height="30"
+                             class="rounded-circle" style="margin-left: 30px;margin-right: 20px">
+                        <span class="d-none d-sm-inline mx-1" style="color: black">Huy ngu</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+                        <li><a class="dropdown-item" href="/profile">Profile</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="/login">Sign out
+                            <img src="image/icon/logout-icon.svg" width="30" height="30" style="margin-left: 40px"></a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+        <!-- end Navbar -->
+
+        <!-- Content -->
+        <div class="col py-3" style=" width: 100%;text-align: center">
+            <h2>DASHBOARD</h2>
+            <div class="row">
+
+                <div class="col-xl-8 col-lg-7">
+
+                    <!-- Area Chart -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Area Chart</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-area">
+                                <canvas id="myAreaChart"></canvas>
+                            </div>
+                            <hr>
+                            Styling for the area chart can be found in the
+                            <code>/js/demo/chart-area-demo.js</code> file.
+                        </div>
+                    </div>
+
+                    <!-- Bar Chart -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Bar Chart</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-bar">
+                                <canvas id="myBarChart"></canvas>
+                            </div>
+                            <hr>
+                            Styling for the bar chart can be found in the
+                            <code>/js/demo/chart-bar-demo.js</code> file.
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Donut Chart -->
+                <div class="col-xl-4 col-lg-5">
+                    <div class="card shadow mb-4">
+                        <!-- Card Header - Dropdown -->
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Donut Chart</h6>
+                        </div>
+                        <!-- Card Body -->
+                        <div class="card-body">
+                            <div class="chart-pie pt-4">
+                                <canvas id="myPieChart"></canvas>
+                            </div>
+                            <hr>
+                            Styling for the donut chart can be found in the
+                            <code>/js/demo/chart-pie-demo.js</code> file.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+<!-- Bootstrap core JavaScript-->
+<script src="vendor/jquery/jquery.min.js"></script>
+<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Page level plugins -->
+<script src="vendor/chart.js/Chart.min.js"></script>
+
+<!-- Page level custom scripts -->
+<script src="js/demo/chart-area-demo.js"></script>
+<script src="js/demo/chart-pie-demo.js"></script>
+</body>
+
+</html>

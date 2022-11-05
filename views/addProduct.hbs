@@ -3,12 +3,13 @@
 <head>
     <meta charset="utf-8"/>
     <title>App</title>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/hover.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="css/hover.css" rel="stylesheet"/>
     <script src="js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 
 </head>
 <body>
+
 <div class="container-fluid">
     <div class="row flex-nowrap">
         <!-- Navbar -->
@@ -20,7 +21,7 @@
                 <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu"
                     style="width: 126px">
                     <li class="nav-item">
-                        <a href="#" class="nav-link align-middle px-0 align-self-center" id="nav-btn">
+                        <a href="/dashboard" class="nav-link align-middle px-0 align-self-center" id="nav-btn">
                             <img src="image/icon/dashboard-icon.svg" width="30" height="30"> <span
                                 class="ms-1 d-none d-sm-inline " style="color: black">Dashboard</span>
                         </a>
@@ -32,20 +33,20 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" id="nav-btn" class="nav-link align-middle px-0 align-self-center"
+                        <a href="/product" id="nav-btn" class="nav-link align-middle px-0 align-self-center"
                            style="background-color: #b6b6b6">
                             <img src="image/icon/product-icon.svg" width="30" height="30"> <span
                                 class="ms-1 d-none d-sm-inline" style="color: black">Product</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" id="nav-btn" class="nav-link align-middle px-0 align-self-center">
+                        <a href="/users" id="nav-btn" class="nav-link align-middle px-0 align-self-center">
                             <img src="image/icon/customer-icon.svg" width="30" height="30"> <span
                                 class="ms-1 d-none d-sm-inline" style="color: black">Customer</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" id="nav-btn" class="nav-link align-middle px-0 align-self-center">
+                        <a href="/bills" id="nav-btn" class="nav-link align-middle px-0 align-self-center">
                             <img src="image/icon/bill-icon.svg" width="30" height="30"> <span
                                 class="ms-1 d-none d-sm-inline" style="color: black">Bill</span>
                         </a>
@@ -74,11 +75,11 @@
                         <span class="d-none d-sm-inline mx-1" style="color: black">Huy ngu</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-                        <li><a class="dropdown-item" href="#">Profile</a></li>
+                        <li><a class="dropdown-item" href="/profile">Profile</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" href="#">Sign out
+                        <li><a class="dropdown-item" href="/login">Sign out
                             <img src="image/icon/logout-icon.svg" width="30" height="30" style="margin-left: 40px"></a>
                         </li>
                     </ul>
@@ -90,6 +91,7 @@
 
         <!-- Content -->
         <div class="col py-3" style=" width: 100%;text-align: center">
+
             <h2>Add Product</h2>
             <form style="width: 500px;margin: auto" class="mt-5">
                 <div class="row mb-3">
@@ -127,18 +129,29 @@
                         <input class="form-control" type="file" id="AddContentImage" name="AddContentImage" multiple>
                     </div>
                 </div>
+                <a onclick="addKeywordFields()">Add a keyword</a>
+                <div id="fieldContainer"></div>
+
+
                 <div style="width: 100%" class="mt-4">
                     <button class="btn btn-secondary col-3">Cancel</button>
                     <button type="submit" class="btn btn-primary" style="margin-left: 200px">Add Product</button>
-
                 </div>
 
             </form>
 
         </div>
-
-
     </div>
 </div>
+<script>
+    function addKeywordFields() {
+        var mydiv = document.getElementById("fieldContainer");
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.name = (new Date()).toISOString(); // Some dynamic name logic
+        mydiv.appendChild(input);
+    }
+</script>
 </body>
+
 </html>

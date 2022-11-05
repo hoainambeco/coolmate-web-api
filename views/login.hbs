@@ -19,23 +19,27 @@
                     <div class="col-12 col-md-8 col-lg-6 col-xl-5">
                         <div class="card text-black" style="border-radius: 1rem;background-color: #ffffff">
                             <div class="card-body p-5 text-center">
-
-                                <div class=" pb-5">
+                                {{#if msg}}
+                                    {{{msg}}}
+                                {{/if}}
+                                <form  class="pb-5" method="post">
                                     <img class="mb-2" src="image/logo-app.svg" width="200" height="60">
                                     <h2 class="fw-bold mb-2 text-uppercase">Login</h2>
                                     <p class="text-black-50 mb-3">Please enter your login email and password!</p>
 
                                     <div class="form-floating mb-3">
-                                        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" style="color: black" autocomplete="off">
+                                        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com"
+                                               style="color: black" autocomplete="off" name="email">
                                         <label for="floatingInput" style="color: black">Email address</label>
                                     </div>
                                     <div class="form-floating mb-5">
-                                        <input type="password" class="form-control" id="floatingPassword" placeholder="Password"style="color: black" autocomplete="off">
+                                        <input type="password" class="form-control" id="floatingPassword" placeholder="Password"
+                                               style="color: black" autocomplete="off" name="password">
                                         <label for="floatingPassword"style="color: black">Password</label>
                                     </div>
 
                                     <button class="btn btn-outline-dark btn-lg px-5" type="submit">Login</button>
-                                </div>
+                                </form>
 
 
                             </div>
