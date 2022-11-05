@@ -1,4 +1,4 @@
-import {Controller, Get, Post, Render, Req, Res} from "@nestjs/common";
+import {Controller, Get, Post, Render, Req, Res, Session} from "@nestjs/common";
 import { AppService } from './app.service';
 
 @Controller()
@@ -7,13 +7,20 @@ export class AppController {
 
   @Get()
   @Render('listProduct')
-  root() {
-    return this.appService.getHello();
+  root(@Req() req,@Res() res) {
+    if(!req.session.user){
+      res.redirect('/login')
+    }
+    return this.appService.getProduct(req,res);
   }
   @Get('product')
   @Render('listProduct')
-  getListProduct() {
-    return this.appService.getHello();
+  getListProduct(@Req() req,@Res() res) {
+    console.log(req)
+    if (!req.session){
+      res.redirect('login')
+    }
+    return this.appService.getProduct(req,res);
   }
   @Get('product-add')
   @Render('addProduct')
