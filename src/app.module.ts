@@ -15,6 +15,7 @@ import { ProductModule } from './product/product.module';
 import { CartModule } from './cart/cart.module';
 import { OdersModule } from './oders/oders.module';
 import { PassportModule } from "@nestjs/passport";
+import { VoucherModule } from './voucher/voucher.module';
 
 @Module({
   imports: [TypeOrmModule.forRoot(
@@ -36,7 +37,8 @@ import { PassportModule } from "@nestjs/passport";
     OdersModule,
     PassportModule.register({
       session: true
-    })],
+    }),
+    VoucherModule],
   controllers: [AppController, AuthController],
   providers: [AppService, AuthService, UsersService, JwtStrategy, JwtService],
 })

@@ -22,7 +22,7 @@ import { AuthUserInterceptor } from "../interceptors/auth-user.interceptor";
 @UseGuards(JwtAuthGuard)
 @UseInterceptors(AuthUserInterceptor)
 @ApiBearerAuth()
-@Controller('cart')
+@Controller('api/cart')
 export class CartController {
   constructor(private readonly cartService: CartService) {}
 

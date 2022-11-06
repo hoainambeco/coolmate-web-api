@@ -6,11 +6,19 @@ import {
   Patch,
   Param,
   Delete,
-  Put,
-} from '@nestjs/common';
+  Put, UseGuards, UseInterceptors
+} from "@nestjs/common";
 import { OdersService } from './oders.service';
 import { CreateOderDto } from './dto/create-oder.dto';
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { JwtAuthGuard } from "../guards/jwt-auth.guard";
+import { AuthUserInterceptor } from "../interceptors/auth-user.interceptor";
 
+@ApiTags('Oders')
+@UseGuards(JwtAuthGuard)
+@UseInterceptors(AuthUserInterceptor)
+@ApiBearerAuth()
+@Controller('api/oders')
 @Controller('oders')
 export class OdersController {
   constructor(private readonly odersService: OdersService) {}
