@@ -2,7 +2,7 @@ import { ErrorException } from './../exceptions/error.exception';
 import { Repository } from 'typeorm';
 import { Oder } from './entities/oder.entity';
 import { Injectable, HttpStatus } from '@nestjs/common';
-import { CreateOderDto } from './dto/create-oder.dto';
+import { CreateOderDto, UpdateShippingStatusDto } from "./dto/create-oder.dto";
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
@@ -61,5 +61,24 @@ export class OdersService {
 
   async remove(id: string) {
     return await this.oderRepository.delete(id);
+  }
+
+  async updateShippingStatus(id: string, updateShippingStatusDto: UpdateShippingStatusDto) {
+    // @ts-ignore
+    const oder = await this.oderRepository.findOne(id);
+    if (!oder) {
+      throw new ErrorException(HttpStatus.NOT_FOUND, 'Oder not found');
+    }
+    try{
+      oder.shippingStatus.push(updateShippingStatusDto.shippingStatus);
+    }
+    catch (e) {
+      oder.shippingStatus = [updateShippingStatusDto.shippingStatus];
+    }
+    await this.oderRepository.save(oder);
+    return {
+      ...oder,
+      id: oder.id.toString(),
+    };
   }
 }

@@ -9,10 +9,10 @@ import {
   UseInterceptors,
   HttpCode,
   HttpStatus,
-  UseGuards,
-} from '@nestjs/common';
+  UseGuards, Put
+} from "@nestjs/common";
 import { ProductService } from './product.service';
-import { CreateProductDto, UpdateProductDto } from './dto/create-product.dto';
+import { CreateProductDto, rating, UpdateProductDto } from "./dto/create-product.dto";
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthUserInterceptor } from '../interceptors/auth-user.interceptor';
 import { ProductDto } from './dto/product.dto';
@@ -72,5 +72,16 @@ export class ProductController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.productService.remove(id);
+  }
+
+  @Put('rating/:id')
+  @HttpCode(HttpStatus.OK)
+  @ApiResponse({
+    status: 200,
+    description: 'The found record',
+    type: rating,
+  })
+  creatRating(@Param('id') id: string, @Body() rating: rating) {
+    return this.productService.createRating(id, rating);
   }
 }

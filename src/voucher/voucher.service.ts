@@ -1,26 +1,83 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from "@nestjs/common";
 import { CreateVoucherDto } from './dto/create-voucher.dto';
-import { UpdateVoucherDto } from './dto/update-voucher.dto';
+import { InjectRepository } from "@nestjs/typeorm";
+import { Voucher } from "./entities/voucher.entity";
+import { Repository } from "typeorm";
+import { ErrorException } from "../exceptions/error.exception";
+import { ProductDto } from "../product/dto/product.dto";
 
 @Injectable()
 export class VoucherService {
-  create(createVoucherDto: CreateVoucherDto) {
-    return 'This action adds a new voucher';
+  constructor(
+    @InjectRepository(Voucher)
+    private voucherRepository: Repository<Voucher>,
+  ) {}
+  async create(createVoucherDto: CreateVoucherDto):Promise<Voucher> {
+    // console.log(createVoucherDto);
+    if (await  this.voucherRepository.findOneBy({code: createVoucherDto.code})) {
+      throw  new ErrorException(HttpStatus.BAD_REQUEST, 'Voucher code already exists');
+    }
+    const voucher = await this.voucherRepository.create(createVoucherDto);
+    return await this.voucherRepository.save(voucher);
   }
 
-  findAll() {
-    return `This action returns all voucher`;
+  async findAll() {
+    const listVoucher = await this.voucherRepository.find();
+    return listVoucher.map((voucher) => {
+      return{
+        ...voucher,
+        id: voucher.id.toString(),
+      }
+    })
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} voucher`;
+  async findOne(id: string):Promise<ProductDto> {
+    console.log(id);
+    // @ts-ignore
+    const voucher = await this.voucherRepository.findOneBy(id);
+    if (!voucher) {
+      throw new ErrorException(HttpStatus.NOT_FOUND, 'Voucher not found');
+    }
+    // @ts-ignore
+    return {
+      ...voucher,
+      id: voucher.id.toString(),
+    }
+  }
+  async findOneByCode(code: string):Promise<ProductDto> {
+    // @ts-ignore
+    const voucher = await this.voucherRepository.findOneBy({code: code});
+    if (!voucher) {
+      throw new ErrorException(HttpStatus.NOT_FOUND, 'Voucher not found');
+    }
+    // @ts-ignore
+    return {
+      ...voucher,
+      id: voucher.id.toString(),
+    }
   }
 
-  update(id: number, updateVoucherDto: UpdateVoucherDto) {
-    return `This action updates a #${id} voucher`;
+  async update(id: string, updateVoucherDto: CreateVoucherDto) {
+    // @ts-ignore
+    const voucher = await this.voucherRepository.findOneBy(id);
+    if (!voucher) {
+      throw new ErrorException(HttpStatus.NOT_FOUND, 'Voucher not found');
+    }
+    const voucherUpdate = Object.assign(voucher, updateVoucherDto);
+    await this.voucherRepository.save(voucherUpdate);
+    return {
+      ...voucherUpdate,
+      id: voucher.id.toString(),
+    };
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} voucher`;
+  async remove(id: string) {
+    // @ts-ignore
+    const voucher = await this.voucherRepository.findOneBy(id);
+    if (!voucher) {
+      throw new ErrorException(HttpStatus.NOT_FOUND, 'Voucher not found');
+    }
+return this.voucherRepository.remove(voucher);
+
   }
 }

@@ -9,7 +9,7 @@ import {
   Put, UseGuards, UseInterceptors
 } from "@nestjs/common";
 import { OdersService } from './oders.service';
-import { CreateOderDto } from './dto/create-oder.dto';
+import { CreateOderDto, UpdateShippingStatusDto } from "./dto/create-oder.dto";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../guards/jwt-auth.guard";
 import { AuthUserInterceptor } from "../interceptors/auth-user.interceptor";
@@ -46,5 +46,10 @@ export class OdersController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.odersService.remove(id);
+  }
+
+  @Put('update-shipping-status/:id')
+  updateShippingStatus(@Param('id') id: string, @Body() updateShippingStatusDto: UpdateShippingStatusDto){
+    return this.odersService.updateShippingStatus(id, updateShippingStatusDto);
   }
 }

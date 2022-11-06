@@ -46,4 +46,17 @@ export class CreateOderDto {
   @IsArray()
   @IsNotEmpty()
   voucherId: [string];
+
+  @ApiProperty({default : ['WAITING']})
+  @IsArray()
+  @IsNotEmpty()
+  shippingStatus:[string];
+
+}
+export class UpdateShippingStatusDto{
+
+  @ApiProperty({default : 'WAITING'})
+  @IsString()
+  @IsNotEmpty()
+  shippingStatus:string;
 }

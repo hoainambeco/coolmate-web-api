@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, UseInterceptors, Put } from "@nestjs/common";
 import { VoucherService } from './voucher.service';
 import { CreateVoucherDto } from './dto/create-voucher.dto';
-import { UpdateVoucherDto } from './dto/update-voucher.dto';
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../guards/jwt-auth.guard";
 import { AuthUserInterceptor } from "../interceptors/auth-user.interceptor";
@@ -27,16 +26,21 @@ export class VoucherController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.voucherService.findOne(+id);
+    return this.voucherService.findOne(id);
+  }
+
+  @Get('byCode/:code')
+  findOneByCode(@Param('code') code: string) {
+    return this.voucherService.findOneByCode(code);
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateVoucherDto: UpdateVoucherDto) {
-    return this.voucherService.update(+id, updateVoucherDto);
+  update(@Param('id') id: string, @Body() updateVoucherDto: CreateVoucherDto) {
+    return this.voucherService.update(id, updateVoucherDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.voucherService.remove(+id);
+    return this.voucherService.remove(id);
   }
 }

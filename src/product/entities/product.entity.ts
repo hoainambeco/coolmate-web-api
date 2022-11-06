@@ -31,7 +31,7 @@ export class Product {
       ];
     },
   ];
-  @Column() rating: [
+  @Column( {default: []}) rating: [
     {
       userId: string;
       modelID: string;

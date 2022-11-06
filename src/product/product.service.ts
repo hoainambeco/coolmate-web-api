@@ -2,8 +2,8 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import {
   CreateProductDto,
   UpdateProductDto,
-  Color,
-} from './dto/create-product.dto';
+  Color, rating
+} from "./dto/create-product.dto";
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
 import { Repository } from 'typeorm';
@@ -18,7 +18,8 @@ export class ProductService {
   ) {}
 
   async create(createProductDto: CreateProductDto): Promise<Product> {
-    return this.productRepository.save(createProductDto);
+    const product = await this.productRepository.create(createProductDto);
+    return this.productRepository.save(product);
   }
 
   async findAll() {
@@ -92,5 +93,26 @@ export class ProductService {
 
   async remove(id: string) {
     return await this.productRepository.delete(id);
+  }
+
+  async createRating(id:string, rating:rating): Promise<ProductDto> {
+    // @ts-ignore
+    let product = await this.productRepository.findOneBy(id)
+
+    if (!product) {
+      throw new ErrorException(HttpStatus.NOT_FOUND, 'Product not found');
+    }
+
+    console.log(product);
+    try {
+      // @ts-ignore
+      product.rating.push(rating);
+    }catch ( e){
+      // @ts-ignore
+      product.rating =  [rating]
+    }
+    await this.productRepository.save(product)
+    // @ts-ignore
+    return rating
   }
 }

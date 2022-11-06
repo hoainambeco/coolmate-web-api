@@ -30,6 +30,9 @@ export class Oder {
   @Column()
   voucherId: [string];
 
+  @Column()
+  shippingStatus:[string];
+
   constructor(partial: Partial<Oder>) {
     Object.assign(this, partial);
   }

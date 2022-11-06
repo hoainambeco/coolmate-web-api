@@ -43,6 +43,9 @@ export class OderDto {
   @ApiProperty()
   voucherId: [string];
 
+  @ApiProperty()
+  shippingStatus:[string];
+
   constructor(partial: Partial<OderDto>) {
     Object.assign(this, partial);
   }
