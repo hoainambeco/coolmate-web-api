@@ -1,4 +1,12 @@
-import { Column, Entity, ObjectID, ObjectIdColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  ObjectID,
+  ObjectIdColumn,
+  UpdateDateColumn
+} from "typeorm";
 import { GenderEnum } from "../../enum/gender";
 import { StatusAccount } from "../../enum/status-account";
 
@@ -24,6 +32,22 @@ export class User {
   constructor(user?: Partial<User>) {
     if (user) {
       Object.assign(this, user);
+    }
+  }
+}
+
+@Entity('favorites')
+export class Favorite {
+  @ObjectIdColumn() id: string;
+  @Column() userId: string;
+  @Column() productId: string;
+  @CreateDateColumn() createdAt: Date;
+  @UpdateDateColumn() updatedAt: Date;
+  @DeleteDateColumn() deletedAt: Date;
+
+  constructor(favorite?: Partial<Favorite>) {
+    if (favorite) {
+      Object.assign(this, favorite);
     }
   }
 }

@@ -1,8 +1,8 @@
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { User } from "./entities/user.entity";
-import { MongoRepository } from "typeorm";
-import { UserDto } from "./dto/user.dto";
+import { Favorite, User } from "./entities/user.entity";
+import { MongoRepository, Repository } from "typeorm";
+import { FavoriteDto, UserDto } from "./dto/user.dto";
 import { ErrorException } from "../exceptions/error.exception";
 import * as bcrypt from "bcrypt";
 import { UserCreatDto, UserUpdateDto } from "./dto/user-data.dto";
@@ -13,12 +13,17 @@ import * as OtpGenerator from "otp-generator";
 import { UserResetPasswordDto } from "../auth/dto/user-change-password.dto";
 import { IFile } from "./file.interface";
 import { StatusAccount } from "../enum/status-account";
+import { Product } from "../product/entities/product.entity";
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private readonly userRepository: MongoRepository<User>
+    private readonly userRepository: MongoRepository<User>,
+    @InjectRepository(Favorite)
+    private readonly favoriteRepository: MongoRepository<Favorite>,
+    @InjectRepository(Product)
+    private productRepository: Repository<Product>,
   ) {
   }
 
@@ -261,6 +266,78 @@ export class UsersService {
     return {
       ...user,
       id: user.id.toString()
+    };
+  }
+
+  async likePost(productId: string): Promise<FavoriteDto> {
+    const user = AuthService.getAuthUser();
+    // @ts-ignore
+    const product = await this.productRepository.findOneBy(productId);
+    if (!product) {
+      throw new ErrorException(
+        HttpStatus.NOT_FOUND,
+        "PRODUCT_NOT_FOUND"
+      );
+    }
+    const Favorite = await this.favoriteRepository.findOneBy({
+      where: {
+        userId: user.id,
+        productId: product.id
+      }
+    });
+    if (Favorite) {
+      throw new ErrorException(
+        HttpStatus.BAD_REQUEST,
+        "POST_ALREADY_LIKED")
+    }
+
+    const newFavorite = this.favoriteRepository.create({
+      userId: user.id.toString(),
+      productId: productId
+    });
+    await this.favoriteRepository.save(newFavorite);
+    return {
+      ...newFavorite,
+      id: newFavorite.id.toString()
+    }
+  }
+
+  async getFavorite(): Promise<FavoriteDto[]> {
+    const user = AuthService.getAuthUser();
+    const favorites = await this.favoriteRepository.findBy({ userId: user.id });
+    return favorites.map(favorite => ({
+      ...favorite,
+      id: favorite.id.toString()
+    }));
+  }
+
+  async getFavoriteByProductId(productId: string): Promise<FavoriteDto> {
+    const user = AuthService.getAuthUser();
+    const favorites = await this.favoriteRepository.findOneBy({ userId: user.id, productId: productId });
+    return {
+      ...favorites,
+      id: favorites.id.toString()
+    }
+  }
+
+  async deleteFavorite(productId: string): Promise<FavoriteDto> {
+    const user = AuthService.getAuthUser();
+    const favorite = await this.favoriteRepository.findOneBy({
+      where: {
+        userId: user.id,
+        productId: productId
+      }
+    });
+    if (!favorite) {
+      throw new ErrorException(
+        HttpStatus.NOT_FOUND,
+        "FAVORITE_NOT_FOUND"
+      );
+    }
+    await this.favoriteRepository.delete({productId: productId, userId: user.id});
+    return {
+      ...favorite,
+      id: favorite.id.toString()
     };
   }
 }

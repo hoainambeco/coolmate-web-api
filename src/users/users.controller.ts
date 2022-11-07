@@ -12,7 +12,7 @@ import {
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { ApiBearerAuth, ApiProperty, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { UserDto } from "./dto/user.dto";
+import { FavoriteDto, UserDto } from "./dto/user.dto";
 import { OtpDto, UserCreatDto, UserUpdateDto } from "./dto/user-data.dto";
 import { AuthUserInterceptor } from "../interceptors/auth-user.interceptor";
 import { JwtAuthGuard } from "../guards/jwt-auth.guard";
@@ -113,5 +113,34 @@ export class UsersController {
   @ApiResponse({ status: 200, description: "The found record", type: UserDto })
   remove(@Param("id") id: string) {
     return this.usersService.remove(id);
+  }
+
+  @Post("like/:productId")
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({ status: 200, description: "The found record", type: FavoriteDto })
+  like(@Param("productId") productId: string) {
+    return this.usersService.likePost(productId);
+  }
+
+  @Get("like/favorite")
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({ status: 200, description: "The found record", type: [FavoriteDto] })
+  async favorite() {
+    return await this.usersService.getFavorite();
+  }
+
+  @Get("like/favorite-by-product/:productId")
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({ status: 200, description: "The found record", type: FavoriteDto })
+  async getFavoriteByProductId(@Param('productId') productId: string): Promise<FavoriteDto> {
+    return await this.usersService.getFavoriteByProductId(productId);
+  }
+
+
+  @Delete("like/:productId")
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({ status: 200, description: "The found record", type: FavoriteDto })
+  async unlike(@Param("productId") productId: string) {
+    return await this.usersService.deleteFavorite(productId);
   }
 }

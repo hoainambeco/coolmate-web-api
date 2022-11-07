@@ -57,8 +57,12 @@ export class AuthController {
   @UseInterceptors(AuthUserInterceptor)
   @ApiBearerAuth()
   @ApiOkResponse({ type: UserDto, description: 'current user info' })
-  getCurrentUser(@AuthUser() user: User) {
-    return user;
+  async getCurrentUser(@AuthUser() user: User) {
+    const token = await this.AuthService.createToken(user);
+    return {
+      user,
+      token
+    };
   }
 
   @Get('reset-password-get-otp')
