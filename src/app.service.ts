@@ -99,7 +99,7 @@ export class AppService {
         console.log(req.body);
 
         // @ts-ignore
-        let listColor: [{ name: string, image: string[], size: [{ name: string, productCount: number }] }]=[];
+        let listColor: [{ name: string, image: string[], size: [{ name: string, productCount: number }] }] = [];
 
         for (let i = 0; i < req.body.stt.length; i++) {
             // @ts-ignore
@@ -141,6 +141,56 @@ export class AppService {
         const product = await this.productRepository.findOneBy(id);
         console.log(product.createdAt);
         return res.render('./detailProduct', {product: product})
+    }
+
+    async postSearchProduct(req, res) {
+        if (req.body.SearchValue ==='') {
+            return res.redirect('/product');
+        }
+        let listProducts = [];
+        if (req.body.SearchBy == 1) {
+            // @ts-ignore
+            listProducts = await this.productRepository.find({where:{productName: new RegExp(`${req.body.SearchValue}`) }});
+            console.log( new RegExp(`${req.body.SearchValue}`))
+            console.log( listProducts)
+        } else if (req.body.SearchBy == 2) {
+            listProducts = await this.productRepository.findBy({modelID: req.body.SearchValue});
+        }
+        let products: ProductDto[];
+        products = listProducts.map((product) => {
+            return {
+                id: product.id.toString(),
+                modelID: product.modelID,
+                cmtCount: product.cmtCount,
+                rebate: product.rebate,
+                specialSale: product.specialSale,
+                likeCount: product.likeCount,
+                type: product.type,
+                productName: product.productName,
+                image: product.image,
+                price: product.price,
+                description: product.description,
+                createdAt: product.createdAt,
+                updatedAt: product.updatedAt,
+                deletedAt: product.deletedAt,
+                isDeleted: product.isDeleted,
+                status: product.status,
+                promotionalPrice: product.promotionalPrice,
+                color: product.color,
+                rating: product.rating,
+            };
+        });
+
+        if (products.length > 0) {
+            return res.render('./listProduct', {
+                listProduct: products,
+                msg: `<h6 class="alert alert-success">Tìm được sản phẩm</h6>`
+            });
+        } else {
+            return res.render('./listProduct', {
+                msg: `<h6 class="alert alert-danger">Không tìm thấy</h6>`
+            });
+        }
     }
 
 //user

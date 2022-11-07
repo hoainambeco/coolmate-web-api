@@ -79,7 +79,8 @@
                             <hr class="dropdown-divider">
                         </li>
                         <li><a class="dropdown-item" href="/login">Sign out
-                            <img src="../image/icon/logout-icon.svg" width="30" height="30" style="margin-left: 40px"></a>
+                            <img src="../image/icon/logout-icon.svg" width="30" height="30"
+                                 style="margin-left: 40px"></a>
                         </li>
                     </ul>
                 </div>
@@ -91,22 +92,26 @@
 
         <div class="col py-3">
             <div style="width: 100%">
-                <form action="/sreach" class="d-flex" method="POST" style="width: 60%;margin: auto" autocomplete="off">
-                    <div class="me-2" style="margin: auto">
-                        <label></label>
-                        <select  style="margin: auto;height: 38px;border-radius: 5px">
+                <form action="/searchProduct" class="d-flex" method="POST" style="width: 60%;margin: auto"
+                      autocomplete="off">
+                    <div class="me-2 " style="margin: auto">
+                        <select name="SearchBy" style="margin: auto;height: 38px;border-radius: 5px">
                             <option value="1">Name Product</option>
                             <option value="2">ID</option>
                         </select>
                     </div>
                     <input class="form-control me-2" type="search" placeholder="Search here" aria-label="Search"
-                           name="searchUser">
+                           name="SearchValue">
                     <button class="btn btn-outline-secondary" type="submit" style="width: 150px">Search</button>
                 </form>
             </div>
             <div class=" mt-4" style="width: 100%;text-align: end">
                 <a href="/product-add" class="btn btn-outline-secondary" style="width: 150px">Add Product</a>
             </div>
+            <div style="width: 100%;max-height: 100px">
+                {{#if msg}}
+                {{{msg}}}
+            {{/if}}</div>
             <div class="panel panel-default mt-2" style="width: 100%">
                 <div class="panel-body table-responsive" style="max-height: 500px">
                     <table class="table table-bordered">
@@ -126,21 +131,27 @@
                         {{#each listProduct}}
                             <tr>
                                 <th scope="col">{{this.modelID}}</th>
-                                <th scope="col"><img src="" height="70px" width="50"/> </th>
+                                <th scope="col"><img src="" height="70px" width="50"/></th>
                                 <th scope="col">{{this.productName}}</th>
                                 <th scope="col">{{this.price}}</th>
                                 <th scope="col">??</th>
                                 <th scope="col">??</th>
                                 <th scope="col">{{this.status}}</th>
-                                <th scope="col"><div class="dropdown">
-                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Action
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                        <li><a class="dropdown-item" href="productDetail/{{this.id}}">Detail</a></li>
-                                        <li><a class="dropdown-item" href="product/delete/{{this.id}}">Delete</a></li>
-                                    </ul>
-                                </div></th>
+                                <th scope="col">
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button"
+                                                id="dropdownMenuButton1" data-bs-toggle="dropdown"
+                                                aria-expanded="false">
+                                            Action
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                            <li><a class="dropdown-item" href="productDetail/{{this.id}}">Detail</a>
+                                            </li>
+                                            <li><a class="dropdown-item" href="product/delete/{{this.id}}">Delete</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </th>
                             </tr>
                         {{/each}}
                         </tbody>

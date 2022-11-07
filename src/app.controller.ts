@@ -40,6 +40,11 @@ export class AppController {
     getDetailProduct(@Req() req, @Res() res,@Param('id') param) {
         return this.appService.getDetailProduct(req,res,param);
     }
+    @Post('/searchProduct')
+    postSearchProduct(@Req() req, @Res() res
+    ) {
+        return this.appService.postSearchProduct(req, res);
+    }
 //
     @Get('profile')
     @Render('profile')
