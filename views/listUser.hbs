@@ -71,7 +71,7 @@
                        style="width: 100%; height: 100%;margin-bottom: 20px">
                         <img src="../image/chengwei-pan-2.jpg" width="30" height="30"
                              class="rounded-circle" style="margin-left: 30px;margin-right: 20px">
-                        <span class="d-none d-sm-inline mx-1" style="color: black">Huy ngu</span>
+                        <span class="d-none d-sm-inline mx-1" style="color: black">UserName</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
                         <li><a class="dropdown-item" href="/profile">Profile</a></li>
@@ -92,16 +92,16 @@
         <div class="col py-3 text-lg-center">
             <h2>List user</h2>
             <div style="width: 100%">
-                <form action="/#" class="d-flex" method="POST" style="width: 60%;margin: auto" autocomplete="off">
+                <form action="/searchUser" class="d-flex" method="POST" style="width: 60%;margin: auto" autocomplete="off">
                     <div class="me-2" style="margin: auto">
-                        <select style="margin: auto;height: 38px;border-radius: 5px">
+                        <select style="margin: auto;height: 38px;border-radius: 5px" name="SearchBy">
                             <option value="1">Name</option>
                             <option value="2">ID</option>
                             <option value="3">Email</option>
                         </select>
                     </div>
                     <input class="form-control me-2" type="search" placeholder="Search here" aria-label="Search"
-                           name="searchUser">
+                           name="SearchValue">
                     <button class="btn btn-outline-secondary" type="submit" style="width: 150px">Search</button>
                 </form>
             </div>
@@ -109,6 +109,9 @@
                 <button class="btn btn-outline-secondary" type="submit" style="width: 150px">Add User</button>
             </div>
             <div class="panel panel-default mt-2" style="width: 100%">
+                {{#if msg}}
+                    {{{msg}}}
+                {{/if}}
                 <div class="panel-body table-responsive" style="max-height: 500px;min-height: 200px">
                     <table class="table table-bordered">
                         <thead>
@@ -147,9 +150,8 @@
                                             Action
                                         </button>
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                            <li><a class="dropdown-item" href="#">Xem thông tin chi tiết</a>
+                                            <li><a class="dropdown-item" href="userInfo/{{this.id}}">Show Detail</a>
                                             </li>
-                                            <li><a class="dropdown-item" href="#">Xóa người dùng</a></li>
                                         </ul>
                                     </div>
                                 </td>

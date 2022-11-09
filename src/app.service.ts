@@ -1,4 +1,4 @@
-import {Injectable, UnauthorizedException} from '@nestjs/common';
+import {HttpStatus, Injectable, UnauthorizedException} from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import {InjectRepository} from "@nestjs/typeorm";
 import {User} from "./users/entities/user.entity";
@@ -11,6 +11,7 @@ import {UserDto} from "./users/dto/user.dto";
 import {compareAsc, format} from 'date-fns'
 import {resolve} from "path";
 import fs from "fs";
+import {ErrorException} from "./exceptions/error.exception";
 
 @Injectable()
 export class AppService {
@@ -144,15 +145,15 @@ export class AppService {
     }
 
     async postSearchProduct(req, res) {
-        if (req.body.SearchValue ==='') {
+        if (req.body.SearchValue === '') {
             return res.redirect('/product');
         }
         let listProducts = [];
         if (req.body.SearchBy == 1) {
             // @ts-ignore
-            listProducts = await this.productRepository.find({where:{productName: new RegExp(`${req.body.SearchValue}`) }});
-            console.log( new RegExp(`${req.body.SearchValue}`))
-            console.log( listProducts)
+            listProducts = await this.productRepository.find({where: {productName: new RegExp(`${req.body.SearchValue}`)}});
+            console.log(new RegExp(`${req.body.SearchValue}`))
+            console.log(listProducts)
         } else if (req.body.SearchBy == 2) {
             listProducts = await this.productRepository.findBy({modelID: req.body.SearchValue});
         }
@@ -193,6 +194,30 @@ export class AppService {
         }
     }
 
+    async postUpdate(req, res): Promise<ProductDto> {
+        // @ts-ignore
+        let product = await this.productRepository.findOneBy(req.body.updateProductID)
+
+        if (!product) {
+            throw new ErrorException(HttpStatus.NOT_FOUND, 'Product not found');
+        }
+        try {
+            // @ts-ignore
+            product.modelID= req.body.updateProductIDModel;
+            product.productName= req.body.updateProductName;
+            product.type= req.body.updateProductType;
+            product.price= req.body.updateProductPrice;
+            product.status= req.body.updateProductStatus;
+            product.description= req.body.updateProductDescription;
+        } catch (e) {
+            // @ts-ignore
+            console.log(e);
+        }
+        await this.productRepository.save(product)
+        // @ts-ignore
+        return res.render('./detailProduct', {product: product});
+    }
+
 //user
     async getListCustomer(req, res) {
         const listUser = await this.userRepository.find({});
@@ -208,6 +233,82 @@ export class AppService {
         console.log(users);
         res.render('./listUser', {listUser: users});
 
+    }
+    async getDetailUser(req, res, id) {
+        const user = await this.userRepository.findOneBy(id);
+        return res.render('./profile', {user: user})
+    }
+    async postUpdateUser(req, res): Promise<UserDto> {
+        // @ts-ignore
+        let user = await this.userRepository.findOneBy(req.body.id)
+
+        if (!user) {
+            throw new ErrorException(HttpStatus.NOT_FOUND, 'user not found');
+        }
+        try {
+            // @ts-ignore
+            user.fullName= req.body.updateUserName;
+            user.email= req.body.updateUserEmail;
+            user.gender= req.body.updateUserGender;
+            user.birthday= req.body.updateUserBirthday;
+            user.status= req.body.updateUserStatus;
+            user.address= req.body.updateUserAddress;
+            user.phone= req.body.updateUserPhone;
+        } catch (e) {
+            // @ts-ignore
+            console.log(e);
+        }
+        await this.userRepository.save(user)
+        // @ts-ignore
+        return res.render('./profile', {user: user});
+    }
+
+    async postSearchUser(req, res) {
+        if (req.body.SearchValue === '') {
+            return res.redirect('/customers');
+        }
+        let listUser = [];
+        if (req.body.SearchBy == 1) {
+            // @ts-ignore
+            listUser = await this.userRepository.find({where: {fullName: new RegExp(`${req.body.SearchValue}`)}});
+        } else if (req.body.SearchBy == 2) {
+            listUser = await this.userRepository.findBy({id: req.body.SearchValue});
+        }else {
+            listUser =await this.userRepository.findBy({email: req.body.SearchValue});
+        }
+
+        let users: UserDto[];
+        // @ts-ignore
+        users = listUser.map((user) => {
+            return {
+                id : user.id.toString(),
+                fullName : user.fullName,
+                email : user.email,
+                role : user.role,
+                createdAt : user.createdAt,
+                updatedAt : user.updatedAt,
+                deletedAt : user.deletedAt,
+                status : user.status,
+                gender: user.gender,
+                birthday : user.birthday,
+                address : user.address,
+                phone : user.phone,
+                avatar : user.avatar,
+                isCreate : user.isCreate,
+                otp : user.otp,
+            };
+        });
+
+        if (users.length > 0) {
+            return res.render('./listUser', {
+                listUser: users,
+                msg: `<h6 class="alert alert-success">Tìm được sản phẩm</h6>`
+            });
+        } else {
+            return res.render('./listUser', {
+                msg: `<h6 class="alert alert-danger">Không tìm thấy</h6>`
+            });
+        }
     }
 
 }

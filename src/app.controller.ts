@@ -30,21 +30,31 @@ export class AppController {
     addProduct() {
         return this.appService.getHello();
     }
+
     @Post('product-add')
     @Render('addProduct')
     postAddProduct(@Req() req, @Res() res
     ) {
         return this.appService.postAddProduct(req, res);
     }
+
     @Get('productDetail/:id')
-    getDetailProduct(@Req() req, @Res() res,@Param('id') param) {
-        return this.appService.getDetailProduct(req,res,param);
+    getDetailProduct(@Req() req, @Res() res, @Param('id') param) {
+        return this.appService.getDetailProduct(req, res, param);
     }
+
     @Post('/searchProduct')
     postSearchProduct(@Req() req, @Res() res
     ) {
         return this.appService.postSearchProduct(req, res);
     }
+
+    @Post('/productDetail/:id')
+    postUpdateProduct(@Req() req, @Res() res
+    ) {
+        return this.appService.postUpdate(req, res);
+    }
+
 //
     @Get('profile')
     @Render('profile')
@@ -62,12 +72,20 @@ export class AppController {
         return this.appService.getListCustomer(req, res);
     }
 
-    @Get('user-Info')
-    @Render('userInfo')
-    showUserInfo() {
-        return this.appService.getHello();
+    @Get('userInfo/:id')
+    showUserInfo(@Req() req, @Res() res, @Param('id') param) {
+        return this.appService.getDetailUser(req, res, param);
     }
-
+    @Post('userInfo/:id')
+    postUpdateUser(@Req() req, @Res() res
+    ) {
+        return this.appService.postUpdateUser(req, res);
+    }
+    @Post('/searchUser')
+    postSearch(@Req() req, @Res() res
+    ) {
+        return this.appService.postSearchUser(req, res);
+    }
     //login
     @Get('login')
     @Render('login')
