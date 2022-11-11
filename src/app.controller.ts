@@ -1,11 +1,66 @@
-import {Controller, Get, Param, Post, Render, Req, Res, Session} from "@nestjs/common";
+import {
+    Controller,
+    Get, HttpException, HttpStatus,
+    Param,
+    Post,
+    Render,
+    Req,
+    Res,
+    Session,
+    UploadedFile,
+    UploadedFiles,
+    UseInterceptors
+} from "@nestjs/common";
 import {AppService} from './app.service';
 import {ApiTags} from "@nestjs/swagger";
+import * as multer from 'multer';
+import {
+    AnyFilesInterceptor,
+    FileFieldsInterceptor,
+    FileInterceptor,
+    FilesInterceptor,
+    MulterModule
+} from "@nestjs/platform-express";
+import {extname} from "path";
+import {diskStorage} from "multer";
+export const imageFileFilter = (req, file, callback) => {
+    console.log(file);
+    let permittedFileTypes = [
+        // images
+        '.jpg',
+        '.jpeg',
+        '.png',
+        '.gif',
+        '.ico',
+    ];
+    if (!permittedFileTypes.includes(extname(file.originalname.toLowerCase()))) {
+        return callback(
+            new HttpException(
+                'The file type are not allowed!',
+                HttpStatus.BAD_REQUEST,
+            ),
+            false,
+        );
+    }
+
+    callback(null, true);
+};
+export const editFileName = (req, file, callback) => {
+    const name = file.originalname.split('.')[0];
+    const fileExtName = extname(file.originalname);
+    const randomName = Array(4)
+        .fill(null)
+        .map(() => Math.round(Math.random() * 10).toString(10))
+        .join('');
+    callback(null, `${name}-${randomName}${fileExtName}`);
+};
 
 @ApiTags('web')
 @Controller()
 export class AppController {
     constructor(private readonly appService: AppService) {
+
+        var uploader = multer( { dest: './tmp/'});
     }
 
     @Get()
@@ -28,14 +83,56 @@ export class AppController {
     @Get('product-add')
     @Render('addProduct')
     addProduct() {
+
         return this.appService.getHello();
     }
 
     @Post('product-add')
     @Render('addProduct')
-    postAddProduct(@Req() req, @Res() res
+    @UseInterceptors(
+        FilesInterceptor('colorImage', 100, {
+            storage: diskStorage({
+                destination: './uploads/imageProduct',
+                filename: editFileName,
+            }),
+            fileFilter: imageFileFilter,
+        }),
+    )
+    /*@UseInterceptors(
+        FileFieldsInterceptor('colorImage', {
+            storage: diskStorage({
+                destination: './uploads/imageProduct',
+                filename: (req, file, callback) => {
+                    const name = file.originalname.split('.')[0];
+                    console.log(file);
+                    const fileExtName = extname(file.originalname);
+                    const randomName = Math.round(Date.now() / 1000);
+                    callback(null, `${req.body.idProduct}-${name}-${randomName}${fileExtName}`);
+                },
+            }),
+            fileFilter: (req, file, callback) => {
+                const imageMimeType = [
+                    'image/jpeg',
+                    'image/png',
+                    'image/gif',
+                    'image/webp',
+                ];
+                if (!imageMimeType.includes(file.mimetype)) {
+                    return callback(
+                        new HttpException(
+                            'Only image files are allowed!',
+                            HttpStatus.BAD_REQUEST,
+                        ),
+                        false,
+                    );
+                }
+                callback(null, true);
+            },
+        }),
+    )*/
+    postAddProduct(@Req() req, @Res() res,@UploadedFiles() files
     ) {
-        return this.appService.postAddProduct(req, res);
+        return this.appService.postAddProduct(req, res,files);
     }
 
     @Get('productDetail/:id')

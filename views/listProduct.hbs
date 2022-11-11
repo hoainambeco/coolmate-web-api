@@ -118,10 +118,10 @@
                         <thead>
                         <tr>
                             <th class="col-1" scope="col">ID</th>
-                            <th class="col-1" scope="col">Logo</th>
+                            <th class="col-1" scope="col">Image</th>
                             <th class="col-2" scope="col">Name</th>
                             <th class="col-1" scope="col">Price</th>
-                            <th class="col-1" scope="col">Count</th>
+                            <th class="col-1" scope="col">Quantity</th>
                             <th class="col-1" scope="col">Rating</th>
                             <th class="col-1" scope="col">Status</th>
                             <th class="col-1" scope="col">Action</th>
@@ -131,10 +131,13 @@
                         {{#each listProduct}}
                             <tr>
                                 <th scope="col">{{this.modelID}}</th>
-                                <th scope="col"><img src="" height="70px" width="50"/></th>
+                                <th scope="col"><img src="{{ this.color.[0].image.[0]}}" height="70px" width="50"/>
+
+
+                                </th>
                                 <th scope="col">{{this.productName}}</th>
                                 <th scope="col">{{this.price}}</th>
-                                <th scope="col">??</th>
+                                <th scope="col"> </th>
                                 <th scope="col">??</th>
                                 <th scope="col">{{this.status}}</th>
                                 <th scope="col">
