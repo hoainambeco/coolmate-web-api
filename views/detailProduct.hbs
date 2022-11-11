@@ -33,6 +33,7 @@
                     </li>
                     <li class="nav-item">
                         <a href="/product" id="nav-btn" class="nav-link align-middle px-0 align-self-center"
+                           style="background-color: #b6b6b6"
                         >
                             <img src="../image/icon/product-icon.svg" width="30" height="30"> <span
                                 class="ms-1 d-none d-sm-inline" style="color: black">Product</span>
@@ -40,7 +41,7 @@
                     </li>
                     <li class="nav-item">
                         <a href="/customers" id="nav-btn" class="nav-link align-middle px-0 align-self-center"
-                           style="background-color: #b6b6b6">
+                           >
                             <img src="../image/icon/customer-icon.svg" width="30" height="30"> <span
                                 class="ms-1 d-none d-sm-inline" style="color: black">Customer</span>
                         </a>
@@ -155,7 +156,8 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="exampleModalLabel">Update Product!</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ></button>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     <div class="col-auto">
@@ -163,59 +165,115 @@
                                             <label for="updateProductID" class="col-sm-2 col-form-label">ID:</label>
                                             <div class="col-sm-10">
                                                 <input readonly name="updateProductID" type="text" class="form-control
-                                                text-dark" id="updateProductID" placeholder="ID"value="{{product.id}}"
-                                                style="background-color: #adadad"/>
+                                                text-dark" id="updateProductID" placeholder="ID" value="{{product.id}}"
+                                                       style="background-color: #adadad"/>
                                             </div>
                                         </div>
                                         <div class="mb-3 row">
-                                            <label for="updateProductIDModel" class="col-sm-2 col-form-label">ID Model:</label>
+                                            <label for="updateProductIDModel" class="col-sm-2 col-form-label">ID
+                                                Model:</label>
                                             <div class="col-sm-10">
-                                                <input name="updateProductIDModel" type="text" class="form-control text-dark"
-                                                       id="updateProductIDModel" placeholder="id" value="{{product.modelID}}"/>
+                                                <input name="updateProductIDModel" type="text"
+                                                       class="form-control text-dark"
+                                                       id="updateProductIDModel" placeholder="id"
+                                                       value="{{product.modelID}}"/>
                                             </div>
                                         </div>
                                         <div class="mb-3 row">
                                             <label for="updateProductName" class="col-sm-2 col-form-label">Name:</label>
                                             <div class="col-sm-10">
-                                                <input name="updateProductName" type="text" class="form-control text-dark"
-                                                       id="updateProductName" placeholder="name" value="{{product.productName}}"/>
+                                                <input name="updateProductName" type="text"
+                                                       class="form-control text-dark"
+                                                       id="updateProductName" placeholder="name"
+                                                       value="{{product.productName}}"/>
                                             </div>
-                                        </div><div class="mb-3 row">
+                                        </div>
+                                        <div class="mb-3 row">
                                             <label for="updateProductType" class="col-sm-2 col-form-label">Type:</label>
                                             <div class="col-sm-10">
-                                                <input name="updateProductType" type="text" class="form-control text-dark"
-                                                       id="updateProductType" placeholder="name" value="{{product.type}}"/>
+                                                <input name="updateProductType" type="text"
+                                                       class="form-control text-dark"
+                                                       id="updateProductType" placeholder="name"
+                                                       value="{{product.type}}"/>
                                             </div>
                                         </div>
                                         <div class="mb-3 row">
-                                            <label for="updateProductName" class="col-sm-2 col-form-label">Price:</label>
+                                            <label for="updateProductName"
+                                                   class="col-sm-2 col-form-label">Price:</label>
                                             <div class="col-sm-10">
-                                                <input name="updateProductPrice" type="number" class="form-control text-dark"
-                                                       id="updateProductPrice" placeholder="name" value="{{product.price}}"/>
-                                            </div>
-                                        </div><div class="mb-3 row">
-                                            <label for="updateProductName" class="col-sm-2 col-form-label">Status:</label>
-                                            <div class="col-sm-10">
-                                                <input name="updateProductStatus" type="text" class="form-control text-dark"
-                                                       id="updateProductStatus" placeholder="name" value="{{product.status}}"/>
+                                                <input name="updateProductPrice" type="number"
+                                                       class="form-control text-dark"
+                                                       id="updateProductPrice" placeholder="name"
+                                                       value="{{product.price}}"/>
                                             </div>
                                         </div>
                                         <div class="mb-3 row">
-                                            <label for="updateProductName" class="col-sm-2 col-form-label">Description:</label>
+                                            <label for="updateProductName"
+                                                   class="col-sm-2 col-form-label">Status:</label>
                                             <div class="col-sm-10">
-                                                <textarea name="updateProductDescription"  class="form-control text-dark"
-                                                          id="updateProductDescription" >{{product.description}}</textarea>
+                                                <input name="updateProductStatus" type="text"
+                                                       class="form-control text-dark"
+                                                       id="updateProductStatus" placeholder="name"
+                                                       value="{{product.status}}"/>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3 row">
+                                            <label for="updateProductName"
+                                                   class="col-sm-2 col-form-label">Description:</label>
+                                            <div class="col-sm-10">
+                                                <textarea name="updateProductDescription" class="form-control text-dark"
+                                                          id="updateProductDescription">{{product.description}}</textarea>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Đóng</button>
-                                            <button type="submit" class="btn btn-primary" >Sửa </button>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                Đóng
+                                            </button>
+                                            <button type="submit" class="btn btn-primary">Sửa</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </form>
                     </div>
+                </div>
+            </div>
+
+            <!--list color-->
+            <div class="panel panel-default mt-2" style="width: 100%">
+                <div class="panel-body table-responsive" style="max-height: 500px">
+                    <table class="table table-bordered align-middle">
+                        <thead>
+                        <tr>
+                            <th class="col-1" scope="col"></th>
+                            <th class="col-1" scope="col">Name Color</th>
+                            <th class="col-4" scope="col">Image</th>
+                            <th class="col-5" scope="col">Size</th>
+                            <th class="col-5" scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{#each product.color}}
+                            <tr>
+                                <th scope="row">{{@index}}</th>
+                                <th scope="row">{{this.name}}</th>
+
+                                <th scope="row">
+                                    {{#each this.image}}
+                                        <img src="{{ this}}" height="120pc" width="80px"/>
+                                    {{/each}}
+                                </th>
+                                <th scope="row">
+                                    {{#each this.size}}
+                                        <p>Size: {{this.name}} -- Quantity: {{this.quantity}}</p>
+                                        <hr style="margin: 0px 0px 0px 0px;width: 100%">
+                                    {{/each}}
+                                </th>
+
+                            </tr>
+                        {{/each}}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

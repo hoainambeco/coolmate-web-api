@@ -9,9 +9,12 @@ import {ProductDto} from "./product/dto/product.dto";
 import {Product} from "./product/entities/product.entity";
 import {UserDto} from "./users/dto/user.dto";
 import {compareAsc, format} from 'date-fns'
-import {resolve} from "path";
+import {extname, resolve} from "path";
 import fs from "fs";
 import {ErrorException} from "./exceptions/error.exception";
+import {inspect} from "util";
+import * as multer from 'multer';
+import {IFile} from "./product/file.interface";
 
 @Injectable()
 export class AppService {
@@ -64,9 +67,7 @@ export class AppService {
 //product
     async getProduct(req, res) {
         const listProducts = await this.productRepository.find({
-            order: {updatedAt: 'ASC'},
-            skip: 0,
-            take: 10,
+            order: {updatedAt: 'ASC'}
         });
         let products: ProductDto[];
         products = listProducts.map((product) => {
@@ -96,9 +97,11 @@ export class AppService {
 
     }
 
-    async postAddProduct(req, res) {
-        console.log(req.body);
-
+    async postAddProduct(req, res, files: IFile[]) {
+        console.log(files)
+        if (!files || !files.length) {
+            return res.redirect('/product-add',{msgFile: `<h6 class="alert alert-danger">Add failed due to no files!</h6>`});
+        }
         // @ts-ignore
         let listColor: [{ name: string, image: string[], size: [{ name: string, productCount: number }] }] = [];
 
@@ -112,7 +115,7 @@ export class AppService {
             }
             listColor.push({
                 name: req.body.nameColor[i],
-                image: req.body.colorImage[i],
+                image: [process.env.HOST_NAME + files[i].path],
                 size: sizeList
             })
         }
@@ -126,7 +129,7 @@ export class AppService {
         });
         console.log(product);
         await this.productRepository.save(product);
-
+        res.redirect('/product');
     }
 
     async getProductDetail(req, res) {
@@ -182,6 +185,7 @@ export class AppService {
             };
         });
 
+
         if (products.length > 0) {
             return res.render('./listProduct', {
                 listProduct: products,
@@ -203,12 +207,12 @@ export class AppService {
         }
         try {
             // @ts-ignore
-            product.modelID= req.body.updateProductIDModel;
-            product.productName= req.body.updateProductName;
-            product.type= req.body.updateProductType;
-            product.price= req.body.updateProductPrice;
-            product.status= req.body.updateProductStatus;
-            product.description= req.body.updateProductDescription;
+            product.modelID = req.body.updateProductIDModel;
+            product.productName = req.body.updateProductName;
+            product.type = req.body.updateProductType;
+            product.price = req.body.updateProductPrice;
+            product.status = req.body.updateProductStatus;
+            product.description = req.body.updateProductDescription;
         } catch (e) {
             // @ts-ignore
             console.log(e);
@@ -234,10 +238,12 @@ export class AppService {
         res.render('./listUser', {listUser: users});
 
     }
+
     async getDetailUser(req, res, id) {
         const user = await this.userRepository.findOneBy(id);
         return res.render('./profile', {user: user})
     }
+
     async postUpdateUser(req, res): Promise<UserDto> {
         // @ts-ignore
         let user = await this.userRepository.findOneBy(req.body.id)
@@ -247,13 +253,13 @@ export class AppService {
         }
         try {
             // @ts-ignore
-            user.fullName= req.body.updateUserName;
-            user.email= req.body.updateUserEmail;
-            user.gender= req.body.updateUserGender;
-            user.birthday= req.body.updateUserBirthday;
-            user.status= req.body.updateUserStatus;
-            user.address= req.body.updateUserAddress;
-            user.phone= req.body.updateUserPhone;
+            user.fullName = req.body.updateUserName;
+            user.email = req.body.updateUserEmail;
+            user.gender = req.body.updateUserGender;
+            user.birthday = req.body.updateUserBirthday;
+            user.status = req.body.updateUserStatus;
+            user.address = req.body.updateUserAddress;
+            user.phone = req.body.updateUserPhone;
         } catch (e) {
             // @ts-ignore
             console.log(e);
@@ -273,29 +279,29 @@ export class AppService {
             listUser = await this.userRepository.find({where: {fullName: new RegExp(`${req.body.SearchValue}`)}});
         } else if (req.body.SearchBy == 2) {
             listUser = await this.userRepository.findBy({id: req.body.SearchValue});
-        }else {
-            listUser =await this.userRepository.findBy({email: req.body.SearchValue});
+        } else {
+            listUser = await this.userRepository.findBy({email: req.body.SearchValue});
         }
 
         let users: UserDto[];
         // @ts-ignore
         users = listUser.map((user) => {
             return {
-                id : user.id.toString(),
-                fullName : user.fullName,
-                email : user.email,
-                role : user.role,
-                createdAt : user.createdAt,
-                updatedAt : user.updatedAt,
-                deletedAt : user.deletedAt,
-                status : user.status,
+                id: user.id.toString(),
+                fullName: user.fullName,
+                email: user.email,
+                role: user.role,
+                createdAt: user.createdAt,
+                updatedAt: user.updatedAt,
+                deletedAt: user.deletedAt,
+                status: user.status,
                 gender: user.gender,
-                birthday : user.birthday,
-                address : user.address,
-                phone : user.phone,
-                avatar : user.avatar,
-                isCreate : user.isCreate,
-                otp : user.otp,
+                birthday: user.birthday,
+                address: user.address,
+                phone: user.phone,
+                avatar: user.avatar,
+                isCreate: user.isCreate,
+                otp: user.otp,
             };
         });
 
