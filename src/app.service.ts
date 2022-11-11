@@ -278,12 +278,12 @@ export class AppService {
         }
 
         let users: UserDto[];
-        // @ts-ignore
         users = listUser.map((user) => {
             return {
                 id : user.id.toString(),
                 fullName : user.fullName,
                 email : user.email,
+                password : user.password,
                 role : user.role,
                 createdAt : user.createdAt,
                 updatedAt : user.updatedAt,

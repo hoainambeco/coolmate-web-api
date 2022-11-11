@@ -16,6 +16,7 @@ import { CartModule } from './cart/cart.module';
 import { OdersModule } from './oders/oders.module';
 import { PassportModule } from "@nestjs/passport";
 import { VoucherModule } from './voucher/voucher.module';
+import { BichNgocModule } from './bich-ngoc/bich-ngoc.module';
 
 @Module({
   imports: [TypeOrmModule.forRoot(
@@ -38,7 +39,8 @@ import { VoucherModule } from './voucher/voucher.module';
     PassportModule.register({
       session: true
     }),
-    VoucherModule],
+    VoucherModule,
+    BichNgocModule],
   controllers: [AppController, AuthController],
   providers: [AppService, AuthService, UsersService, JwtStrategy, JwtService],
 })
