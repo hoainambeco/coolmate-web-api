@@ -93,7 +93,7 @@
         <div class="col py-3" style=" width: 100%;">
             <div class="ps-5" style="width: 100%"><h2>Add Product</h2></div>
 
-            <form action="" method="post" style="width: 100%;background-color: #91bbf6;border-radius: 10px"
+            <form action="" method="post" style="width: 100%;background-color: #ffffff;border-radius: 10px"
                   class="mt-5 ps-5 pe-3 p-2" id="form_add" enctype="multipart/form-data">
                 {{#if msg}}
                     {{{msgFile}}}
@@ -145,7 +145,7 @@
                             <label for="inputPriceProduct" class="form-label">Image</label>
                             <input name="colorImage" class="form-control" type="file" id="AddContentImage" required>
                         </div>
-                        <div class="col-5  ms-1 p-1  me-1" style="border: 1px solid red;border-radius: 10px ">
+                        <div class="col-5  ms-1 p-1  me-1" style="border: 1px solid #000000;border-radius: 10px ">
                             <div class="row">
                                 <div class="col-4">
                                     <label class="form-label">Size</label>
@@ -275,7 +275,7 @@
                                     </select>
                                 </div>
                                 <div class="col-4">
-                                    <label for="inputZip" class="form-label" required pattern="\S+.*">Count</label>
+                                    <label for="inputZip" class="form-label" required pattern="\S+.*">Quantity</label>
                                     <input name="count_` + stt + `[]" type="number" class="form-control" id="count">
                                 </div>
                                 <div class="col-3">
