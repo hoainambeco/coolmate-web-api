@@ -98,8 +98,10 @@ export class UsersService {
   async update(user: UserUpdateDto): Promise<UserDto> {
     let users = AuthService.getAuthUser();
     users = await Object.assign(users, user);
-    users.password = await bcrypt.hashSync(user.password, 10);
-    await this.userRepository.update(users.id.toString(), users);
+    if (user.password) {
+      users.password = await bcrypt.hashSync(user.password, 10);
+      await this.userRepository.update(users.id.toString(), users);
+    }
     return {
       ...users,
       id: users.id.toString()
@@ -272,7 +274,7 @@ export class UsersService {
   async likePost(productId: string): Promise<FavoriteDto> {
     const user = AuthService.getAuthUser();
     // @ts-ignore
-    const product = await this.productRepository.findOneBy(productId);
+    let product = await this.productRepository.findOneBy(productId);
     if (!product) {
       throw new ErrorException(
         HttpStatus.NOT_FOUND,
@@ -282,42 +284,36 @@ export class UsersService {
     const Favorite = await this.favoriteRepository.findOneBy({
       where: {
         userId: user.id,
-        productId: product.id
+        productId: product.id.toString()
       }
     });
+    console.log(Favorite);
     if (Favorite) {
       throw new ErrorException(
         HttpStatus.BAD_REQUEST,
         "POST_ALREADY_LIKED")
     }
 
-    const newFavorite = this.favoriteRepository.create({
+    const newFavorite = await this.favoriteRepository.create({
       userId: user.id.toString(),
-      productId: productId
+      productId: productId,
+      product: product
     });
     await this.favoriteRepository.save(newFavorite);
-    return {
-      ...newFavorite,
-      id: newFavorite.id.toString()
-    }
+    return JSON.parse(JSON.stringify(newFavorite));
   }
 
   async getFavorite(): Promise<FavoriteDto[]> {
     const user = AuthService.getAuthUser();
     const favorites = await this.favoriteRepository.findBy({ userId: user.id });
-    return favorites.map(favorite => ({
-      ...favorite,
-      id: favorite.id.toString()
-    }));
+    console.log(favorites);
+    return JSON.parse(JSON.stringify(favorites));
   }
 
   async getFavoriteByProductId(productId: string): Promise<FavoriteDto> {
     const user = AuthService.getAuthUser();
     const favorites = await this.favoriteRepository.findOneBy({ userId: user.id, productId: productId });
-    return {
-      ...favorites,
-      id: favorites.id.toString()
-    }
+    return JSON.parse(JSON.stringify(favorites));
   }
 
   async deleteFavorite(productId: string): Promise<FavoriteDto> {
@@ -335,9 +331,6 @@ export class UsersService {
       );
     }
     await this.favoriteRepository.delete({productId: productId, userId: user.id});
-    return {
-      ...favorite,
-      id: favorite.id.toString()
-    };
+    return JSON.parse(JSON.stringify(favorite));
   }
 }

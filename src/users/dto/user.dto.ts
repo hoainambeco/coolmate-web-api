@@ -2,6 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { GenderEnum } from "../../enum/gender";
 import { Favorite, User } from "../entities/user.entity";
 import { StatusAccount } from "../../enum/status-account";
+import { Product } from "../../product/entities/product.entity";
 
 export class UserDto {
   @ApiProperty()
@@ -47,6 +48,9 @@ export class UserDto {
   avatar: string;
 
   @ApiProperty()
+  chatLink: string;
+
+  @ApiProperty()
   otp: string;
 
   @ApiProperty()
@@ -66,6 +70,7 @@ export class UserDto {
     this.address = entity.address;
     this.phone = entity.phone;
     this.avatar = entity.avatar;
+    this.chatLink = entity.chatLink;
     this.isCreate = entity.isCreate;
     this.otp = entity.otp;
   }
@@ -82,6 +87,9 @@ export class FavoriteDto {
   productId: string;
 
   @ApiProperty()
+  product: object;
+
+  @ApiProperty()
   createdAt: Date;
 
   @ApiProperty()
@@ -94,6 +102,7 @@ export class FavoriteDto {
     this.id = entity.id.toString();
     this.userId = entity.userId;
     this.productId = entity.productId;
+    this.product = entity.product;
     this.createdAt = entity.createdAt;
     this.updatedAt = entity.updatedAt;
     this.deletedAt = entity.deletedAt;

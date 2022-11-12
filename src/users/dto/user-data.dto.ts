@@ -70,6 +70,11 @@ export class UserUpdateDto{
   @IsString()
   @IsOptional()
   @ApiPropertyOptional()
+  chatLink: string;
+
+  @IsString()
+  @IsOptional()
+  @ApiPropertyOptional()
   avatar: string;
 
   @IsString()

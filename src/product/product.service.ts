@@ -20,7 +20,9 @@ export class ProductService {
 
     async create(createProductDto: CreateProductDto): Promise<Product> {
         const product = await this.productRepository.create(createProductDto);
-        return this.productRepository.save(product);
+        product.productCount = product.color.map((color) => color.size.map((size) => size.productCount)).map((item) => item.reduce((a, b) => a + b, 0)).reduce((a, b) => a + b, 0);
+        // console.log(product);
+        return product;
     }
 
     async findAll() {
@@ -35,6 +37,7 @@ export class ProductService {
                 id: product.id.toString(),
                 modelID: product.modelID,
                 cmtCount: product.cmtCount,
+                productCount: product.productCount,
                 rebate: product.rebate,
                 specialSale: product.specialSale,
                 likeCount: product.likeCount,

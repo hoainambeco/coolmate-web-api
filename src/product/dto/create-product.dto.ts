@@ -53,7 +53,7 @@ export class Size {
   @ApiProperty()
   @IsNumber()
   @IsNotEmpty()
-  quantity: number;
+  productCount: number;
 }
 export class rating {
   @ApiProperty()

@@ -70,6 +70,7 @@ export class AppService {
             order: {updatedAt: 'ASC'}
         });
         let products: ProductDto[];
+        // @ts-ignore
         products = listProducts.map((product) => {
             return {
                 id: product.id.toString(),
@@ -166,6 +167,7 @@ export class AppService {
                 id: product.id.toString(),
                 modelID: product.modelID,
                 cmtCount: product.cmtCount,
+                productCount: product.productCount,
                 rebate: product.rebate,
                 specialSale: product.specialSale,
                 likeCount: product.likeCount,

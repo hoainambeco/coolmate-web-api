@@ -9,6 +9,7 @@ export class Product {
   @Column() image: string[];
   @Column() status: string;
   @Column() cmtCount: number;
+  @Column() productCount: number;
   @Column() createdAt: Date;
   @Column() specialSale: number;
   @Column() promotionalPrice: number;

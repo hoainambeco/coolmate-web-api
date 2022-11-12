@@ -18,7 +18,6 @@ import { AuthUserInterceptor } from "../interceptors/auth-user.interceptor";
 import { JwtAuthGuard } from "../guards/jwt-auth.guard";
 import { AuthGuard } from "@nestjs/passport";
 import { extname } from "path";
-import { User } from "./entities/user.entity";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from 'multer';
 

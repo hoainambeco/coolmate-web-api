@@ -9,6 +9,7 @@ import {
 } from "typeorm";
 import { GenderEnum } from "../../enum/gender";
 import { StatusAccount } from "../../enum/status-account";
+import { Product } from "../../product/entities/product.entity";
 
 @Entity('users')
 export class User {
@@ -28,6 +29,7 @@ export class User {
   @Column() address: string;
   @Column() phone: string;
   @Column() avatar: string;
+  @Column() chatLink: string;
 
   constructor(user?: Partial<User>) {
     if (user) {
@@ -41,6 +43,7 @@ export class Favorite {
   @ObjectIdColumn() id: string;
   @Column() userId: string;
   @Column() productId: string;
+  @Column() product : Product;
   @CreateDateColumn() createdAt: Date;
   @UpdateDateColumn() updatedAt: Date;
   @DeleteDateColumn() deletedAt: Date;
