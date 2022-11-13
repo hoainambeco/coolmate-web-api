@@ -184,6 +184,11 @@ export class AppService {
                 promotionalPrice: product.promotionalPrice,
                 color: product.color,
                 rating: product.rating,
+                catalog: product.catalog,
+                feature: product.feature,
+                material: product.material,
+                purpose: product.purpose,
+                style: product.style,
             };
         });
 

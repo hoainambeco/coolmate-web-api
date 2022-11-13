@@ -31,32 +31,7 @@ export class ProductService {
             skip: 0,
             take: 10,
         });
-        let products: ProductDto[];
-        products = listProducts.map((product) => {
-            return {
-                id: product.id.toString(),
-                modelID: product.modelID,
-                cmtCount: product.cmtCount,
-                productCount: product.productCount,
-                rebate: product.rebate,
-                specialSale: product.specialSale,
-                likeCount: product.likeCount,
-                type: product.type,
-                productName: product.productName,
-                image: product.image,
-                price: product.price,
-                description: product.description,
-                createdAt: product.createdAt,
-                updatedAt: product.updatedAt,
-                deletedAt: product.deletedAt,
-                isDeleted: product.isDeleted,
-                status: product.status,
-                promotionalPrice: product.promotionalPrice,
-                color: product.color,
-                rating: product.rating,
-            };
-        });
-        return products;
+        return JSON.parse(JSON.stringify(listProducts));
     }
 
     async findOne(id: string): Promise<ProductDto> {

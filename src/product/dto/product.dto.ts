@@ -57,6 +57,21 @@ export class ProductDto{
   likeCount: number;
 
   @ApiProperty()
+  style: string;
+
+  @ApiProperty()
+  catalog: string;
+
+  @ApiProperty()
+  material : string;
+
+  @ApiProperty()
+  purpose : string[];
+
+  @ApiProperty()
+  feature : string[];
+
+  @ApiProperty()
   color: [{
     name: string;
     image : string[];
@@ -97,5 +112,10 @@ export class ProductDto{
     this.promotionalPrice = entity.promotionalPrice;
     this.color = entity.color;
     this.rating = entity.rating;
+    this.style = entity.style;
+    this.catalog = entity.catalog;
+    this.material = entity.material;
+    this.purpose = entity.purpose;
+    this.feature = entity.feature;
   }
 }

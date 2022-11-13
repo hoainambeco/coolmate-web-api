@@ -1,5 +1,7 @@
 import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
-import { IsNotEmpty, IsNumber, IsObject, IsOptional, IsString } from "class-validator";
+import { IsArray, IsEnum, IsNotEmpty, IsNumber, IsObject, IsOptional, IsString, ValidateNested } from "class-validator";
+import { GenderEnum } from "../../enum/gender";
+import { CatalogEnum, FeatureEnum, MaterialEnum, PurposeEnum, StyleEnum } from "../../enum/product";
 
 export class CreateProductDto {
   @ApiProperty()
@@ -39,6 +41,39 @@ export class CreateProductDto {
   @IsNotEmpty()
   @IsNumber()
   PromotionalPrice: number;
+
+  @IsString()
+  @IsOptional()
+  @IsNotEmpty()
+  @IsEnum(StyleEnum)
+  @ApiPropertyOptional({enum: StyleEnum})
+  style: string;
+
+  @IsString()
+  @IsOptional()
+  @IsNotEmpty()
+  @IsEnum(CatalogEnum)
+  @ApiPropertyOptional({enum: CatalogEnum})
+  catalog: string;
+
+  @IsString()
+  @IsOptional()
+  @IsNotEmpty()
+  @IsEnum(MaterialEnum)
+  @ApiPropertyOptional({enum: MaterialEnum})
+  material: string;
+
+  @IsArray()
+  @IsNotEmpty()
+  @IsEnum(PurposeEnum,{each: true})
+  @ApiProperty({isArray: true,enum: PurposeEnum})
+  purpose: string[];
+
+  @IsArray()
+  @IsNotEmpty()
+  @IsEnum(FeatureEnum , {each: true})
+  @ApiProperty({ isArray: true,enum: FeatureEnum})
+  readonly feature: string[];
 
   @ApiProperty({type: () => [Color]})
   @IsNotEmpty()

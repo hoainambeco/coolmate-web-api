@@ -1,4 +1,6 @@
 import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
+import { GenderEnum } from "../../enum/gender";
+import { CatalogEnum, FeatureEnum, MaterialEnum, PurposeEnum, StyleEnum } from "../../enum/product";
 
 @Entity('product')
 export class Product {
@@ -20,6 +22,11 @@ export class Product {
   @Column() deletedAt: Date;
   @Column() isDeleted: boolean;
   @Column() likeCount: number;
+  @Column({type: 'enum', enum: StyleEnum, nullable: false}) style: string
+  @Column({type: 'enum', enum: CatalogEnum, nullable: false}) catalog: string;
+  @Column({type: 'enum', enum: MaterialEnum, nullable: false}) material : string;
+  @Column({type: 'enum', enum: PurposeEnum, nullable: false}) purpose : [string];
+  @Column({type: 'enum', enum: FeatureEnum, nullable: false}) feature : [string];
   @Column() color: [
     {
       name: string;
