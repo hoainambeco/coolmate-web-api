@@ -75,6 +75,11 @@ export class UserUpdateDto{
   @IsString()
   @IsOptional()
   @ApiPropertyOptional()
+  registrationToken: string;
+
+  @IsString()
+  @IsOptional()
+  @ApiPropertyOptional()
   avatar: string;
 
   @IsString()

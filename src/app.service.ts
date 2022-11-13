@@ -15,6 +15,7 @@ import {ErrorException} from "./exceptions/error.exception";
 import {inspect} from "util";
 import * as multer from 'multer';
 import {IFile} from "./product/file.interface";
+import { AuthService } from "./auth/auth.service";
 
 @Injectable()
 export class AppService {
@@ -184,6 +185,11 @@ export class AppService {
                 promotionalPrice: product.promotionalPrice,
                 color: product.color,
                 rating: product.rating,
+                catalog: product.catalog,
+                feature: product.feature,
+                material: product.material,
+                purpose: product.purpose,
+                style: product.style,
             };
         });
 
@@ -319,4 +325,20 @@ export class AppService {
         }
     }
 
+    async DeleteUserInActive() {
+        const authUser = AuthService.getAuthUser();
+        if ( authUser.role !== 'ADMIN') {
+            throw new ErrorException(HttpStatus.FORBIDDEN, 'Permission denied');
+        }
+        let user = await this.userRepository.findBy({status: 'INACTIVE'});
+        console.log(user);
+        if (!user) {
+            throw new ErrorException(HttpStatus.NOT_FOUND, 'user not found');
+        }
+        user.map(async (user) => {
+            await this.userRepository.delete(user.id);
+            console.log(user.id);
+        })
+        return true
+    }
 }

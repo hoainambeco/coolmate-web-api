@@ -30,6 +30,7 @@ export class User {
   @Column() phone: string;
   @Column() avatar: string;
   @Column() chatLink: string;
+  @Column() registrationToken: string;
 
   constructor(user?: Partial<User>) {
     if (user) {

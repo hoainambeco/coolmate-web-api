@@ -1,5 +1,5 @@
 import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
-import { AppController } from './app.controller';
+import { AppController, rss } from "./app.controller";
 import { AppService } from './app.service';
 import { AuthController } from './auth/auth.controller';
 import { AuthModule } from './auth/auth.module';
@@ -16,7 +16,6 @@ import { CartModule } from './cart/cart.module';
 import { OdersModule } from './oders/oders.module';
 import { PassportModule } from "@nestjs/passport";
 import { VoucherModule } from './voucher/voucher.module';
-import { BichNgocModule } from './bich-ngoc/bich-ngoc.module';
 
 @Module({
   imports: [TypeOrmModule.forRoot(
@@ -39,9 +38,8 @@ import { BichNgocModule } from './bich-ngoc/bich-ngoc.module';
     PassportModule.register({
       session: true
     }),
-    VoucherModule,
-    BichNgocModule],
-  controllers: [AppController, AuthController],
+    VoucherModule,],
+  controllers: [AppController, AuthController,rss],
   providers: [AppService, AuthService, UsersService, JwtStrategy, JwtService],
 })
 export class AppModule implements NestModule{
