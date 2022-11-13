@@ -51,6 +51,9 @@ export class UserDto {
   chatLink: string;
 
   @ApiProperty()
+  registrationToken: string;
+
+  @ApiProperty()
   otp: string;
 
   @ApiProperty()
@@ -71,6 +74,7 @@ export class UserDto {
     this.phone = entity.phone;
     this.avatar = entity.avatar;
     this.chatLink = entity.chatLink;
+    this.registrationToken =  entity.registrationToken;
     this.isCreate = entity.isCreate;
     this.otp = entity.otp;
   }
