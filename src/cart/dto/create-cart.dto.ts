@@ -9,11 +9,6 @@ export class CreateCartDto {
   @IsNotEmpty()
   name: string;
 
-  @ApiProperty()
-  @IsNumber()
-  @IsNotEmpty()
-  quantity: number;
-
   @ApiProperty({type: () => [CreateCartProductDto]})
   @IsArray()
   @Type(() => CreateCartProductDto)
@@ -31,4 +26,14 @@ export class CreateCartProductDto {
   @IsNumber()
   @IsNotEmpty()
   quantity: number;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  colorName: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  sizeName: string;
 }
