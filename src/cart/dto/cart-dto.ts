@@ -26,8 +26,10 @@ export  class CartDto{
 
   @ApiProperty()
   products: [{
-    product: ProductDto,
-    quantity: number,
+      productId: string,
+      quantity: number,
+      colorName: string,
+      sizeName: string,
   }];
 
   @ApiProperty()

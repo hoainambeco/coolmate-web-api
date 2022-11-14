@@ -21,8 +21,10 @@ export class Cart {
   @UpdateDateColumn() updatedAt: Date;
   @DeleteDateColumn() deletedAt: Date;
   @Column() products: [{
-    product: ProductDto,
-    quantity: number,
+      productId: string,
+      quantity: number,
+      colorName: string,
+      sizeName: string,
   }];
   @Column()
   userId: string;

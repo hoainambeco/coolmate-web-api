@@ -56,14 +56,21 @@ export class CartService {
   }
 
   async findOne(id: string) {
-    console.log(id);
     // @ts-ignore
     const cart = await this.cartRepository.findOneBy(id);
     if(!cart){
       throw new ErrorException(404, 'Cart not found');
     }
-    cart.id = cart.id.toString();
-    return cart;
+    const listProducts = [];
+    for (const product of cart.products) {
+      listProducts.push({
+        ...product,
+        product: await this.productRepository.findOneBy(ObjectId(product.productId))
+      });
+    }
+    // @ts-ignore
+    cart.products = listProducts;
+    return await JSON.parse(JSON.stringify(cart));
   }
 
   async findByUserId(id: string) {
