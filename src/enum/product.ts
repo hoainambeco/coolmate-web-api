@@ -58,3 +58,9 @@ export enum FeatureEnum {
   THOANG_KHI = 'Thoáng khí',
   THAM_HUT_TOT = 'Thấm hút tốt',
 }
+export enum StatusProductEnum {
+  CON_HANG = "Còn hàng",
+  HET_HANG = "Hết hàng",
+  SAP_RA_MAT = "Sắp ra mắt",
+  NGUNG_KINH_DOANh = "Ngừng kinh doanh",
+}
