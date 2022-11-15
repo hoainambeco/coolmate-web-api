@@ -63,6 +63,9 @@ export class ProductDto{
   likeCount: number;
 
   @ApiProperty()
+  sellCount: number;
+
+  @ApiProperty()
   style: string;
 
   @ApiProperty()
@@ -111,6 +114,7 @@ export class ProductDto{
     this.specialSale = entity.specialSale;
     this.rebate = entity.rebate;
     this.likeCount = entity.likeCount;
+    this.sellCount = entity.sellCount;
     this.type = entity.type;
     this.productName = entity.productName;
     this.image = entity.image;

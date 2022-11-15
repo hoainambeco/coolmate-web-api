@@ -25,6 +25,7 @@ export class Product {
   @Column() likeCount: number;
   @Column() brand: string;
   @Column() ratingAvg: number;
+  @Column() sellCount: number;
   @Column({type: 'enum', enum: StyleEnum, nullable: false}) style: string
   @Column({type: 'enum', enum: CatalogEnum, nullable: false}) catalog: string;
   @Column({type: 'enum', enum: MaterialEnum, nullable: false}) material : string;
