@@ -28,6 +28,11 @@ export class CreateProductDto {
   price: number;
 
   @ApiProperty()
+  @IsNumber()
+  @IsNotEmpty()
+  sellingPrice: number;
+
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   description: string;
@@ -125,6 +130,11 @@ export class Color {
   @IsString()
   @IsNotEmpty()
   name: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  colorCode: string;
 
   @ApiProperty()
   @IsString()

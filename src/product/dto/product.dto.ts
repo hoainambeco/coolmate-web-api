@@ -39,6 +39,9 @@ export class ProductDto{
   price: number;
 
   @ApiProperty()
+  sellingPrice: number;
+
+  @ApiProperty()
   rebate: number;
 
   @ApiProperty()
@@ -77,6 +80,7 @@ export class ProductDto{
   @ApiProperty()
   color: [{
     name: string;
+    colorCode: string;
     image : string[];
     size: [{
       name: string;
@@ -111,6 +115,7 @@ export class ProductDto{
     this.productName = entity.productName;
     this.image = entity.image;
     this.price = entity.price;
+    this.sellingPrice = entity.sellingPrice;
     this.description = entity.description;
     this.createdAt = entity.createdAt;
     this.updatedAt = entity.updatedAt;

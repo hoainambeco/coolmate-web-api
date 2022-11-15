@@ -17,6 +17,7 @@ export class Product {
   @Column() promotionalPrice: number;
   @Column() rebate: number;
   @Column() price: number;
+  @Column() sellingPrice: number;
   @Column() description: string;
   @Column() updatedAt: Date;
   @Column() deletedAt: Date;
@@ -32,6 +33,7 @@ export class Product {
   @Column() color: [
     {
       name: string;
+      colorCode: string;
       image: string[];
       size: [
         {
