@@ -1,52 +1,96 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name=”viewport” content=”width=device-width, initial-scale=1.0″>
     <meta charset="utf-8"/>
-  <link rel="shortcut icon" href="https://www.coolmate.me/images/favicon.png" />
-  <title>Áo Thun, Áo Phông Nam - Cool Mate</title>
+    <link rel="shortcut icon" href="https://www.coolmate.me/images/favicon.png"/>
+    <title>Áo Thun, Áo Phông Nam - Cool Mate</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/hover.css" rel="stylesheet">
     <script src="js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <link href='https://fonts.googleapis.com/css?family=Outfit' rel='stylesheet'>
+    <style>
+        body {
+            font-family: 'Outfit';
+            font-size: 16px;
 
+        }
+
+        .btn-login {
+            background-color: white;
+            border: 1px solid #2F5ACF
+        ;
+            color: black;
+        }
+
+        .btn-login:hover {
+            background-color: #2F5ACF
+        ;
+            color: white;
+        }
+    </style>
 </head>
 <body>
 <div class="container-fluid">
     <div class="row flex-nowrap">
 
         <!-- Content -->
-        <section class="vh-100 ">
-            <div class="container py-5 h-100">
-                <div class="row d-flex justify-content-center align-items-center h-100">
-                    <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-                        <div class="card text-black" style="border-radius: 1rem;background-color: #ffffff">
-                            <div class="card-body p-5 text-center">
-                                {{#if msg}}
-                                    {{{msg}}}
-                                {{/if}}
-                                <form  class="pb-5" method="post">
-                                    <img class="mb-2" src="image/logo-app.svg" width="200" height="60">
-                                    <h2 class="fw-bold mb-2 text-uppercase">Login</h2>
-                                    <p class="text-black-50 mb-3">Please enter your login email and password!</p>
+        <section class="vh-100 row">
+            <div class="col-5 " style="height: 100%;padding-top: 59px;padding-bottom: 44px;">
+                <div class=" text-black"
+                     style="border-radius: 20px;background-color: #ffffff;box-shadow: -20px 15px 4px rgba(0, 0, 0, 0.25)
+                     ;width: 350px; height: 620px;margin-left: 213px;border: 1px solid #000000;">
+                    <div class="card-body  text-center" style="width: 100%">
+                        {{#if msg}}
+                            {{{msg}}}
+                        {{/if}}
+                        <form method="post" style="width: 348px;height: 618px;padding-left: 50px;padding-right: 50px">
+                            <img src="image/logo-app.svg" width="100%" height="60" style="margin-top: 89px">
 
-                                    <div class="form-floating mb-3">
-                                        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com"
-                                               style="color: black" autocomplete="off" name="email">
-                                        <label for="floatingInput" style="color: black">Email address</label>
-                                    </div>
-                                    <div class="form-floating mb-5">
-                                        <input type="password" class="form-control" id="floatingPassword" placeholder="Password"
-                                               style="color: black" autocomplete="off" name="password">
-                                        <label for="floatingPassword"style="color: black">Password</label>
-                                    </div>
-
-                                    <button class="btn btn-outline-dark btn-lg px-5" type="submit">Login</button>
-                                </form>
-
-
+                            <div class="col " style="margin-top: 20px;width: 250px">
+                                <label style="width: 100%;color: black;text-align: left;">
+                                    Email address:</label>
+                                <input type="email" id="floatingInput" placeholder="email@example.com"
+                                       style="color: black;width: 100%;height: 48px; border-radius: 25px;
+                                               border:1px solid #2F5ACF ;padding-left: 25px" name="email">
                             </div>
-                        </div>
+                            <div class="col " style="margin-top: 10px;width: 250px">
+                                <label style="width: 100%;color: black;text-align: left; ">Password:</label>
+                                <input type="password" id="floatingInput" placeholder="Password"
+                                       style="color: black;width: 100%;;height: 48px; border-radius: 25px;
+                                               border:1px solid #2F5ACF ;padding-left: 25px" name="password">
+                            </div>
+
+                            <button class="btn-login" type="submit"
+                                    style="border-radius: 25px;width: 150px;height: 48px;margin-top: 24px;">Login
+                            </button>
+                        </form>
+
+
                     </div>
                 </div>
+            </div>
+            <div class="col-7 ">
+                <img src="image/login-img-1-1.png" class="modal-fullscreen-sm-down"
+                     style="width: 748px;height: 241px;border-radius: 10px;margin-top: 62px ; "/>
+
+                <div class="row align-items-center my-3" style="width: 748px;text-align: center;margin-left: 10px">
+                    <div class="col-4">
+                        <hr>
+                    </div>
+                    <div class="col-4 align-items-center" style="text-align: center">
+                        <div style="font-size:24px"><b> Create your fashion</b><br> <b>in your own way</b></div>
+
+                    </div>
+
+                    <div class="col-4">
+                        <hr>
+                    </div>
+                </div>
+                <div style="width: 748px;height: 269px;border-radius: 10px;background-color: black;text-align: center">
+                    <img src="image/login-img-2.png" style="width: 533px;height: 253px;border-radius: 10px;"/></div>
+
+
             </div>
         </section>
 

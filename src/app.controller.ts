@@ -97,38 +97,7 @@ export class AppController {
       fileFilter: imageFileFilter
     })
   )
-  /*@UseInterceptors(
-      FileFieldsInterceptor('colorImage', {
-          storage: diskStorage({
-              destination: './uploads/imageProduct',
-              filename: (req, file, callback) => {
-                  const name = file.originalname.split('.')[0];
-                  console.log(file);
-                  const fileExtName = extname(file.originalname);
-                  const randomName = Math.round(Date.now() / 1000);
-                  callback(null, `${req.body.idProduct}-${name}-${randomName}${fileExtName}`);
-              },
-          }),
-          fileFilter: (req, file, callback) => {
-              const imageMimeType = [
-                  'image/jpeg',
-                  'image/png',
-                  'image/gif',
-                  'image/webp',
-              ];
-              if (!imageMimeType.includes(file.mimetype)) {
-                  return callback(
-                      new HttpException(
-                          'Only image files are allowed!',
-                          HttpStatus.BAD_REQUEST,
-                      ),
-                      false,
-                  );
-              }
-              callback(null, true);
-          },
-      }),
-  )*/
+
   postAddProduct(@Req() req, @Res() res, @UploadedFiles() files
   ) {
     return this.appService.postAddProduct(req, res, files);
@@ -151,7 +120,7 @@ export class AppController {
     return this.appService.postUpdate(req, res);
   }
 
-//
+// user
   @Get("profile")
   @Render("profile")
   getProfile() {
@@ -210,8 +179,8 @@ export class AppController {
 //bil
   @Get("bills")
   @Render("listBill")
-  getListBill() {
-    return this.appService.getHello();
+  getListBill(@Req() req,@Res() res) {
+    return this.appService.getListBill(req, res);
   }
 }
 

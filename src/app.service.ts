@@ -15,7 +15,9 @@ import {ErrorException} from "./exceptions/error.exception";
 import {inspect} from "util";
 import * as multer from 'multer';
 import {IFile} from "./product/file.interface";
-import { AuthService } from "./auth/auth.service";
+import {AuthService} from "./auth/auth.service";
+import {Oder} from "./oders/entities/oder.entity";
+import {OderDto} from "./oders/dto/oder.dto";
 
 @Injectable()
 export class AppService {
@@ -26,6 +28,8 @@ export class AppService {
         private configService: ConfigService,
         @InjectRepository(Product)
         private productRepository: Repository<Product>,
+        @InjectRepository(Oder)
+        private oderRepository: Repository<Oder>,
     ) {
     }
 
@@ -95,14 +99,24 @@ export class AppService {
                 rating: product.rating,
             };
         });
-        res.render('./listProduct', {listProduct: products});
+        var nameList = req.session.user.fullName.split(" ");
+
+        var nameNav = "";
+        if(nameList.length >=2){
+          nameNav=  nameList[0]+" "+nameList[nameList.length -1]
+        }else {
+          nameNav=  nameList[0];
+        }
+
+        var idUser = req.session.user.id;
+        res.render('./listProduct', {listProduct: products,nameNav:nameNav,idUser:idUser});
 
     }
 
     async postAddProduct(req, res, files: IFile[]) {
         console.log(files)
         if (!files || !files.length) {
-            return res.redirect('/product-add',{msgFile: `<h6 class="alert alert-danger">Add failed due to no files!</h6>`});
+            return res.redirect('/product-add', {msgFile: `<h6 class="alert alert-danger">Add failed due to no files!</h6>`});
         }
         // @ts-ignore
         let listColor: [{ name: string, image: string[], size: [{ name: string, productCount: number }] }] = [];
@@ -112,41 +126,64 @@ export class AppService {
             let sizeList: [{ name: string, productCount: number }] = [];
             var count = 'count_' + req.body.stt[i].toString()
             var size = 'size_' + req.body.stt[i].toString()
+            console.log(size);
             for (let j = 0; j < req.body[size].length; j++) {
-                sizeList.push({name: req.body[size][j], productCount: req.body[count][j]})
+                if (sizeList.length > 0) {
+
+                    sizeList.forEach((item) => {
+                        if (item.name === req.body[size][j]) {
+                            item.productCount =Number( parseInt(String(item.productCount)) + parseInt(req.body[count][j]));
+                        } else {
+                            sizeList.push({name: req.body[size][j], productCount: req.body[count][j]})
+                        }
+                    })
+                } else {
+                    sizeList.push({name: req.body[size][j], productCount: req.body[count][j]})
+                }
+
             }
+            console.log(sizeList);
             listColor.push({
                 name: req.body.nameColor[i],
                 image: [process.env.HOST_NAME + files[i].path],
                 size: sizeList
             })
         }
+        let listPurpose = []
         const product = this.productRepository.create({
             modelID: req.body.idProduct,
             productName: req.body.productName,
-            price: req.body.priceProduct,
+            price: Number(req.body.priceProduct) ,
             description: req.body.Description,
+            style: req.body.style,
+            catalog: req.body.Catalog,
+            material: req.body.material,
+            purpose: req.body.purpose ,
+            feature: req.body.feature,
             createdAt: new Date(),
             color: listColor
         });
         console.log(product);
+        let c =String( req.body.colorCode);
+        console.log(c)
         await this.productRepository.save(product);
         res.redirect('/product');
-    }
-
-    async getProductDetail(req, res) {
-
-    }
-
-    async getDeleteProduct(req, res) {
-
+        res.writeHead()
     }
 
     async getDetailProduct(req, res, id) {
         console.log(id);
         const product = await this.productRepository.findOneBy(id);
-        console.log(product.createdAt);
-        return res.render('./detailProduct', {product: product})
+        var nameList = req.session.user.fullName.split(" ");
+        var nameNav = "";
+        if(nameList.length >=2){
+            nameNav=  nameList[0]+" "+nameList[nameList.length -1]
+        }else {
+            nameNav=  nameList[0];
+        }
+
+        var idUser = req.session.user.id;
+        return res.render('./detailProduct', {product: product,nameNav:nameNav,idUser:idUser})
     }
 
     async postSearchProduct(req, res) {
@@ -299,7 +336,7 @@ export class AppService {
 
     async DeleteUserInActive() {
         const authUser = AuthService.getAuthUser();
-        if ( authUser.role !== 'ADMIN') {
+        if (authUser.role !== 'ADMIN') {
             throw new ErrorException(HttpStatus.FORBIDDEN, 'Permission denied');
         }
         let user = await this.userRepository.findBy({status: 'INACTIVE'});
@@ -312,5 +349,23 @@ export class AppService {
             console.log(user.id);
         })
         return true
+    }
+
+    /// bill
+    async getListBill(req, res) {
+        const listOders = await this.oderRepository.find({
+            order: {updatedAt: 'ASC'},
+            skip: 0,
+            take: 10,
+        });
+        let ListBill: OderDto[];
+        ListBill = listOders.map((oder) => {
+            return {
+                ...oder,
+                id: oder.id.toString(),
+            };
+        });
+        console.log(ListBill);
+        res.render('./listBill', {listBill: ListBill});
     }
 }

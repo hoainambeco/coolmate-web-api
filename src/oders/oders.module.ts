@@ -8,5 +8,6 @@ import { OdersController } from './oders.controller';
   imports: [TypeOrmModule.forFeature([Oder])],
   controllers: [OdersController],
   providers: [OdersService],
+  exports:[TypeOrmModule,OdersService],
 })
 export class OdersModule {}
