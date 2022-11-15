@@ -71,34 +71,8 @@ export class AppService {
 
 //product
     async getProduct(req, res) {
-        const listProducts = await this.productRepository.find({
-            order: {updatedAt: 'ASC'}
-        });
-        let products: ProductDto[];
-        // @ts-ignore
-        products = listProducts.map((product) => {
-            return {
-                id: product.id.toString(),
-                modelID: product.modelID,
-                cmtCount: product.cmtCount,
-                rebate: product.rebate,
-                specialSale: product.specialSale,
-                likeCount: product.likeCount,
-                type: product.type,
-                productName: product.productName,
-                image: product.image,
-                price: product.price,
-                description: product.description,
-                createdAt: product.createdAt,
-                updatedAt: product.updatedAt,
-                deletedAt: product.deletedAt,
-                isDeleted: product.isDeleted,
-                status: product.status,
-                promotionalPrice: product.promotionalPrice,
-                color: product.color,
-                rating: product.rating,
-            };
-        });
+        const listProducts = await this.productRepository.find();
+        let products: ProductDto[]= JSON.parse(JSON.stringify(listProducts));
         var nameList = req.session.user.fullName.split(" ");
 
         var nameNav = "";
@@ -107,7 +81,8 @@ export class AppService {
         }else {
           nameNav=  nameList[0];
         }
-
+        console.log(products[0]);
+        console.log(products[0].productCount);
         var idUser = req.session.user.id;
         res.render('./listProduct', {listProduct: products,nameNav:nameNav,idUser:idUser});
 
@@ -119,7 +94,7 @@ export class AppService {
             return res.redirect('/product-add', {msgFile: `<h6 class="alert alert-danger">Add failed due to no files!</h6>`});
         }
         // @ts-ignore
-        let listColor: [{ name: string, image: string[], size: [{ name: string, productCount: number }] }] = [];
+        let listColor: [{ name: string,colorCode: string, image: string[], size: [{ name: string, productCount: number }] }] = [];
 
         for (let i = 0; i < req.body.stt.length; i++) {
             // @ts-ignore
@@ -142,14 +117,17 @@ export class AppService {
                 }
 
             }
-            console.log(sizeList);
             listColor.push({
                 name: req.body.nameColor[i],
-                image: [process.env.HOST_NAME + files[i].path],
+                colorCode: req.body.colorCode[i],
+                image: [files[i].path],
                 size: sizeList
             })
         }
-        let listPurpose = []
+        let listPurpose = [];
+        listPurpose.push(req.body.purpose);
+        let listFe= [];
+        listFe.push(req.body.feature);
         const product = this.productRepository.create({
             modelID: req.body.idProduct,
             productName: req.body.productName,
@@ -158,14 +136,16 @@ export class AppService {
             style: req.body.style,
             catalog: req.body.Catalog,
             material: req.body.material,
-            purpose: req.body.purpose ,
-            feature: req.body.feature,
+            purpose: listPurpose,
+            feature: listFe,
             createdAt: new Date(),
-            color: listColor
+            color: listColor,
+            rebate:Number(req.body.rebate),
+            sellingPrice: Number(req.body.sellingPriceProduct)
+
         });
         console.log(product);
-        let c =String( req.body.colorCode);
-        console.log(c)
+
         await this.productRepository.save(product);
         res.redirect('/product');
         res.writeHead()
