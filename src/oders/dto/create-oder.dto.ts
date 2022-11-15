@@ -25,7 +25,7 @@ export class CreateOderDto {
 
   @ApiProperty({enum: PaymentMethod, default: PaymentMethod.COD})
   @IsString()
-  @IsEnum(ShippingStatus)
+  @IsEnum(PaymentMethod)
   @IsNotEmpty()
   paymentMethod: string;
 
@@ -47,7 +47,7 @@ export class CreateOderDto {
   @ApiProperty()
   @IsArray()
   @IsNotEmpty()
-  voucherId: [string];
+  voucherId: string[];
 
   @ApiProperty({enum : ShippingStatus, default: ShippingStatus.CHO_XAC_NHAN})
   @IsEnum(ShippingStatus)

@@ -4,18 +4,46 @@ import { Oder } from './entities/oder.entity';
 import { Injectable, HttpStatus } from '@nestjs/common';
 import { CreateOderDto, UpdateShippingStatusDto } from "./dto/create-oder.dto";
 import { InjectRepository } from '@nestjs/typeorm';
+import { Voucher } from "../voucher/entities/voucher.entity";
+import { Cart } from "../cart/entities/cart.entity";
 
 @Injectable()
 export class OdersService {
   constructor(
     @InjectRepository(Oder)
     private oderRepository: Repository<Oder>,
+
+    @InjectRepository(Voucher)
+    private voucherRepository: Repository<Voucher>,
+
+    @InjectRepository(Cart)
+    private cartRepository: Repository<Cart>,
   ) {}
 
-  create(createOderDto: CreateOderDto) {
+  async create(createOderDto: CreateOderDto) {
     console.log(createOderDto);
-
-    return this.oderRepository.save(createOderDto);
+    const oder = await this.oderRepository.create(createOderDto);
+    let vouchers = [];
+    let carts = [];
+    createOderDto.voucherId.map(async (voucherId) => {
+      // @ts-ignore
+      const voucher = await this.voucherRepository.findOneBy(voucherId);
+      console.log(voucher);
+      vouchers.push(voucher);
+    });
+    createOderDto.cartId.map(async (cartId) => {
+      // @ts-ignore
+      const cart = await this.cartRepository.findOneBy(cartId);
+      carts.push(cart);
+    });
+    console.log(vouchers);
+    if(vouchers.length < createOderDto.voucherId.length){
+      throw new ErrorException(HttpStatus.NOT_FOUND, 'Voucher not found');
+    }
+    if(carts.length < createOderDto.cartId.length){
+      throw new ErrorException(HttpStatus.NOT_FOUND, 'Cart not found');
+    }
+    return //this.oderRepository.save(createOderDto);
   }
 
   async findAll() {
