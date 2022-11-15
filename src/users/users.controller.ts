@@ -80,6 +80,10 @@ export class UsersController {
       }),
       fileFilter: (req, file, callback) => {
         const imageMimeType = [
+          'image/jpeg',
+          'image/png',
+          'image/gif',
+          'image/webp',
           'image/*',
         ];
         if (!imageMimeType.includes(file.mimetype)) {
