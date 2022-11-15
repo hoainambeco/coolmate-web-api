@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsArray, IsEnum, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { PaymentMethod, ShippingStatus } from "../../enum/bull";
 
 export class CreateOderDto {
   @ApiProperty()
@@ -22,8 +23,9 @@ export class CreateOderDto {
   @IsNotEmpty()
   status: string;
 
-  @ApiProperty()
+  @ApiProperty({enum: PaymentMethod, default: PaymentMethod.COD})
   @IsString()
+  @IsEnum(ShippingStatus)
   @IsNotEmpty()
   paymentMethod: string;
 
@@ -47,16 +49,17 @@ export class CreateOderDto {
   @IsNotEmpty()
   voucherId: [string];
 
-  @ApiProperty({default : ['WAITING']})
-  @IsArray()
+  @ApiProperty({enum : ShippingStatus, default: ShippingStatus.CHO_XAC_NHAN})
+  @IsEnum(ShippingStatus)
   @IsNotEmpty()
+  @IsString()
   shippingStatus:string;
 
 }
 export class UpdateShippingStatusDto{
-
-  @ApiProperty({default : 'WAITING'})
-  @IsString()
+  @ApiProperty({enum : ShippingStatus, default: ShippingStatus.CHO_XAC_NHAN})
+  @IsEnum(ShippingStatus)
   @IsNotEmpty()
+  @IsString()
   shippingStatus:string;
 }
