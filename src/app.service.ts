@@ -99,9 +99,17 @@ export class AppService {
                 rating: product.rating,
             };
         });
-        console.log(req.session.user);
+        var nameList = req.session.user.fullName.split(" ");
 
-        res.render('./listProduct', {listProduct: products});
+        var nameNav = "";
+        if(nameList.length >=2){
+          nameNav=  nameList[0]+" "+nameList[nameList.length -1]
+        }else {
+          nameNav=  nameList[0];
+        }
+
+        var idUser = req.session.user.id;
+        res.render('./listProduct', {listProduct: products,nameNav:nameNav,idUser:idUser});
 
     }
 
@@ -156,6 +164,8 @@ export class AppService {
             color: listColor
         });
         console.log(product);
+        let c =String( req.body.colorCode);
+        console.log(c)
         await this.productRepository.save(product);
         res.redirect('/product');
         res.writeHead()
@@ -164,8 +174,16 @@ export class AppService {
     async getDetailProduct(req, res, id) {
         console.log(id);
         const product = await this.productRepository.findOneBy(id);
-        console.log(product.createdAt);
-        return res.render('./detailProduct', {product: product})
+        var nameList = req.session.user.fullName.split(" ");
+        var nameNav = "";
+        if(nameList.length >=2){
+            nameNav=  nameList[0]+" "+nameList[nameList.length -1]
+        }else {
+            nameNav=  nameList[0];
+        }
+
+        var idUser = req.session.user.id;
+        return res.render('./detailProduct', {product: product,nameNav:nameNav,idUser:idUser})
     }
 
     async postSearchProduct(req, res) {

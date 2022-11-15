@@ -82,7 +82,7 @@
                        style="width: 100%; height: 100%;margin-bottom: 20px">
                         <img src="../image/chengwei-pan-2.jpg" width="30" height="30"
                              class="rounded-circle" style="margin-left: 30px;margin-right: 20px">
-                        <span class="d-none d-sm-inline mx-1" style="color: black">UserName</span>
+                        <span class="d-none d-sm-inline mx-1" style="color: black">{{nameNav}}</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
                         <li><a class="dropdown-item" href="/profile">Profile</a></li>
@@ -106,8 +106,12 @@
             <div style="width: 100%">
 
                 <div class="row">
-                    <div class="col-2 row date-time " style="color: #707EAE ">
-                        <div class="col-12 time p-0 " style="font-size: 14px; text-align: right;">
+                    <div class="col-3 row date-time " style="color: #707EAE ">
+                        <div class="col-12 p-0 " style="font-size: 24px; text-align: left;color: black">
+                            <span>Hello </span>
+                            <span>{{nameNav}}</span>
+                        </div>
+                        <div class="col-12 time p-0 " style="font-size: 14px; text-align: left;">
                             <span class="col-4" id="hour">00</span>:
                             <span class="col-4" id="minutes">00</span>
                             <span class="col-4" id="period">AM </span>
@@ -118,7 +122,7 @@
 
                     </div>
 
-                    <form action="/searchProduct" class="col-10 d-flex" method="POST" style="width: 60%;margin: auto"
+                    <form action="/searchProduct" class="col-9 d-flex" method="POST" style="width: 60%;margin: auto"
                           autocomplete="off">
                         <div class="me-2 " style="margin: auto">
                             <select name="SearchBy" style="margin: auto;height: 38px;border-radius: 5px">
@@ -128,7 +132,6 @@
                         </div>
                         <input class="form-control me-2" type="search" placeholder="Search here" aria-label="Search"
                                name="SearchValue">
-                        <button class="btn btn-outline-secondary" type="submit" style="width: 150px">Search</button>
                     </form>
 
                 </div>
