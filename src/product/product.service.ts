@@ -7,6 +7,10 @@ import { ProductDto } from "./dto/product.dto";
 import { ErrorException } from "../exceptions/error.exception";
 import { User } from "../users/entities/user.entity";
 import { getMessaging } from "firebase-admin/messaging";
+import { QueryProductDto } from "./dto/query-product.dto";
+import { FindManyOptions } from "typeorm/find-options/FindManyOptions";
+import { AuthUser } from "../decorators/auth-user.decorator";
+import { AuthService } from "../auth/auth.service";
 
 @Injectable()
 export class ProductService {
@@ -38,30 +42,105 @@ export class ProductService {
           notification: {
             title: "New Product",
             body: "New Product has been added",
-            imageUrl: product.image[0],
+            imageUrl: product.image[0]
           }
         },
         tokens: [item]
       };
       getMessaging().sendMulticast(message)
         .then((response) => {
-          console.log('Successfully sent message:', response);
-        }
+            console.log("Successfully sent message:", response);
+          }
         )
         .catch((error) => {
-          console.log('Error sending message:', error);
-        })
-    })
+          console.log("Error sending message:", error);
+        });
+    });
 
     return product;
   }
 
-  async findAll() {
-    const listProducts = await this.productRepository.find({
-      order: { updatedAt: "ASC" },
-      skip: 0,
-      take: 10
-    });
+  async findAll(queryProductDto: QueryProductDto): Promise<ProductDto[]> {
+    const products = await this.productRepository.find();
+    products.map((item) =>
+      {
+        try {
+          item.image = item.color.map((color) => color.image.map((image) => image)).map((item) => item.reduce((a, b) => a.concat(b), [])).reduce((a, b) => a.concat(b), []);
+          item.ratingAvg = item.rating.map((item) => item.score).reduce((a, b) => a + b, 0) / item.rating.length
+          item.price = parseInt(item.price.toString());
+        }
+        catch (e) {
+          item.ratingAvg = 0;
+        }
+      }
+    );
+    await this.productRepository.save(products);
+    let options = {
+      where: {
+        type: {$regex: queryProductDto.type, $options: "i"},
+        productName: {$regex : queryProductDto.productName, $options: "i"},
+        status: queryProductDto.status,
+        brand: {$regex : queryProductDto.brand, $options: "i"},
+        price: {
+          $gte: queryProductDto.priceTo,
+          $lte: queryProductDto.priceFrom
+        },
+        ratingAvg: {$gte: queryProductDto.rating},
+        style: queryProductDto.style,
+        catalog: queryProductDto.catalog,
+        purpose: queryProductDto.purpose,
+        features: queryProductDto.feature,
+        },
+      // skip: queryProductDto.skip,
+      // take: queryProductDto.take,
+      order: {}
+    };
+    if (queryProductDto.orderBy) {
+      options = Object.assign(options, {
+        order: {
+          [queryProductDto.orderBy]: queryProductDto.order
+        }
+      });
+    }
+    if(!queryProductDto.type){
+      delete options.where.type;
+    }
+    if(!queryProductDto.productName){
+      delete options.where.productName;
+    }
+    if(!queryProductDto.status){
+      delete options.where.status;
+    }
+    if(!queryProductDto.brand){
+      delete options.where.brand;
+    }
+    if(!queryProductDto.priceFrom){
+      delete options.where.price.$lte;
+    }
+    if(!queryProductDto.priceTo){
+      delete options.where.price.$gte;
+    }
+    if(!queryProductDto.priceFrom && !queryProductDto.priceTo){
+      delete options.where.price;
+    }
+    if(!queryProductDto.rating){
+      delete options.where.ratingAvg;
+    }
+    if(!queryProductDto.style){
+      delete options.where.style;
+    }
+    if(!queryProductDto.catalog){
+      delete options.where.catalog;
+    }
+    if(!queryProductDto.purpose){
+      delete options.where.purpose;
+    }
+    if(!queryProductDto.feature){
+      delete options.where.features;
+    }
+    console.log(options);
+    // @ts-ignore
+    const listProducts = await this.productRepository.find(options);
     return JSON.parse(JSON.stringify(listProducts));
   }
 
@@ -103,14 +182,14 @@ export class ProductService {
   }
 
   async createRating(id: string, rating: rating): Promise<ProductDto> {
+    const user = AuthService.getAuthUser();
     // @ts-ignore
     let product = await this.productRepository.findOneBy(id);
 
     if (!product) {
       throw new ErrorException(HttpStatus.NOT_FOUND, "Product not found");
     }
-
-    console.log(product);
+    rating.userId = user.id;
     try {
       // @ts-ignore
       product.rating.push(rating);
@@ -118,6 +197,9 @@ export class ProductService {
       // @ts-ignore
       product.rating = [rating];
     }
+    console.log(product.rating.map((item) => item.score).reduce((a, b) => a + b, 0) / product.rating.length);
+    product.ratingAvg = product.rating.map((item) => item.score).reduce((a, b) => a + b, 0) / product.rating.length;
+
     await this.productRepository.save(product);
     // @ts-ignore
     return rating;

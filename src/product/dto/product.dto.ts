@@ -15,6 +15,9 @@ export class ProductDto{
   productName: string;
 
   @ApiProperty()
+  brand: string;
+
+  @ApiProperty()
   image: string[];
 
   @ApiProperty()
@@ -94,6 +97,11 @@ export class ProductDto{
   constructor(entity : Product) {
     this.id = entity.id.toString();
     this.modelID = entity.modelID;
+    this.type = entity.type;
+    this.productName = entity.productName;
+    this.brand = entity.brand;
+    this.image = entity.image;
+    this.status = entity.status;
     this.cmtCount = entity.cmtCount;
     this.productCount = entity.productCount;
     this.specialSale = entity.specialSale;

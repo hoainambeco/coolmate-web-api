@@ -14,6 +14,11 @@ export class CreateProductDto {
   @IsNotEmpty()
   productName: string;
 
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  brand: string;
+
   @ApiPropertyOptional()
   image: string[];
 
@@ -99,7 +104,7 @@ export class rating {
   @ApiProperty()
   @IsNumber()
   @IsNotEmpty()
-  rating: number;
+  score: number;
 
   @ApiProperty()
   @IsString()

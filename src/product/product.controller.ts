@@ -9,7 +9,7 @@ import {
   UseInterceptors,
   HttpCode,
   HttpStatus,
-  UseGuards, Put
+  UseGuards, Put, Query, ValidationPipe
 } from "@nestjs/common";
 import { ProductService } from './product.service';
 import { CreateProductDto, rating, UpdateProductDto } from "./dto/create-product.dto";
@@ -17,6 +17,7 @@ import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthUserInterceptor } from '../interceptors/auth-user.interceptor';
 import { ProductDto } from './dto/product.dto';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { QueryProductDto } from "./dto/query-product.dto";
 @ApiTags('Product')
 @UseGuards(JwtAuthGuard)
 @UseInterceptors(AuthUserInterceptor)
@@ -43,8 +44,10 @@ export class ProductController {
     description: 'The found record',
     type: [ProductDto],
   })
-  findAll() {
-    return this.productService.findAll();
+  findAll(@Query(new ValidationPipe({ transform: true }))
+            queryProductDto: QueryProductDto,) {
+    // console.log(queryProductDto);
+    return this.productService.findAll(queryProductDto);
   }
 
   @Get(':id')

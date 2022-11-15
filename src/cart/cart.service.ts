@@ -45,14 +45,19 @@ export class CartService {
 
   async findAll():Promise<CartDto[]>{
     const carts = await this.cartRepository.find();
-    console.log(carts);
-    // @ts-ignore
-    return carts.map(cart => {
-      return {
-        ...cart,
-        id: cart.id.toString()
+    const listProducts = [];
+    for (const cart of carts) {
+      for (const product of cart.products) {
+        listProducts.push({
+          ...product,
+          product: await this.productRepository.findOneBy(ObjectId(product.productId))
+        });
       }
-    })
+      // @ts-ignore
+      cart.products = listProducts;
+    }
+    // @ts-ignore
+    return JSON.parse(JSON.stringify(carts));
   }
 
   async findOne(id: string) {
@@ -78,12 +83,18 @@ export class CartService {
     if ( carts.length <= 0) {
       throw new ErrorException( 404,'Cart not found');
     }
-    return carts.map(cart => {
-      return {
-        ...cart,
-        id: cart.id.toString(),
+    const listProducts = [];
+    for (const cart of carts) {
+      for (const product of cart.products) {
+        listProducts.push({
+          ...product,
+          product: await this.productRepository.findOneBy(ObjectId(product.productId))
+        });
       }
-    });
+      // @ts-ignore
+      cart.products = listProducts;
+    }
+    return JSON.parse(JSON.stringify(carts));
   }
 
   async update(id: string, updateCartDto: UpdateCartDto) {

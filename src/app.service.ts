@@ -163,35 +163,7 @@ export class AppService {
             listProducts = await this.productRepository.findBy({modelID: req.body.SearchValue});
         }
         let products: ProductDto[];
-        products = listProducts.map((product) => {
-            return {
-                id: product.id.toString(),
-                modelID: product.modelID,
-                cmtCount: product.cmtCount,
-                productCount: product.productCount,
-                rebate: product.rebate,
-                specialSale: product.specialSale,
-                likeCount: product.likeCount,
-                type: product.type,
-                productName: product.productName,
-                image: product.image,
-                price: product.price,
-                description: product.description,
-                createdAt: product.createdAt,
-                updatedAt: product.updatedAt,
-                deletedAt: product.deletedAt,
-                isDeleted: product.isDeleted,
-                status: product.status,
-                promotionalPrice: product.promotionalPrice,
-                color: product.color,
-                rating: product.rating,
-                catalog: product.catalog,
-                feature: product.feature,
-                material: product.material,
-                purpose: product.purpose,
-                style: product.style,
-            };
-        });
+        products = JSON.parse(JSON.stringify(listProducts));
 
 
         if (products.length > 0) {
