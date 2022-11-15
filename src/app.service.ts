@@ -359,12 +359,7 @@ export class AppService {
             take: 10,
         });
         let ListBill: OderDto[];
-        ListBill = listOders.map((oder) => {
-            return {
-                ...oder,
-                id: oder.id.toString(),
-            };
-        });
+        ListBill = JSON.parse(JSON.stringify(listOders));
         console.log(ListBill);
         res.render('./listBill', {listBill: ListBill});
     }

@@ -102,6 +102,9 @@ export class UsersService {
       users.password = await bcrypt.hashSync(user.password, 10);
       await this.userRepository.update(users.id.toString(), users);
     }
+    if(user.phoneActive !== StatusAccount.INACTIVE){
+      users.phoneActive = StatusAccount.ACTIVE;
+    }
     return {
       ...users,
       id: users.id.toString()
@@ -167,6 +170,7 @@ export class UsersService {
     newUser.updatedAt = new Date();
     newUser.deletedAt = null;
     newUser.status = StatusAccount.INACTIVE;
+    newUser.phoneActive = StatusAccount.INACTIVE;
     newUser.isCreate = true;
 
     const mailContent = newUserMailTemplate2(userData.fullName, userData.email, otp);

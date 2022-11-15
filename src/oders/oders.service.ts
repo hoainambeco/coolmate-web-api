@@ -69,12 +69,7 @@ export class OdersService {
     if (!oder) {
       throw new ErrorException(HttpStatus.NOT_FOUND, 'Oder not found');
     }
-    try{
-      oder.shippingStatus.push(updateShippingStatusDto.shippingStatus);
-    }
-    catch (e) {
-      oder.shippingStatus = [updateShippingStatusDto.shippingStatus];
-    }
+    oder.shippingStatus = updateShippingStatusDto.shippingStatus;
     await this.oderRepository.save(oder);
     return {
       ...oder,

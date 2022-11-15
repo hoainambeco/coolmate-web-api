@@ -1,6 +1,7 @@
 import { IsDateString, IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { GenderEnum } from "../../enum/gender";
+import { StatusAccount } from "../../enum/status-account";
 
 export class UserCreatDto{
   @IsString()
@@ -66,6 +67,12 @@ export class UserUpdateDto{
   @IsOptional()
   @ApiPropertyOptional()
   phone: string;
+
+  @IsString()
+  @IsOptional()
+  @IsEnum(StatusAccount)
+  @ApiPropertyOptional({enum: StatusAccount})
+  phoneActive: string;
 
   @IsString()
   @IsOptional()

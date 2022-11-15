@@ -50,7 +50,7 @@ export class CreateOderDto {
   @ApiProperty({default : ['WAITING']})
   @IsArray()
   @IsNotEmpty()
-  shippingStatus:[string];
+  shippingStatus:string;
 
 }
 export class UpdateShippingStatusDto{

@@ -32,6 +32,9 @@ export class UserDto {
   @ApiPropertyOptional({type: 'enum', enum: StatusAccount})
   status: string;
 
+  @ApiPropertyOptional({type: 'enum', enum: StatusAccount})
+  phoneActive: string;
+
   @ApiPropertyOptional({type: 'enum', enum: GenderEnum})
   gender: string;
 
