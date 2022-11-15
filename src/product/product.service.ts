@@ -85,6 +85,7 @@ export class ProductService {
           $gte: queryProductDto.priceTo,
           $lte: queryProductDto.priceFrom
         },
+        //gte là lớn hơn hoặc bằng; lte là nhỏ hơn hoặc bằng
         ratingAvg: {$gte: queryProductDto.rating},
         style: queryProductDto.style,
         catalog: queryProductDto.catalog,

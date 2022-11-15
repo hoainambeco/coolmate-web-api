@@ -18,14 +18,16 @@
         }
 
         .box-show {
-            width: 788px;
-            height: 642px;
+            width: 1229px;
+            height: 494px;
             background: #FFFFFF;
             border: 1px solid #000000;
             box-shadow: -16px 15px 4px rgba(0, 0, 0, 0.25);
             border-radius: 20px;
             font-size: 20px;
             margin: 0px;
+            padding: 10px;
+
         }
 
         .box-add-color {
@@ -40,7 +42,7 @@
         }
 
         .content-main {
-            width: 100%;
+            width: 680px;
         }
 
         .inputID {
@@ -72,7 +74,6 @@
             flex-direction: column;
             align-items: flex-start;
             gap: 10px;
-            position: absolute;
             width: 161px;
             height: 32px;
             font-size: 14px;
@@ -215,245 +216,237 @@
         <!-- end Navbar -->
 
         <!-- Content -->
-        <div class="col " style=" width: 100%;display: block;box-sizing: border-box">
+        <div class="col " style=" width: 100%;display: block;box-sizing: border-box; overflow: auto;max-height: 722px">
 
 
-            <form class="row" action="" method="post" style="width: 100%;padding-top: 45px" id="form_add"
+            <form class="row" action="" method="post" style="padding-bottom: 20px;width: 100%;padding-top: 15px"
+                  id="form_add"
                   enctype="multipart/form-data">
-                <div class="box-show row col-8" style="padding-left: 26px;padding-right: 0px;margin-left: 16px">
-                    <div class="ps-5" style="width: 100%;font-family: 'Outfit';font-style: normal;
-                    font-weight: 700;font-size: 40px;line-height: 44px;color: #2F5ACF;"><h2>Add Product</h2></div>
-                    <div class="content-img">
+                <div class="col-8" style="padding: 0px">
+                    <div class="box-show row " style="padding-left: 26px;padding-right: 0px;margin-left: 16px">
+                        <div style="width: 100%;font-family: 'Outfit';font-style: normal;
+                    font-size: 40px;line-height: 44px;color: #2F5ACF;height: 40px"><span>Add Product</span></div>
+                        <div class="content-main row">
+                            <div class="content-left col-8" style="width: 402px;padding: 0px">
+                                <div class="col-12 row" style="width: 100%">
+                                    <div style="width: 263px;height: 67px">
+                                        <label for="inputNameProduct" class="labelInput">Name</label>
+                                        <div class="col-sm-5">
+                                            <input name="nameProduct" type="text" class="inputName"
+                                                   id="inputNameProduct"
+                                                   required placeholder="Name Product"
+                                                   pattern="\S+.*">
+                                        </div>
+                                    </div>
+                                    <div style="width: 128px;height: 67px;margin-left: 10px">
+                                        <label for="inputNameProduct" class=" labelInput">Product ID</label>
+                                        <div>
+                                            <input name="idProduct" type="text" class="inputID" id="inputIDProduct"
+                                                   required
+                                                   pattern="\S+.*" placeholder="ID">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div style="margin-top: 0px">
+                                    <label for="inputPriceProduct" class="labelInput">Description</label>
+                                    <textarea class="input-des" id="Description" name="Description" required
+                                              pattern="\S+.*" placeholder="Write something ..."
+                                              style="padding: 10px"></textarea>
+                                </div>
+                                <div class="col-12 row" style="width: 100%;margin-top: 12px">
+                                    <div class="col" style="width: 162px;height: 55px">
+                                        <label for="inputPriceProduct" class="labelInput">Price</label>
+                                        <div class="col-sm-5">
+                                            <input name="priceProduct" type="number" class="inputPrice"
+                                                   id="inputPriceProduct" required
+                                                   min="0" placeholder="0.00">
+                                        </div>
+                                    </div>
+                                    <div class="col " style="width: 162px;height: 55px">
+                                        <label for="inputPriceProduct" class="labelInput">Selling price</label>
+                                        <div class="col-sm-5">
+                                            <input name="sellingPriceProduct" type="number" class="inputPrice"
+                                                   id="inputPriceProduct" required
+                                                   min="0" placeholder="0.00">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row align-items-center"
+                                     style="margin-top: 15px;margin-left: 16px;align-items: center">
+                                    <input class="col-1" type="checkbox" onclick="showInputChecked()" id="checkRebate"
+                                           style="width: 24px;height: 24px;border-radius: 8px">
+                                    <label class="col" style="font-size: 16px;font-weight: 400;color: #000000">
+                                        Rebate
+                                    </label>
+
+                                </div>
+                                <input name="rebate" type="number" class="inputPrice"
+                                       id="rebate" required value="0" style="display: none"
+                                       min="0" max="100">
+                            </div>
+
+                            <div class="content-right col-4" style="width: 230px">
+                                <!--category-->
+                                <div class="row">
+                                    <div class="col-12" style="height: 65px">
+                                        <label for="inputState" class="labelSelect">Style</label>
+                                        <select id="inputState" class="fieldSelect" name="style">
+                                            <option value="Oversize"> Oversize</option>
+                                            <option value="Regular fit"> Regular fit</option>
+                                            <option value="Áo ngắn tay"> Áo ngắn tay</option>
+                                            <option value="Áo dài tay"> Áo dài tay</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12" style="height: 65px;margin-top: 14px">
+                                        <label for="inputState" class="labelSelect">Catalog</label>
+                                        <select id="inputState" class="fieldSelect" name="Catalog">
+                                            <option value="Áo thun"> Áo thun</option>
+                                            <option value="Áo sơ mi"> Áo sơ mi</option>
+                                            <option value="Áo khoác"> Áo khoác</option>
+                                            <option value="Áo polo"> Áo polo</option>
+                                            <option value=" Áo tank top"> Áo tank top</option>
+                                            <option value=" Áo thể thao"> Áo thể thao</option>
+                                            <option value=" Áo in hình"> Áo in hình</option>
+                                            <option value=" Áo khoác thể thao"> Áo khoác thể thao</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12" style="height: 65px;margin-top: 14px">
+                                        <label for="inputState" class="labelSelect">Material</label>
+                                        <select id="inputState" class="fieldSelect" name="material">
+                                            <option value="Cotton"> Cotton</option>
+                                            <option value="Polyester"> Polyester</option>
+                                            <option value="Recycle"> Recycle</option>
+                                            <option value="Excool"> Excool</option>
+                                            <option value="Cafe"> Cafe</option>
+                                            <option value="Denim"> Denim</option>
+                                            <option value="Kaki"> Kaki</option>
+                                            <option value="Bamboo"> Bamboo</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12" style="height: 65px;margin-top: 14px">
+                                        <label for="inputState" class="labelSelect">Purpose</label>
+                                        <select id="inputState" class="fieldSelect" name="purpose">
+                                            <option value="Chơi thể thao"> Chơi thể thao</option>
+                                            <option value="Đi làm"> Đi làm</option>
+                                            <option value="Đi chơi"> Đi chơi</option>
+                                            <option value="Đi du lịch"> Đi du lịch</option>
+                                            <option value="Đi đi học"> Đi đi học</option>
+                                            <option value="Ở nhà"> Ở nhà</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12" style="height: 65px;margin-top: 14px">
+                                        <label for="inputState" class="labelSelect">Feature</label>
+                                        <select id="inputState" class="fieldSelect" name="feature">
+                                            <option value="Chống nhăn"> Chống nhăn</option>
+                                            <option value="chống tia UV"> chống tia UV</option>
+                                            <option value="Chống nắng"> Chống nắng</option>
+                                            <option value="Co dãn tốt"> Co dãn tốt</option>
+                                            <option value="Mềm mại"> Mềm mại</option>
+                                            <option value="Thoải mái"> Thoải mái</option>
+                                            <option value="Nhanh khô"> Nhanh khô</option>
+                                            <option value="Thoáng khí"> Thoáng khí</option>
+                                            <option value="Thấm hút tốt"> Thấm hút tốt</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
 
                     </div>
-                    <div class="content-main row">
-                        <div class="content-left col" style="width: 402px;padding: 0px">
-                            <div class="col-12 row" style="width: 100%">
-                                <div style="width: 263px;height: 67px">
-                                    <label for="inputNameProduct" class="labelInput">Name</label>
-                                    <div class="col-sm-5">
-                                        <input name="nameProduct" type="text" class="inputName" id="inputNameProduct"
-                                               required placeholder="Name Product"
+                </div>
+
+                <div class="box-show" style="padding-left: 26px;margin-left: 16px;margin-top: 12px">
+                    <div style="width: 100%" class="mt-1">
+                        <button class="btn btn-success add_item_btn">Add Color</button>
+                    </div>
+                    <div class="table-responsive" style="max-height: 327px">
+                        <table class="table table-bordered table-responsive" style="text-align: center;margin-top: 20px;margin-bottom: 0px
+                    ;min-height:327px;overflow: auto">
+                            <thead>
+                            <tr>
+                                <th class="col-1" scope="col">STT</th>
+                                <th class="col-2" scope="col">Name Color</th>
+                                <th class="col-1" scope="col">Color</th>
+                                <th class="col-3" scope="col">File</th>
+                                <th class="col-4" scope="col">Size</th>
+                                <th class="col-1" scope="col">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody id="product_list_color">
+                            <tr>
+                                <th>
+                                    <div>
+                                        <input name="stt[]" type="text" class="form-control" id="inputCity"
+                                               readonly
+                                               value="1">
+                                    </div>
+                                </th>
+                                <th>
+                                    <div>
+                                        <input name="nameColor[]" type="text" class="form-control"
+                                               id="inputCity"
+                                               required placeholder="Name Color"
                                                pattern="\S+.*">
                                     </div>
-                                </div>
-                                <div style="width: 128px;height: 67px;margin-left: 10px">
-                                    <label for="inputNameProduct" class=" labelInput">Product ID</label>
+                                </th>
+                                <th>
                                     <div>
-                                        <input name="idProduct" type="text" class="inputID" id="inputIDProduct" required
-                                               pattern="\S+.*" placeholder="ID">
+                                        <input type="color" value="#ffffff" name="colorCode[]"
+                                               style="width: 38px;height: 38px;border-radius: 5px;padding: 0;border: none">
                                     </div>
-                                </div>
-                            </div>
-
-                            <div style="margin-top: 0px">
-                                <label for="inputPriceProduct" class="labelInput">Description</label>
-                                <textarea class="input-des" id="Description" name="Description" required
-                                          pattern="\S+.*" placeholder="Write something ..."
-                                          style="padding: 10px"></textarea>
-                            </div>
-                            <div class="col-12 row" style="width: 100%;margin-top: 12px">
-                                <div class="col" style="width: 162px;height: 55px">
-                                    <label for="inputPriceProduct" class="labelInput">Price</label>
-                                    <div class="col-sm-5">
-                                        <input name="priceProduct" type="number" class="inputPrice"
-                                               id="inputPriceProduct" required
-                                               min="0" placeholder="0.00">
+                                </th>
+                                <th>
+                                    <div>
+                                        <input name="colorImage" class="form-control" type="file"
+                                               id="AddContentImage" required>
                                     </div>
-                                </div>
-                                <div class="col " style="width: 162px;height: 55px">
-                                    <label for="inputPriceProduct" class="labelInput">Selling price</label>
-                                    <div class="col-sm-5">
-                                        <input name="sellingPriceProduct" type="number" class="inputPrice"
-                                               id="inputPriceProduct" required
-                                               min="0" placeholder="0.00">
+                                </th>
+                                <th>
+                                    <div>
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <label class="form-label">Size</label>
+                                                <select name="size_1[]" id="size" class="form-select">
+                                                    <option value="S">S</option>
+                                                    <option value="M">M</option>
+                                                    <option value="L">L</option>
+                                                    <option value="XL">XL</option>
+                                                    <option value="XXL">XXL</option>
+                                                    <option value="3XL">3XL</option>
+                                                    <option value="Over">Over Size</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-4">
+                                                <label for="inputZip" class="form-label" required
+                                                       pattern="\S+.*">Quantity</label>
+                                                <input name="count_1[]" type="number" class="form-control" id="count"
+                                                       min="0">
+                                            </div>
+                                            <div class="col-4 row align-items-end">
+                                                <button class="btn btn-success add_itemSize" style="margin-top: 7px">Add
+                                                    Size
+                                                </button>
+                                            </div>
+                                        </div>
+
                                     </div>
-                                </div>
-                            </div>
+                                </th>
+                                <th>
+                                    <div class="col-1">
+                                        <button class="btn btn-danger remove_item_btn" name="">Remove</button>
+                                    </div>
+                                </th>
 
-                            <div class="row align-items-center"
-                                 style="margin-top: 15px;margin-left: 16px;align-items: center">
-                                <input class="col-1" type="checkbox" onclick="showInputChecked()" id="checkRebate"
-                                       style="width: 24px;height: 24px;border-radius: 8px">
-                                <label class="col" style="font-size: 16px;font-weight: 400;color: #000000">
-                                    Rebate
-                                </label>
 
-                            </div>
-                            <input name="rebate" type="number" class="inputPrice"
-                                   id="rebate" required value="0" style="display: none"
-                                   min="0" max="100">
-                        </div>
-
-                        <div class="content-right col" style="width: 230px">
-                            <!--category-->
-                            <div class="row">
-                                <div class="col-12">
-                                    <label for="inputState" class="labelSelect">Style</label>
-                                    <select id="inputState" class="fieldSelect" name="style">
-                                        <option value="Oversize"> Oversize</option>
-                                        <option value="Regular fit"> Regular fit</option>
-                                        <option value="Áo ngắn tay"> Áo ngắn tay</option>
-                                        <option value="Áo dài tay"> Áo dài tay</option>
-                                    </select>
-                                </div>
-                                <div class="col-12">
-                                    <label for="inputState" class="labelSelect">Catalog</label>
-                                    <select id="inputState" class="fieldSelect" name="Catalog">
-                                        <option value="Áo thun"> Áo thun</option>
-                                        <option value="Áo sơ mi"> Áo sơ mi</option>
-                                        <option value="Áo khoác"> Áo khoác</option>
-                                        <option value="Áo polo"> Áo polo</option>
-                                        <option value=" Áo tank top"> Áo tank top</option>
-                                        <option value=" Áo thể thao"> Áo thể thao</option>
-                                        <option value=" Áo in hình"> Áo in hình</option>
-                                        <option value=" Áo khoác thể thao"> Áo khoác thể thao</option>
-                                    </select>
-                                </div>
-                                <div class="col-12">
-                                    <label for="inputState" class="labelSelect">Material</label>
-                                    <select id="inputState" class="fieldSelect" name="material">
-                                        <option value="Cotton"> Cotton</option>
-                                        <option value="Polyester"> Polyester</option>
-                                        <option value="Recycle"> Recycle</option>
-                                        <option value="Excool"> Excool</option>
-                                        <option value="Cafe"> Cafe</option>
-                                        <option value="Denim"> Denim</option>
-                                        <option value="Kaki"> Kaki</option>
-                                        <option value="Bamboo"> Bamboo</option>
-                                    </select>
-                                </div>
-                                <div class="col-12">
-                                    <label for="inputState" class="labelSelect">Purpose</label>
-                                    <select id="inputState" class="fieldSelect" name="purpose">
-                                        <option value="Chơi thể thao"> Chơi thể thao</option>
-                                        <option value="Đi làm"> Đi làm</option>
-                                        <option value="Đi chơi"> Đi chơi</option>
-                                        <option value="Đi du lịch"> Đi du lịch</option>
-                                        <option value="Đi đi học"> Đi đi học</option>
-                                        <option value="Ở nhà"> Ở nhà</option>
-                                    </select>
-                                </div>
-                                <div class="col-12">
-                                    <label for="inputState" class="labelSelect">Feature</label>
-                                    <select id="inputState" class="fieldSelect" name="feature">
-                                        <option value="Chống nhăn"> Chống nhăn</option>
-                                        <option value="chống tia UV"> chống tia UV</option>
-                                        <option value="Chống nắng"> Chống nắng</option>
-                                        <option value="Co dãn tốt"> Co dãn tốt</option>
-                                        <option value="Mềm mại"> Mềm mại</option>
-                                        <option value="Thoải mái"> Thoải mái</option>
-                                        <option value="Nhanh khô"> Nhanh khô</option>
-                                        <option value="Thoáng khí"> Thoáng khí</option>
-                                        <option value="Thấm hút tốt"> Thấm hút tốt</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                        </div>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
 
-                </div>
-                <div class="col-4">
-                    <div class="box-add-color" style="padding: 10px">
-                        <div style="width: 100%" class="mt-1">
-                            <button class="btn btn-success add_item_btn">Add Color</button>
-                        </div>
-                        <div class="row mb-3" id="product_list_color">
-                        </div>
-                        <div class="table-responsive" style="max-height: 550px">
-                                <table class="table table-bordered " style="width: 1200px;text-align: center" >
-                                    <thead>
-                                    <tr>
-                                        <th class="col-1" scope="col">STT</th>
-                                        <th class="col-2" scope="col">Name Color</th>
-                                        <th class="col-1" scope="col">Color</th>
-                                        <th class="col-3" scope="col">File</th>
-                                        <th class="col-4" scope="col">Size</th>
-                                        <th class="col-1" scope="col">Action</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <th>
-                                            <div>
-                                                <label for="inputCity" class="form-label">STT</label>
-                                                <input name="stt[]" type="text" class="form-control" id="inputCity"
-                                                       readonly
-                                                       value="1">
-                                            </div>
-                                        </th>
-                                        <th>
-
-                                            <div >
-                                                <label for="inputCity" class="form-label">Name Color</label>
-                                                <input name="nameColor[]" type="text" class="form-control"
-                                                       id="inputCity" required
-                                                       pattern="\S+.*">
-                                            </div>
-
-
-                                        </th>
-                                        <th>
-                                            <div >
-                                                <label for="inputCity" class="form-label col-12">Color</label>
-                                                <input type="color" value="#ffffff"
-                                                       name="colorCode" style="width: 38px;height: 38px;border-radius: 5px;padding: 0;border: none">
-                                            </div>
-
-                                        </th>
-                                        <th>
-                                            <div >
-                                                <label for="inputPriceProduct" class="form-label">Image</label>
-                                                <input name="colorImage" class="form-control" type="file"
-                                                       id="AddContentImage"
-                                                       required>
-                                            </div>
-                                        </th>
-                                        <th>
-                                            <div >
-                                                <div class="row">
-                                                    <div class="col-4">
-                                                        <label class="form-label">Size</label>
-                                                        <select name="size_1[]" id="size" class="form-select">
-                                                            <option value="S">S</option>
-                                                            <option value="M">M</option>
-                                                            <option value="L">L</option>
-                                                            <option value="XL">XL</option>
-                                                            <option value="XXL">XXL</option>
-                                                            <option value="3XL">3XL</option>
-                                                            <option value="Over">Over Size</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <label for="inputZip" class="form-label" required
-                                                               pattern="\S+.*">Quantity</label>
-                                                        <input name="count_1[]" type="number" class="form-control" id="count"
-                                                               min="0">
-                                                    </div>
-                                                    <div class="col-3">
-                                                        <button class="btn btn-success add_itemSize">Add Size</button>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </th>
-                                        <th>
-                                            <div class="col-1">
-                                                <label for="inputZip" class="form-label">Action</label>
-                                                <button class="btn btn-danger remove_item_btn" name="">Remove</button>
-                                            </div>
-                                        </th>
-
-
-                                    </tr>
-                                    </tbody>
-                                </table>
-                        </div>
-                    </div>
-
-
-                    <div style="width: 100%;text-align: right;margin-top: 45px">
+                    <div style="width: 100%;text-align: right;margin-top: 30px">
 
                         <button type="submit" class="btn btn-primary btn-addProduct" id="add_product">Add Product
                         </button>
@@ -474,57 +467,79 @@
     $(document).ready(function () {
         $(".add_item_btn").click(function (e) {
             stt += 1;
+
             e.preventDefault();
-            $("#product_list_color").prepend(`<div class="row p-2 mt-1" style="border: 1px solid rebeccapurple; border-radius: 10px">
-<div class="col-1">
-                            <label for="inputCity" class="form-label" required pattern="\S+.*">STT</label>
-                            <input name="stt[]" type="text" class="form-control" id="inputCity" readonly
-                                   value="` + stt + `">
-                        </div>
-                        <div class="col-2">
-                            <label for="inputCity" class="form-label" required pattern="\S+.*">Name Color</label>
-                            <input name="nameColor[]" type="text" class="form-control" id="inputCity">
-                        </div>
-                        <div class="col-2">
-                            <label for="inputPriceProduct" class="form-label">Image</label>
-                            <input name="colorImage" class="form-control" type="file" id="AddContentImage" required>
-                        </div>
-                        <div class="col-5 row ms-1 p-1  me-1" style="border: 1px solid red;border-radius: 10px ">
-                            <div class="col-4">
-                                <label class="form-label">Size</label>
-                                <select name="size_` + stt + `[]" id="size" class="form-select">
-                                    <option value="S">S</option>
-                                    <option value="M">M</option>
-                                    <option value="L">L</option>
-                                    <option value="XL">XL</option>
-                                    <option value="XXL">XXL</option>
-                                    <option value="3XL">3XL</option>
-                                    <option value="Over">Over Size</option>
-                                </select>
-                            </div>
-                            <div class="col-4">
-                                <label for="inputZip" class="form-label" required pattern="\S+.*">Quantity</label>
-                                <input name="count_` + stt + `[]" type="number" class="form-control" id="count" min="0">
-                            </div>
-                            <div class="col-3">
-                                <label for="inputZip" class="form-label">Action</label>
-                                <button class="btn btn-success add_itemSize">Add Size</button>
-                            </div>
+            $("#product_list_color").prepend(`<tr>
+                            <th>
+                                <div>
+                                    <input name="stt[]" type="text" class="form-control" id="inputCity"
+                                           readonly
+                                           value="` + stt + `">
+                                </div>
+                            </th>
+                            <th>
+                                <div>
+                                    <input name="nameColor[]" type="text" class="form-control"
+                                        required placeholder="Name Color"  pattern="\\S+.*">
+                                </div>
+                            </th>
+                            <th>
+                                <div>
+                                    <input type="color" value="\#ffffff"
+                                           name="colorCode[]"
+                                           style="width: 38px;height: 38px;border-radius: 5px;padding: 0;border: none">
+                                </div>
 
-                        </div>
+                            </th>
+                            <th>
+                                <div>
+                                    <input name="colorImage" class="form-control" type="file"
+                                           id="AddContentImage"
+                                           required>
+                                </div>
+                            </th>
+                            <th>
+                                <div>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <label class="form-label">Size</label>
+                                            <select name="size_` + stt + `[]" id="size" class="form-select">
+                                                <option value="S">S</option>
+                                                <option value="M">M</option>
+                                                <option value="L">L</option>
+                                                <option value="XL">XL</option>
+                                                <option value="XXL">XXL</option>
+                                                <option value="3XL">3XL</option>
+                                                <option value="Over">Over Size</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-4">
+                                            <label for="inputZip" class="form-label" required
+                                                   pattern="\S+.*">Quantity</label>
+                                            <input name="count_` + stt + `[]" type="number" class="form-control" id="count"
+                                                   min="0">
+                                        </div>
+                                        <div class="col-4 row align-items-end">
+                                            <button class="btn btn-success add_itemSize">Add Size</button>
+                                        </div>
+                                    </div>
 
-                        <div class="col-1">
-                            <label for="inputZip" class="form-label">Action</label>
-                            <button class="btn btn-danger remove_item_btn" name="">Remove</button>
-                        </div>
+                                </div>
+                            </th>
+                            <th>
+                                <div class="col-1">
+                                    <button class="btn btn-danger remove_item_btn" name="">Remove</button>
+                                </div>
+                            </th>
 
-                    </div>`);
+
+                        </tr>`);
         });
 
         $(document).on("click", ".remove_item_btn", function (e) {
             stt -= 1;
             e.preventDefault();
-            let row_item = $(this).parent().parent();
+            let row_item = $(this).parent().parent().parent();
             $(row_item).remove();
         });
         $(document).on("click", ".remove_size_btn", function (e) {
@@ -553,8 +568,7 @@
                                     <label for="inputZip" class="form-label" required pattern="\S+.*">Quantity</label>
                                     <input name="count_` + stt + `[]" type="number" class="form-control" id="count">
                                 </div>
-                                <div class="col-3">
-                                    <label for="inputZip" class="form-label">Action</label>
+                                <div class="col-4 row align-items-end" >
                                     <button class="btn btn-danger remove_size_btn" name="" >Remove </button>
                                 </div>
                             </div>`);
