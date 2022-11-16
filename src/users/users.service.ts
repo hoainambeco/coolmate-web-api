@@ -14,6 +14,7 @@ import { UserResetPasswordDto } from "../auth/dto/user-change-password.dto";
 import { IFile } from "./file.interface";
 import { StatusAccount } from "../enum/status-account";
 import { Product } from "../product/entities/product.entity";
+import { GoogleLoginDto } from "../auth/dto/google-login.dto";
 
 @Injectable()
 export class UsersService {
@@ -50,7 +51,7 @@ export class UsersService {
     newUser.isCreate = true;
     newUser.role = "user";
     newUser.phone = "";
-    newUser.avatar = "";
+    newUser.avatar = "uploads/default-avatar.png";
     newUser.otp = await bcrypt.hashSync(otp, 10);
 
     const mailContent = newUserMailTemplate2(userData.fullName, userData.email, otp);
@@ -336,5 +337,27 @@ export class UsersService {
     }
     await this.favoriteRepository.delete({productId: productId, userId: user.id});
     return JSON.parse(JSON.stringify(favorite));
+  }
+
+  async google(userEntity: GoogleLoginDto) {
+    let user = await this.userRepository.findOneBy({ email: userEntity.email });
+    if (!user) {
+      const newUser = await this.userRepository.create({
+        email: userEntity.email,
+        fullName: userEntity.name,
+        avatar: userEntity.picture,
+        otp: null,
+        password: null,
+        role: "user",
+        createdAt : new Date(),
+        updatedAt : new Date(),
+        deletedAt : null,
+        status : StatusAccount.ACTIVE,
+        phoneActive : StatusAccount.INACTIVE,
+        isCreate : false,
+      });
+      user = await this.userRepository.save(newUser);
+    }
+    return JSON.parse(JSON.stringify(user));
   }
 }

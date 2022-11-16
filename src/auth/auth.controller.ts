@@ -24,6 +24,7 @@ import { AuthUser } from "../decorators/auth-user.decorator";
 import { User } from "../users/entities/user.entity";
 import { UserResetPasswordDto, UserResetPasswordQueryDto } from "./dto/user-change-password.dto";
 import { AuthGuard } from "@nestjs/passport";
+import { GoogleLoginDto } from "./dto/google-login.dto";
 
 @Controller("auth")
 @ApiTags("Auth")
@@ -40,6 +41,18 @@ export class AuthController {
   })
   async login(@Body() body: UserLoginDto): Promise<LoginPayloadDto> {
     const userEntity = await this.AuthService.validateUser(body);
+    const token = await this.AuthService.createToken(userEntity);
+    return new LoginPayloadDto(userEntity, token);
+  }
+
+  @Post("login-google") @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({
+    type: LoginPayloadDto,
+    description: "User info with access token"
+  })
+  async loginGoogle(@Body() body: GoogleLoginDto): Promise<LoginPayloadDto> {
+
+    const userEntity = await this.userService.google(body);
     const token = await this.AuthService.createToken(userEntity);
     return new LoginPayloadDto(userEntity, token);
   }
