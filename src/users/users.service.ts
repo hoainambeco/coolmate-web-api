@@ -15,6 +15,7 @@ import { IFile } from "./file.interface";
 import { StatusAccount } from "../enum/status-account";
 import { Product } from "../product/entities/product.entity";
 import { GoogleLoginDto } from "../auth/dto/google-login.dto";
+import { GenderEnum } from "../enum/gender";
 
 @Injectable()
 export class UsersService {
@@ -355,6 +356,12 @@ export class UsersService {
         status : StatusAccount.ACTIVE,
         phoneActive : StatusAccount.INACTIVE,
         isCreate : false,
+        gender: GenderEnum.NAM,
+        birthday: new Date(1999,1,1,0,0,0,0),
+        address: null,
+        phone: null,
+        chatLink: null,
+        registrationToken: null,
       });
       user = await this.userRepository.save(newUser);
     }

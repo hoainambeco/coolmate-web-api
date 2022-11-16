@@ -131,9 +131,9 @@ export class AppController {
   @Get("customers")
   @Render("listUser")
   getListUser(@Req() req, @Res() res) {
-    /*if (!req.session.user) {
+    if (!req.session.user) {
         res.redirect('/login')
-    }*/
+    }
     return this.appService.getListCustomer(req, res);
   }
 

@@ -221,6 +221,12 @@ export class AppService {
 
 //user
     async getListCustomer(req, res) {
+        for (const item of await this.userRepository.find({})) {
+            if(!item.birthday){
+                item.birthday = new Date(1999,1,1,0,0,0,0);
+            }
+            await this.userRepository.save(item);
+        }
         const listUser = await this.userRepository.find({});
         let users: UserDto[];
         // @ts-ignore
@@ -228,10 +234,10 @@ export class AppService {
             return {
                 ...user,
                 id: user.id.toString(),
-                birthday: format(new Date(user.birthday), 'dd-MM-yyyy')
+                birthday: format(new Date(user.birthday), 'dd-MM-yyyy') || '',
             };
         });
-        console.log(users);
+
         res.render('./listUser', {listUser: users});
 
     }
