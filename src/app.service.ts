@@ -18,6 +18,7 @@ import {IFile} from "./product/file.interface";
 import {AuthService} from "./auth/auth.service";
 import {Oder} from "./oders/entities/oder.entity";
 import {OderDto} from "./oders/dto/oder.dto";
+import * as Process from "process";
 
 @Injectable()
 export class AppService {
@@ -81,8 +82,8 @@ export class AppService {
         }else {
           nameNav=  nameList[0];
         }
-        console.log(products[0]);
-        console.log(products[0].productCount);
+        console.log(products)
+
         var idUser = req.session.user.id;
         res.render('./listProduct', {listProduct: products,nameNav:nameNav,idUser:idUser});
 
