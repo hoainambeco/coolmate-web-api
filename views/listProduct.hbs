@@ -10,11 +10,32 @@
     <link href='https://fonts.googleapis.com/css?family=Outfit' rel='stylesheet'>
     <style>
         body {
-            font-family: 'Outfit';
+            font-family: Outfit;
             font-size: 16px;
         }
         .nav_app{
             font-size: 18px;
+        }
+        .date-time{
+            position: relative;
+            margin-left: 10px;
+        }
+        .search-field{
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 8px;
+            width: 426px;
+            height: 49px;
+            background: #2F5ACF;
+            border-radius: 8px;
+        }
+        #search-input{
+
+        }
+        ::placeholder {
+            color: #AEB6CF;
+            opacity: 1;
         }
     </style>
 </head>
@@ -106,7 +127,7 @@
             <div style="width: 100%">
 
                 <div class="row">
-                    <div class="col-3 row date-time " style="color: #707EAE ">
+                    <div class="col-2 row date-time " style="color: #707EAE ">
                         <div class="col-12 p-0 " style="font-size: 24px; text-align: left;color: black">
                             <span>Hello </span>
                             <span>{{nameNav}}</span>
@@ -122,29 +143,36 @@
 
                     </div>
 
-                    <form action="/searchProduct" class="col-9 d-flex" method="POST" style="width: 60%;margin: auto"
+                    <form action="/searchProduct" class="col-9 d-flex" method="POST" style="width: 60%; "
                           autocomplete="off">
-                        <div class="me-2 " style="margin: auto">
-                            <select name="SearchBy" style="margin: auto;height: 38px;border-radius: 5px">
+                        <div class="me-2 " >
+                            <select name="SearchBy" style="margin: auto;height: 49px;border-radius: 5px;border: none;
+                            box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);border-radius: 8px;width: 226px;padding: 0px 20px">
                                 <option value="1">Name Product</option>
                                 <option value="2">ID</option>
                             </select>
                         </div>
-                        <input class="form-control me-2" type="search" placeholder="Search here" aria-label="Search"
-                               name="SearchValue">
+                        <div class="search-field" style="padding-top: 0;padding-bottom: 0;padding-right: 0">
+                            <button type="submit" style="background-color: #2F5ACF; border: none">
+                                <img src="../image/icon/search-icon.svg" ></button>
+
+                            <input  type="search" placeholder="Search here" id="search-input"
+                                   name="SearchValue" style="background-color: #2F5ACF;border: none;
+                                   border-radius: 8px; padding: 10px;
+                                   margin-left: 10px;width: 100%;height: 100% ;color: white">
+                        </div>
+
                     </form>
 
                 </div>
             </div>
-            <div class=" mt-4" style="width: 100%;text-align: end">
-                <a href="/product-add" class="btn btn-outline-secondary" style="width: 150px">Add Product</a>
-            </div>
-            <div style="width: 100%;max-height: 100px">
+
+            <div style="width: 100%;max-height: 100px;margin-top: 40px">
                 {{#if msg}}
                     {{{msg}}}
                 {{/if}}</div>
             <div class="panel panel-default mt-2" style="width: 100%">
-                <div class="panel-body table-responsive" style="max-height: 600px">
+                <div class="panel-body table-responsive" style="max-height: 480px; min-height: 480px">
                     <table class="table table-bordered">
                         <thead>
                         <tr>
@@ -169,7 +197,7 @@
                                 <th scope="col">{{this.productName}}</th>
                                 <th scope="col">{{this.price}}</th>
                                 <th scope="col">{{this.productCount}}</th>
-                                <th scope="col">??</th>
+                                <th scope="col">{{this.ratingAvg}}</th>
                                 <th scope="col">{{this.status}}</th>
                                 <th scope="col">
                                     <div class="dropdown">
@@ -189,6 +217,10 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
+            <div  style="width: 100%;text-align: end;margin-top: 70px">
+                <a href="/product-add" class="btn btn-outline-secondary" style="width: 222px;height: 48px;
+                background: #2F5ACF;border-radius: 56px;text-align: center">Add Product</a>
             </div>
         </div>
     </div>

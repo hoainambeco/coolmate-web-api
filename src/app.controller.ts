@@ -73,17 +73,15 @@ export class AppController {
 
   @Get("product")
   getListProduct(@Req() req, @Res() res) {
-    /*if (!req.session.user) {
+    if (!req.session.user) {
         res.redirect('login')
-    }*/
+    }
     return this.appService.getProduct(req, res);
   }
 
   @Get("product-add")
-  @Render("addProduct")
-  addProduct() {
-
-    return this.appService.getHello();
+  addProduct(@Req() req, @Res() res) {
+    return this.appService.getAddProduct(req, res);
   }
 
   @Post("product-add")
@@ -178,7 +176,7 @@ export class AppController {
 
 //bil
   @Get("bills")
-  @Render("listBill")
+
   getListBill(@Req() req,@Res() res) {
     return this.appService.getListBill(req, res);
   }

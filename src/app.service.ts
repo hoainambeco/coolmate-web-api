@@ -82,10 +82,23 @@ export class AppService {
         }else {
           nameNav=  nameList[0];
         }
-        console.log(products)
 
         var idUser = req.session.user.id;
         res.render('./listProduct', {listProduct: products,nameNav:nameNav,idUser:idUser});
+
+    }
+    async getAddProduct(req, res) {
+        var nameList = req.session.user.fullName.split(" ");
+
+        var nameNav = "";
+        if(nameList.length >=2){
+          nameNav=  nameList[0]+" "+nameList[nameList.length -1]
+        }else {
+          nameNav=  nameList[0];
+        }
+
+        var idUser = req.session.user.id;
+        res.render('./addProduct', {nameNav:nameNav,idUser:idUser});
 
     }
 
@@ -164,6 +177,7 @@ export class AppService {
         }
 
         var idUser = req.session.user.id;
+
         return res.render('./detailProduct', {product: product,nameNav:nameNav,idUser:idUser})
     }
 
@@ -334,19 +348,16 @@ export class AppService {
 
     /// bill
     async getListBill(req, res) {
-        const listOders = await this.oderRepository.find({
-            order: {updatedAt: 'ASC'},
-            skip: 0,
-            take: 10,
-        });
+        const listOders = await this.oderRepository.find({});
         let ListBill: OderDto[];
+        // @ts-ignore
         ListBill = listOders.map((oder) => {
             return {
                 ...oder,
                 id: oder.id.toString(),
+                createdAt: format(new Date(oder.createdAt), 'dd-MM-yyyy')
             };
         });
-        console.log(ListBill);
         res.render('./listBill', {listBill: ListBill});
     }
 }

@@ -4,9 +4,9 @@
     <meta charset="utf-8"/>
     <link rel="shortcut icon" href="https://www.coolmate.me/images/favicon.png"/>
     <title>Áo Thun, Áo Phông Nam - Cool Mate</title>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/hover.css" rel="stylesheet">
-    <script src="js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/hover.css" rel="stylesheet">
+    <script src="../js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 
 </head>
 <body>
@@ -111,7 +111,6 @@
                     <table class="table table-bordered">
                         <thead>
                         <tr>
-                            <th class="col-1" scope="col">ID</th>
                             <th class="col-1" scope="col">DateTime</th>
                             <th class="col-1" scope="col">Status</th>
                             <th class="col-1" scope="col">Name Customer</th>
@@ -127,16 +126,11 @@
                         <tbody tyle="max-height: 500px; min-height: 200px">
                         {{#each listBill}}
                             <tr>
-                                <th scope="row">{{this.id}}</th>
-                                <td>{{this.createAt}}</td>
-                                <td>Chưa xác nhận</td>
-                                <td>Huy Đỗ</td>
-                                <td>Áo dài</td>
-                                <td>1</td>
-                                <td>M-đen</td>
-                                <td>100.000</td>
-                                <td>100.000</td>
-                                <td>Hà Nội</td>
+                                <td>{{this.createdAt}}</td>
+                                <td>{{this.status}}</td>
+                                <td>{{this.customerName}}</td>
+                                <td>{{this.numberPro}}</td>
+                                <td>{{this.total}}</td>
                                 <td>
                                     <div class="dropdown">
                                         <button class="btn btn-secondary dropdown-toggle" type="button"

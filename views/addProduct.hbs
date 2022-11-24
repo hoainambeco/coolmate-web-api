@@ -9,6 +9,13 @@
     <script src="js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <link href='https://fonts.googleapis.com/css?family=Outfit' rel='stylesheet'>
     <style>
+        body {
+            font-family: Outfit;
+            font-size: 16px;
+        }
+        .nav_app{
+            font-size: 18px;
+        }
         .btn-addProduct {
             width: 300px;
             height: 48px;
@@ -29,18 +36,6 @@
             padding: 10px;
 
         }
-
-        .box-add-color {
-            box-sizing: border-box;
-            width: 400px;
-            height: 566px;
-            margin-left: 32px;
-            background: #FFFFFF;
-            border: 1px solid #000000;
-            box-shadow: -20px 15px 4px rgba(0, 0, 0, 0.25);
-            border-radius: 20px;
-        }
-
         .content-main {
             width: 680px;
         }
@@ -164,7 +159,9 @@
             border-radius: 6px;
         }
         .img-preview{
-            width: 70px;height: 100px;padding: 0;margin-left: 14px;margin-top: 20px;
+            height: 100px;padding: 0;margin-left: 14px;margin-top: 20px;
+            max-width: 70px;
+            min-width: 70px;
         }
         .color-preview{
             position:relative;padding: 0;left: 70px;bottom: 10px;
@@ -176,7 +173,7 @@
 <div class="container-fluid">
     <div class="row flex-nowrap">
         <!-- Navbar -->
-        <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0" style="box-shadow: 4px 4px 40px rgba(0, 0, 0, 0.06);">
+        <div class="nav_app col-auto col-md-3 col-xl-2 px-sm-2 px-0" style="box-shadow: 4px 4px 40px rgba(0, 0, 0, 0.06);">
             <div class="d-flex flex-column align-items-center  px-3 pt-2 text-black min-vh-100">
                 <a href="/" class="d-flex align-items-center  mb-md-3 mt-md-3 text-black text-decoration-none">
                     <img src="../image/logo-app.svg" width="126" height="45">
@@ -236,7 +233,7 @@
                        style="width: 100%; height: 100%;margin-bottom: 20px">
                         <img src="../image/chengwei-pan-2.jpg" width="30" height="30"
                              class="rounded-circle" style="margin-left: 30px;margin-right: 20px">
-                        <span class="d-none d-sm-inline mx-1" style="color: black">UserName</span>
+                        <span class="d-none d-sm-inline mx-1" style="color: black">{{nameNav}}</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
                         <li><a class="dropdown-item" href="/profile">Profile</a></li>
@@ -398,9 +395,9 @@
                         <!--preview-->
                         <div class="col-5 row justify-content-end" >
                             <div class="preview_color"  id="preview_color">
-                                <div class=" row_preview_color justify-content-end" id="row_preview_color">
-                                    <div class=" row img-row-preview " >
-                                        <img class="img-preview" src="../image/chengwei-pan-2.jpg" id="img_1">
+                                <div class="row_preview_color justify-content-end" id="row_preview_color">
+                                    <div class=" img-row-preview " >
+                                        <img class="img-preview " id="img_1" style="border: 0px">
                                         <div class=" color-preview  " id="color_1">
                                         </div>
                                     </div>
@@ -413,8 +410,6 @@
                     </div>
 
                 </div>
-
-
                 <div class="box-show" style="padding-left: 26px;margin-left: 16px;margin-top: 12px">
                     <div style="width: 100%" class="mt-1">
                         <button class="btn btn-success add_item_btn">Add Color</button>
@@ -593,7 +588,7 @@
                         </tr>`);
             $("#preview_color").prepend(`<div class=" row_preview_color justify-content-end" id="row_preview_color">
                                     <div class=" row img-row-preview " >
-                                        <img class="img-preview" src="../image/chengwei-pan-2.jpg" id="img_` + stt + `">
+                                        <img class="img-preview" id="img_` + stt + `">
                                         <div class=" color-preview  " id="color_` + stt + `">
                                         </div>
                                     </div>
