@@ -69,7 +69,7 @@ export class AuthService {
   }
   async createToken(user: User | UserDto): Promise<TokenPayloadDto> {
     return new TokenPayloadDto({
-      expiresIn: this.configService.getNumber('JWT_EXPIRATION_TIME'),
+      expiresIn: 604800,
       accessToken: await this.jwtService.signAsync({ id: user.id }, { secret: this.configService.get('JWT_SECRET_KEY'),expiresIn: this.configService.get('JWT_EXPIRATION_TIME') }),
     });
   }

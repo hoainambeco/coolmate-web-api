@@ -1,11 +1,13 @@
-import { ErrorException } from './../exceptions/error.exception';
-import { Repository } from 'typeorm';
-import { Oder } from './entities/oder.entity';
-import { Injectable, HttpStatus } from '@nestjs/common';
+import { ErrorException } from "./../exceptions/error.exception";
+import { Repository } from "typeorm";
+import { Oder } from "./entities/oder.entity";
+import { Injectable, HttpStatus } from "@nestjs/common";
 import { CreateOderDto, UpdateShippingStatusDto } from "./dto/create-oder.dto";
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectRepository } from "@nestjs/typeorm";
 import { Voucher } from "../voucher/entities/voucher.entity";
 import { Cart } from "../cart/entities/cart.entity";
+import { AuthService } from "../auth/auth.service";
+import { ShippingStatus } from "../enum/bull";
 
 @Injectable()
 export class OdersService {
@@ -17,74 +19,59 @@ export class OdersService {
     private voucherRepository: Repository<Voucher>,
 
     @InjectRepository(Cart)
-    private cartRepository: Repository<Cart>,
-  ) {}
+    private cartRepository: Repository<Cart>
+  ) {
+  }
 
   async create(createOderDto: CreateOderDto) {
+    let user = AuthService.getAuthUser();
     console.log(createOderDto);
     const oder = await this.oderRepository.create(createOderDto);
     let vouchers = [];
-    let carts = [];
     createOderDto.voucherId.map(async (voucherId) => {
       // @ts-ignore
       const voucher = await this.voucherRepository.findOneBy(voucherId);
-      console.log(voucher);
+      if (!voucher) {
+        throw new ErrorException(HttpStatus.NOT_FOUND, "Voucher not found");
+      }
+      // console.log(voucher);
       vouchers.push(voucher);
     });
-    createOderDto.cartId.map(async (cartId) => {
-      // @ts-ignore
-      const cart = await this.cartRepository.findOneBy(cartId);
-      carts.push(cart);
-    });
-    console.log(vouchers);
-    if(vouchers.length < createOderDto.voucherId.length){
-      throw new ErrorException(HttpStatus.NOT_FOUND, 'Voucher not found');
+    // @ts-ignore
+    const cart = await this.cartRepository.findOneBy(createOderDto.cartId);
+    if (!cart) {
+      throw new ErrorException(HttpStatus.NOT_FOUND, "Cart not found");
     }
-    if(carts.length < createOderDto.cartId.length){
-      throw new ErrorException(HttpStatus.NOT_FOUND, 'Cart not found');
-    }
-    return //this.oderRepository.save(createOderDto);
+    console.log(cart);
+    oder.userId = user.id;
+    return await this.oderRepository.save({ ...oder, carts: cart, vouchers: vouchers });
   }
 
   async findAll() {
     const listOders = await this.oderRepository.find({
-      order: { updatedAt: 'ASC' },
-      skip: 0,
-      take: 10,
+      order: { updatedAt: "ASC" }
     });
     console.log(listOders);
-
-    return listOders.map((oder) => {
-      return {
-        ...oder,
-        id: oder.id.toString(),
-      };
-    });
+    return JSON.parse(JSON.stringify(listOders));
   }
 
   async findOne(id: string) {
     // @ts-ignore
     const oder = await this.oderRepository.findOneBy(id);
     if (!oder) {
-      throw new ErrorException(HttpStatus.NOT_FOUND, 'Oder not found');
+      throw new ErrorException(HttpStatus.NOT_FOUND, "Oder not found");
     }
-    return {
-      ...oder,
-      id: oder.id.toString(),
-    };
+    return JSON.parse(JSON.stringify(oder))
   }
 
   async update(id: string, updateOderDto: CreateOderDto) {
     // @ts-ignore
     const oder = await this.oderRepository.findOneBy(id);
     if (!oder) {
-      throw new ErrorException(HttpStatus.NOT_FOUND, 'Oder not found');
+      throw new ErrorException(HttpStatus.NOT_FOUND, "Oder not found");
     }
     await this.oderRepository.update(id, updateOderDto);
-    return {
-      ...oder,
-      id: oder.id.toString(),
-    };
+    return JSON.parse(JSON.stringify(oder));
   }
 
   async remove(id: string) {
@@ -95,13 +82,10 @@ export class OdersService {
     // @ts-ignore
     const oder = await this.oderRepository.findOne(id);
     if (!oder) {
-      throw new ErrorException(HttpStatus.NOT_FOUND, 'Oder not found');
+      throw new ErrorException(HttpStatus.NOT_FOUND, "Oder not found");
     }
     oder.shippingStatus = updateShippingStatusDto.shippingStatus;
     await this.oderRepository.save(oder);
-    return {
-      ...oder,
-      id: oder.id.toString(),
-    };
+    return JSON.parse(JSON.stringify(oder));
   }
 }

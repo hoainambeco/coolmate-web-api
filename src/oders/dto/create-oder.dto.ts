@@ -18,9 +18,10 @@ export class CreateOderDto {
   @IsNotEmpty()
   total: number;
 
-  @ApiProperty()
-  @IsString()
+  @ApiProperty({enum : ShippingStatus, default: ShippingStatus.CHUA_THANH_TOAN})
+  @IsEnum(ShippingStatus)
   @IsNotEmpty()
+  @IsString()
   status: string;
 
   @ApiProperty({enum: PaymentMethod, default: PaymentMethod.COD})
@@ -40,9 +41,9 @@ export class CreateOderDto {
   placeCustomer: string;
 
   @ApiProperty()
-  @IsArray()
+  @IsString()
   @IsNotEmpty()
-  cartId: string[];
+  cartId: string;
 
   @ApiProperty()
   @IsArray()
