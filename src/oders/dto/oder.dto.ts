@@ -1,4 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { CartDto } from "../../cart/dto/cart-dto";
+import { VoucherDto } from "../../voucher/dto/voucher.dto";
+import { Cart } from "../../cart/entities/cart.entity";
+import { Voucher } from "../../voucher/entities/voucher.entity";
 
 export class OderDto {
   @ApiProperty()
@@ -38,10 +42,16 @@ export class OderDto {
   userId: string;
 
   @ApiProperty()
-  cartId: [string];
+  cartId: string;
 
   @ApiProperty()
   voucherId: [string];
+
+  @ApiProperty()
+  carts: Cart;
+
+  @ApiProperty()
+  vouchers: [Voucher];
 
   @ApiProperty()
   shippingStatus:[string];

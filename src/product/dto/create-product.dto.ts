@@ -2,8 +2,15 @@ import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { IsArray, IsEnum, IsNotEmpty, IsNumber, IsObject, IsOptional, IsString, ValidateNested } from "class-validator";
 import { GenderEnum } from "../../enum/gender";
 import { CatalogEnum, FeatureEnum, MaterialEnum, PurposeEnum, StyleEnum } from "../../enum/product";
+import { Type } from "class-transformer";
+import { Double } from "typeorm";
 
 export class CreateProductDto {
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  modelID: string;
+
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
@@ -51,6 +58,12 @@ export class CreateProductDto {
   @IsNotEmpty()
   @IsNumber()
   PromotionalPrice: number;
+
+  @ApiPropertyOptional()
+  @IsNotEmpty()
+  @IsNumber()
+  @Type(() => Double)
+  rebate: number;
 
   @IsString()
   @IsOptional()

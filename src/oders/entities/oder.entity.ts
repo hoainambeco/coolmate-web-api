@@ -7,6 +7,8 @@ import {
   ObjectIdColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Voucher } from "../../voucher/entities/voucher.entity";
+import { Cart } from "../../cart/entities/cart.entity";
 
 @Entity('oders')
 export class Oder {
@@ -25,13 +27,19 @@ export class Oder {
   userId: string;
 
   @Column()
-  cartId: [string];
+  cartId: string;
 
   @Column()
   voucherId: [string];
 
   @Column()
-  shippingStatus:[string];
+  carts: Cart;
+
+  @Column()
+  vouchers: [Voucher];
+
+  @Column()
+  shippingStatus:string;
 
   constructor(partial: Partial<Oder>) {
     Object.assign(this, partial);
