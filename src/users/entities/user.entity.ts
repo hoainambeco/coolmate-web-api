@@ -14,24 +14,24 @@ import { Product } from "../../product/entities/product.entity";
 @Entity('users')
 export class User {
   @ObjectIdColumn() id: string;
-  @Column() fullName: string;
-  @Column() email: string;
-  @Column() password: string;
-  @Column() otp: string;
-  @Column() role: string;
-  @Column() createdAt: Date;
-  @Column() updatedAt: Date;
-  @Column() deletedAt: Date;
+  @Column({default: null}) fullName: string;
+  @Column({default: null}) email: string;
+  @Column({default: null}) password: string;
+  @Column({default: null}) otp: string;
+  @Column({default: null}) role: string;
+  @Column({default: null}) createdAt: Date;
+  @Column({default: null}) updatedAt: Date;
+  @Column({default: null}) deletedAt: Date;
   @Column({type: 'enum', enum: StatusAccount, nullable: true, default: StatusAccount.INACTIVE}) status: StatusAccount;
-  @Column() isCreate: boolean;
+  @Column({default: true}) isCreate: boolean;
   @Column({type: 'enum', enum: GenderEnum, nullable: true}) gender: string;
-  @Column() birthday: Date;
-  @Column() address: string;
-  @Column() phone: string;
-  @Column() avatar: string;
-  @Column() chatLink: string;
-  @Column() phoneActive: string;
-  @Column() registrationToken: string;
+  @Column({default: null}) birthday: Date;
+  @Column({default: null}) address: string;
+  @Column({default: null}) phone: string;
+  @Column({default: null}) avatar: string;
+  @Column({default: null}) chatLink: string;
+  @Column({default: null}) phoneActive: string;
+  @Column({default: null}) registrationToken: string;
 
   constructor(user?: Partial<User>) {
     if (user) {

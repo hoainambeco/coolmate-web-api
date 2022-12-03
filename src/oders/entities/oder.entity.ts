@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { Voucher } from "../../voucher/entities/voucher.entity";
 import { Cart } from "../../cart/entities/cart.entity";
+import { Product } from "../../product/entities/product.entity";
 
 @Entity('oders')
 export class Oder {
@@ -30,10 +31,16 @@ export class Oder {
   cartId: string;
 
   @Column()
+  productId: [string];
+
+  @Column()
   voucherId: [string];
 
   @Column()
   carts: Cart;
+
+  @Column()
+  cartProduct: [Cart] | null;
 
   @Column()
   vouchers: [Voucher];

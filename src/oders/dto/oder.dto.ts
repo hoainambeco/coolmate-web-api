@@ -3,6 +3,7 @@ import { CartDto } from "../../cart/dto/cart-dto";
 import { VoucherDto } from "../../voucher/dto/voucher.dto";
 import { Cart } from "../../cart/entities/cart.entity";
 import { Voucher } from "../../voucher/entities/voucher.entity";
+import { Product } from "../../product/entities/product.entity";
 
 export class OderDto {
   @ApiProperty()
@@ -45,10 +46,16 @@ export class OderDto {
   cartId: string;
 
   @ApiProperty()
+  productId: [string]| null;
+
+  @ApiProperty()
   voucherId: [string];
 
   @ApiProperty()
   carts: Cart;
+
+  @ApiProperty()
+  cartProduct: [Cart] | null;
 
   @ApiProperty()
   vouchers: [Voucher];

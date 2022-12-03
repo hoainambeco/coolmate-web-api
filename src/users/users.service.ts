@@ -16,6 +16,7 @@ import { StatusAccount } from "../enum/status-account";
 import { Product } from "../product/entities/product.entity";
 import { GoogleLoginDto } from "../auth/dto/google-login.dto";
 import { GenderEnum } from "../enum/gender";
+import { format } from "date-fns";
 
 @Injectable()
 export class UsersService {
@@ -25,7 +26,7 @@ export class UsersService {
     @InjectRepository(Favorite)
     private readonly favoriteRepository: MongoRepository<Favorite>,
     @InjectRepository(Product)
-    private productRepository: Repository<Product>,
+    private productRepository: Repository<Product>
   ) {
   }
 
@@ -42,7 +43,6 @@ export class UsersService {
       specialChars: false
     });
 
-    // @ts-ignore
     const newUser = this.userRepository.create({ ...userData });
     newUser.password = await bcrypt.hashSync(userData.password, 10);
     newUser.createdAt = new Date();
@@ -51,9 +51,14 @@ export class UsersService {
     newUser.status = StatusAccount.INACTIVE;
     newUser.isCreate = true;
     newUser.role = "user";
-    newUser.phone = "";
+    newUser.phone = null;
     newUser.avatar = "uploads/default-avatar.png";
     newUser.otp = await bcrypt.hashSync(otp, 10);
+    newUser.phoneActive = StatusAccount.INACTIVE;
+    newUser.chatLink = null;
+    newUser.registrationToken = null;
+    newUser.address = userData.address || null;
+    newUser.birthday = new Date(userData.birthday) || null;
 
     const mailContent = newUserMailTemplate2(userData.fullName, userData.email, otp);
     newUser.role = "user";
@@ -72,21 +77,13 @@ export class UsersService {
 
   async findAll(): Promise<UserDto[]> {
     const users = await this.userRepository.find();
-    return users.map((user) => {
-      return {
-        ...user,
-        id: user.id.toString()
-      };
-    });
+    return JSON.parse(JSON.stringify(users));
   }
 
   async findOne(id: string): Promise<UserDto> {
     const user = await this.userRepository.findOneBy(id);
 
-    return {
-      ...user,
-      id: user.id.toString()
-    };
+    return JSON.parse(JSON.stringify(new UserDto(user)));
   }
 
   async findOneByEmail(email: string): Promise<UserDto> {
@@ -104,7 +101,7 @@ export class UsersService {
       users.password = await bcrypt.hashSync(user.password, 10);
       await this.userRepository.update(users.id.toString(), users);
     }
-    if(user.phoneActive !== StatusAccount.INACTIVE){
+    if (user.phoneActive !== StatusAccount.INACTIVE) {
       users.phoneActive = StatusAccount.ACTIVE;
     }
     return {
@@ -167,13 +164,20 @@ export class UsersService {
     });
     const newUser = this.userRepository.create({ ...userData });
     newUser.password = await bcrypt.hashSync(userData.password, 10);
-    newUser.otp = await bcrypt.hashSync(otp, 10);
     newUser.createdAt = new Date();
     newUser.updatedAt = new Date();
     newUser.deletedAt = null;
     newUser.status = StatusAccount.INACTIVE;
-    newUser.phoneActive = StatusAccount.INACTIVE;
     newUser.isCreate = true;
+    newUser.role = "user";
+    newUser.phone = null;
+    newUser.avatar = "uploads/default-avatar.png";
+    newUser.otp = await bcrypt.hashSync(otp, 10);
+    newUser.phoneActive = StatusAccount.INACTIVE;
+    newUser.chatLink = null;
+    newUser.registrationToken = null;
+    newUser.address = userData.address || null;
+    newUser.birthday = new Date(userData.birthday) || null;
 
     const mailContent = newUserMailTemplate2(userData.fullName, userData.email, otp);
     newUser.role = "user";
@@ -297,7 +301,7 @@ export class UsersService {
     if (Favorite) {
       throw new ErrorException(
         HttpStatus.BAD_REQUEST,
-        "POST_ALREADY_LIKED")
+        "POST_ALREADY_LIKED");
     }
 
     const newFavorite = await this.favoriteRepository.create({
@@ -336,7 +340,7 @@ export class UsersService {
         "FAVORITE_NOT_FOUND"
       );
     }
-    await this.favoriteRepository.delete({productId: productId, userId: user.id});
+    await this.favoriteRepository.delete({ productId: productId, userId: user.id });
     return JSON.parse(JSON.stringify(favorite));
   }
 
@@ -350,18 +354,18 @@ export class UsersService {
         otp: null,
         password: null,
         role: "user",
-        createdAt : new Date(),
-        updatedAt : new Date(),
-        deletedAt : null,
-        status : StatusAccount.ACTIVE,
-        phoneActive : StatusAccount.INACTIVE,
-        isCreate : false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
+        status: StatusAccount.ACTIVE,
+        phoneActive: StatusAccount.INACTIVE,
+        isCreate: false,
         gender: GenderEnum.NAM,
-        birthday: new Date(1999,1,1,0,0,0,0),
+        birthday: new Date(1999, 1, 1, 0, 0, 0, 0),
         address: null,
         phone: null,
         chatLink: null,
-        registrationToken: null,
+        registrationToken: null
       });
       user = await this.userRepository.save(newUser);
     }

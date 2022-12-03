@@ -73,9 +73,9 @@ export class AppController {
 
   @Get("product")
   getListProduct(@Req() req, @Res() res) {
-    /*if (!req.session.user) {
+    if (!req.session.user) {
         res.redirect('login')
-    }*/
+    }
     return this.appService.getProduct(req, res);
   }
 
@@ -129,11 +129,11 @@ export class AppController {
 
   //user
   @Get("customers")
-  @Render("listUser")
+  // @Render("listUser")
   getListUser(@Req() req, @Res() res) {
-    if (!req.session.user) {
-        res.redirect('/login')
-    }
+    // if (!req.session.user) {
+    //     res.redirect('/login')
+    // }
     return this.appService.getListCustomer(req, res);
   }
 
