@@ -26,33 +26,7 @@ async function bootstrap() {
   loadEnviroment();
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.disable("x-powered-by");
-  app.use(
-    helmet({
-      contentSecurityPolicy: {
-        directives: {
-          defaultSrc: [`'self'`, `https:`],
-          styleSrc: [`'self'`, `'unsafe-inline'`, `https:`],
-          imgSrc: [`'self'`, "data:", "validator.swagger.io", `https:`],
-          scriptSrc: [`'self'`, `https: 'unsafe-inline'`],
-          fontSrc: [`'self'`, `https:`, `data:`],
-          connectSrc: [`'self'`, `https:`, `wss:`],
-          frameSrc: [`'self'`, `https:`, `wss:`],
-          objectSrc: [`'self'`, `https:`, `wss:`],
-          mediaSrc: [`'self'`, `https:`, `wss:`],
-          frameAncestors: [`'self'`],
-          formAction: [`'self'`],
-          baseUri: [`'self'`],
-          manifestSrc: [`'self'`],
-          workerSrc: [`'self'`],
-          childSrc: [`'self'`],
-          prefetchSrc: [`'self'`],
-          cssSrc: [`'self'`],
-          url: [`'self'`],
-        }
-      },
-      xssFilter: true
-    })
-  );
+
   app.enableCors();
   app.use(compression());
   app.use(morgan("combined"));
@@ -95,6 +69,33 @@ async function bootstrap() {
   );
   app.use(passport.initialize());
   app.use(passport.session());
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: [`'self'`, `https:`],
+          styleSrc: [`'self'`, `'unsafe-inline'`, `https:`],
+          imgSrc: [`'self'`, "data:", "validator.swagger.io", `https:`],
+          scriptSrc: [`'self'`, `https: 'unsafe-inline'`],
+          fontSrc: [`'self'`, `https:`, `data:`],
+          connectSrc: [`'self'`, `https:`, `wss:`],
+          frameSrc: [`'self'`, `https:`, `wss:`],
+          objectSrc: [`'self'`, `https:`, `wss:`],
+          mediaSrc: [`'self'`, `https:`, `wss:`],
+          frameAncestors: [`'self'`],
+          formAction: [`'self'`],
+          baseUri: [`'self'`],
+          manifestSrc: [`'self'`],
+          workerSrc: [`'self'`],
+          childSrc: [`'self'`],
+          prefetchSrc: [`'self'`],
+          cssSrc: [`'self'`],
+          url: [`'self'`],
+        }
+      },
+      xssFilter: true
+    })
+  );
   await app.listen(process.env.PORT || 3000);
 
   Logger.debug(`Application is running on: ${await app.getUrl()}`, "Main");

@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { ProductDto } from "../../product/dto/product.dto";
-import { Cart } from "../entities/cart.entity";
+import { ItemCarts } from "../entities/cart.entity";
 import { type } from "os";
 import { UserDto } from "../../users/dto/user.dto";
 import { User } from "../../users/entities/user.entity";
@@ -36,7 +36,7 @@ export  class CartDto{
   userId: string;
 
 
-constructor(entity : Cart) {
+constructor(entity : ItemCarts) {
     this.id = entity.id.toString();
     this.name = entity.name;
     this.quantity = entity.quantity;

@@ -8,7 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Voucher } from "../../voucher/entities/voucher.entity";
-import { Cart } from "../../cart/entities/cart.entity";
+import { ItemCarts } from "../../cart/entities/cart.entity";
 import { Product } from "../../product/entities/product.entity";
 
 @Entity('oders')
@@ -37,10 +37,10 @@ export class Oder {
   voucherId: [string];
 
   @Column()
-  carts: Cart;
+  carts: ItemCarts;
 
   @Column()
-  cartProduct: [Cart] | null;
+  cartProduct: [ItemCarts] | null;
 
   @Column()
   vouchers: [Voucher];

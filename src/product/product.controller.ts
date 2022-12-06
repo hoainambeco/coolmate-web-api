@@ -44,10 +44,10 @@ export class ProductController {
     description: 'The found record',
     type: [ProductDto],
   })
-  findAll(@Query(new ValidationPipe({ transform: true }))
-            queryProductDto: QueryProductDto,) {
+  async findAll(@Query(new ValidationPipe({ transform: true }))
+                  queryProductDto: QueryProductDto,) {
     // console.log(queryProductDto);
-    return this.productService.findAll(queryProductDto);
+    return await this.productService.findAll(queryProductDto);
   }
 
   @Get(':id')

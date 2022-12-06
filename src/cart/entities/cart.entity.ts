@@ -12,8 +12,8 @@ import { User } from "../../users/entities/user.entity";
 import { UserDto } from "../../users/dto/user.dto";
 import { CartDto } from "../dto/cart-dto";
 
-@Entity("carts")
-export class Cart {
+@Entity("itemCarts")
+export class ItemCarts {
   @ObjectIdColumn() id: string;
   @Column() name: string;
   @Column() quantity: number;
@@ -28,4 +28,15 @@ export class Cart {
   }];
   @Column()
   userId: string;
+}
+
+@Entity("carts")
+export class Carts {
+  @ObjectIdColumn() id: string;
+  @Column() userId: string;
+  @Column() cartId: [string];
+  @Column() carts: [object];
+  @CreateDateColumn() createdAt: Date;
+  @UpdateDateColumn() updatedAt: Date;
+  @DeleteDateColumn() deletedAt: Date;
 }

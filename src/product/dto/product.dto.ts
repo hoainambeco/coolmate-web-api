@@ -115,9 +115,6 @@ export class ProductDto{
     this.rebate = entity.rebate;
     this.likeCount = entity.likeCount;
     this.sellCount = entity.sellCount;
-    this.type = entity.type;
-    this.productName = entity.productName;
-    this.image = entity.image;
     this.price = entity.price;
     this.sellingPrice = entity.sellingPrice;
     this.description = entity.description;
@@ -125,7 +122,6 @@ export class ProductDto{
     this.updatedAt = entity.updatedAt;
     this.deletedAt = entity.deletedAt;
     this.isDeleted = entity.isDeleted;
-    this.status = entity.status;
     this.promotionalPrice = entity.promotionalPrice;
     this.color = entity.color;
     this.rating = entity.rating;
