@@ -17,7 +17,6 @@ import * as multer from "multer";
 import { diskStorage } from "multer";
 import { FilesInterceptor } from "@nestjs/platform-express";
 import { extname } from "path";
-import { MongoClient } from "mongodb";
 import { JwtAuthGuard } from "./guards/jwt-auth.guard";
 import { AuthUserInterceptor } from "./interceptors/auth-user.interceptor";
 import { UserDto } from "./users/dto/user.dto";
@@ -191,7 +190,7 @@ export class rss {
 
   @Get()
   async getRss() {
-    return fetch("https://www.toptal.com/developers/feed2json/convert?url=https%3A%2F%2Fmenback.com%2Fchu-de%2Fphong-cach%2Ffeed&minify=on").then((response) => response.json())
+    return await fetch("https://www.toptal.com/developers/feed2json/convert?url=https%3A%2F%2Fmenback.com%2Fchu-de%2Fphong-cach%2Ffeed&minify=on").then((response) => response.json())
       .then(data => {
         data.items.map((value) => delete value.content_html);
         return data
