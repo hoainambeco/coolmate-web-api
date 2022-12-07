@@ -71,20 +71,16 @@ async function bootstrap() {
   app.use(passport.session());
 
   await app.listen(process.env.PORT || 3000);
-  // app.use(
-  //   helmet({
-  //     contentSecurityPolicy: {
-  //       directives: {
-  //         defaultSrc: [`'self'`],
-  //         styleSrc: [`'self'`, `'unsafe-inline'`],
-  //         imgSrc: [`'self'`, 'data:', 'validator.swagger.io'],
-  //         scriptSrc: [`'self'`, `https: 'unsafe-inline'`],
-  //       },
-  //     },
-  //   }),
-  // );
   app.use(
-      helmet({
+    helmet({
+        contentSecurityPolicy: {
+          directives: {
+            defaultSrc: [`'self'`],
+            styleSrc: [`'self'`, `'unsafe-inline'`],
+            imgSrc: [`'self'`, "data:", "validator.swagger.io"],
+            scriptSrc: [`'self'`, `https: 'unsafe-inline'`]
+          }
+        },
         // contentSecurityPolicy: {
         //   directives: {
         //     defaultSrc: [`'self'`, `https:`],
@@ -98,19 +94,20 @@ async function bootstrap() {
         //     mediaSrc: [`'self'`, `https:`, `wss:`],
         //     frameAncestors: [`'self'`],
         //     formAction: [`'self'`],
-        //     baseUri: [`'self'`],
+        //     baseUri: [`'self'`, `https:`],
         //     manifestSrc: [`'self'`],
         //     workerSrc: [`'self'`],
         //     childSrc: [`'self'`],
         //     prefetchSrc: [`'self'`],
         //     cssSrc: [`'self'`],
-        //     url: [`'self'`],
+        //     url: [`'self'`, `https:`],
         //   }
         // },
+        crossOriginResourcePolicy: false,
         crossOriginEmbedderPolicy: false,
         xssFilter: true
-      })
-    );
+      }
+    ));
   Logger.debug(`Application is running on: ${await app.getUrl()}`, "Main");
 }
 
