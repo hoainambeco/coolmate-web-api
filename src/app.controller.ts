@@ -21,6 +21,7 @@ import {MongoClient} from "mongodb";
 import {JwtAuthGuard} from "./guards/jwt-auth.guard";
 import {AuthUserInterceptor} from "./interceptors/auth-user.interceptor";
 import {UserDto} from "./users/dto/user.dto";
+import fetch from "node-fetch";
 
 export const imageFileFilter = (req, file, callback) => {
     console.log(file);
