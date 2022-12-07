@@ -85,28 +85,29 @@ async function bootstrap() {
   // );
   app.use(
       helmet({
-        contentSecurityPolicy: {
-          directives: {
-            defaultSrc: [`'self'`, `https:`],
-            styleSrc: [`'self'`, `'unsafe-inline'`, `https:`],
-            imgSrc: [`'self'`, "data:", "validator.swagger.io", `https:`],
-            scriptSrc: [`'self'`, `https: 'unsafe-inline'`],
-            fontSrc: [`'self'`, `https:`, `data:`],
-            connectSrc: [`'self'`, `https:`, `wss:`],
-            frameSrc: [`'self'`, `https:`, `wss:`],
-            objectSrc: [`'self'`, `https:`, `wss:`],
-            mediaSrc: [`'self'`, `https:`, `wss:`],
-            frameAncestors: [`'self'`],
-            formAction: [`'self'`],
-            baseUri: [`'self'`],
-            manifestSrc: [`'self'`],
-            workerSrc: [`'self'`],
-            childSrc: [`'self'`],
-            prefetchSrc: [`'self'`],
-            cssSrc: [`'self'`],
-            url: [`'self'`, `https:`],
-          }
-        },
+        // contentSecurityPolicy: {
+        //   directives: {
+        //     defaultSrc: [`'self'`, `https:`],
+        //     styleSrc: [`'self'`, `'unsafe-inline'`, `https:`],
+        //     imgSrc: [`'self'`, "data:", "validator.swagger.io", `https:`],
+        //     scriptSrc: [`'self'`, `https: 'unsafe-inline'`],
+        //     fontSrc: [`'self'`, `https:`, `data:`],
+        //     connectSrc: [`'self'`, `https:`, `wss:`],
+        //     frameSrc: [`'self'`, `https:`, `wss:`],
+        //     objectSrc: [`'self'`, `https:`, `wss:`],
+        //     mediaSrc: [`'self'`, `https:`, `wss:`],
+        //     frameAncestors: [`'self'`],
+        //     formAction: [`'self'`],
+        //     baseUri: [`'self'`],
+        //     manifestSrc: [`'self'`],
+        //     workerSrc: [`'self'`],
+        //     childSrc: [`'self'`],
+        //     prefetchSrc: [`'self'`],
+        //     cssSrc: [`'self'`],
+        //     url: [`'self'`],
+        //   }
+        // },
+        crossOriginEmbedderPolicy: false,
         xssFilter: true
       })
     );
