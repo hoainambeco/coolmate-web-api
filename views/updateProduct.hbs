@@ -642,11 +642,9 @@
         $(document).on("click", ".add_itemSize", function (e) {
             e.preventDefault();
             let row_size = $(this).parent().parent().parent();
-            let colorRow = $(this).parent().parent().parent().parent().parent();
-            let value = colorRow.children().children().children("#stt").val();
             $(row_size).prepend(`<div class="row" style="margin-bottom: 10px">
                                 <div class="col-4">
-                                    <select name="size_` + value + `[]" id="size" class="form-select">
+                                    <select name="size_` + stt + `[]" id="size" class="form-select">
                                         <option value="S">S</option>
                                         <option value="M">M</option>
                                         <option value="L">L</option>
@@ -657,7 +655,7 @@
                                     </select>
                                 </div>
                                 <div class="col-4">
-                                    <input name="count_` + value + `[]" type="number" class="form-control"
+                                    <input name="count_` + stt + `[]" type="number" class="form-control"
                                         id="count" required pattern="\S+.*" placeholder="Số lượng">
                                 </div>
                                 <div class="col-4 row align-items-end" >

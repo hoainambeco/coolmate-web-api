@@ -19,6 +19,7 @@ import {AuthService} from "./auth/auth.service";
 import {Oder} from "./oders/entities/oder.entity";
 import {OderDto} from "./oders/dto/oder.dto";
 import * as Process from "process";
+import {StatusProductEnum} from "./enum/product";
 
 @Injectable()
 export class AppService {
@@ -49,6 +50,13 @@ export class AppService {
                     '</div>',
             });
         }
+        if (user.role.toString() != "ADMIN") {
+            return res.render('./login', {
+                msg: '<div class="alert alert-danger" role="alert">\n' +
+                    'Không có quyền truy cập' +
+                    '</div>',
+            });
+        }
         if (user && (await bcrypt.compare(req.body.password, user.password))) {
             const payload = {username: user.email, sub: user.id};
             const access_token = await this.jwtService.signAsync({id: user.id}, {secret: this.configService.get('JWT_SECRET_KEY')})
@@ -73,64 +81,77 @@ export class AppService {
 //product
     async getProduct(req, res) {
         const listProducts = await this.productRepository.find();
-        let products: ProductDto[]= JSON.parse(JSON.stringify(listProducts));
+        listProducts.map(async products => {
+            const product = {...products}
+            product.productCount = product.color.map((color) => color.size.map((size) => size.productCount)).map((item) => item.reduce((a, b) => a + b, 0)).reduce((a, b) => a + b, 0);
+            product.image = product.color.map((color) => color.image.map((image) => image)).map((item) => item.reduce((a, b) => a.concat(b), [])).reduce((a, b) => a.concat(b), []);
+            product.ratingAvg = product.ratingAvg || 0;
+            product.status = product.status || StatusProductEnum.CON_HANG;
+            await this.productRepository.update(product.id, product);
+        })
+        let products: ProductDto[] = JSON.parse(JSON.stringify(listProducts));
         var nameList = req.session.user.fullName.split(" ");
 
         var nameNav = "";
-        if(nameList.length >=2){
-          nameNav=  nameList[0]+" "+nameList[nameList.length -1]
-        }else {
-          nameNav=  nameList[0];
+        if (nameList.length >= 2) {
+            nameNav = nameList[0] + " " + nameList[nameList.length - 1]
+        } else {
+            nameNav = nameList[0];
         }
 
         var idUser = req.session.user.id;
-        res.render('./listProduct', {listProduct: products,nameNav:nameNav,idUser:idUser});
+        res.render('./listProduct', {listProduct: products, nameNav: nameNav, idUser: idUser});
 
     }
+
     async getAddProduct(req, res) {
         var nameList = req.session.user.fullName.split(" ");
 
         var nameNav = "";
-        if(nameList.length >=2){
-          nameNav=  nameList[0]+" "+nameList[nameList.length -1]
-        }else {
-          nameNav=  nameList[0];
+        if (nameList.length >= 2) {
+            nameNav = nameList[0] + " " + nameList[nameList.length - 1]
+        } else {
+            nameNav = nameList[0];
         }
 
         var idUser = req.session.user.id;
-        res.render('./addProduct', {nameNav:nameNav,idUser:idUser});
+        res.render('./addProduct', {nameNav: nameNav, idUser: idUser});
 
     }
 
     async postAddProduct(req, res, files: IFile[]) {
-        console.log(files)
+        console.log(req.body);
         if (!files || !files.length) {
             return res.redirect('/product-add', {msgFile: `<h6 class="alert alert-danger">Add failed due to no files!</h6>`});
         }
         // @ts-ignore
-        let listColor: [{ name: string,colorCode: string, image: string[], size: [{ name: string, productCount: number }] }] = [];
+        let listColor: [{ name: string, colorCode: string, image: string[], size: [{ name: string, productCount: number }] }] = [];
 
         for (let i = 0; i < req.body.stt.length; i++) {
             // @ts-ignore
             let sizeList: [{ name: string, productCount: number }] = [];
             var count = 'count_' + req.body.stt[i].toString()
             var size = 'size_' + req.body.stt[i].toString()
-            console.log(size);
             for (let j = 0; j < req.body[size].length; j++) {
                 if (sizeList.length > 0) {
-
+                    var trung = false;
                     sizeList.forEach((item) => {
                         if (item.name === req.body[size][j]) {
-                            item.productCount =Number( parseInt(String(item.productCount)) + parseInt(req.body[count][j]));
-                        } else {
-                            sizeList.push({name: req.body[size][j], productCount: req.body[count][j]})
+                            item.productCount = Number(parseInt(String(item.productCount)) + parseInt(req.body[count][j]));
+                            trung = true;
+                        } else if (item.name !== req.body[size][j] && !trung) {
+                            trung = false
                         }
+                        return;
                     })
+                    if (!trung) {
+                        sizeList.push({name: req.body[size][j], productCount: parseInt(req.body[count][j])});
+                    }
                 } else {
-                    sizeList.push({name: req.body[size][j], productCount: req.body[count][j]})
+                    sizeList.push({name: req.body[size][j], productCount: parseInt(req.body[count][j])});
                 }
-
             }
+
             listColor.push({
                 name: req.body.nameColor[i],
                 colorCode: req.body.colorCode[i],
@@ -138,14 +159,15 @@ export class AppService {
                 size: sizeList
             })
         }
+        var tmp = Number(req.body.sellingPriceProduct) - (Number(req.body.rebate) * Number(req.body.sellingPriceProduct)) / 100;
         let listPurpose = [];
         listPurpose.push(req.body.purpose);
-        let listFe= [];
+        let listFe = [];
         listFe.push(req.body.feature);
         const product = this.productRepository.create({
             modelID: req.body.idProduct,
-            productName: req.body.productName,
-            price: Number(req.body.priceProduct) ,
+            productName: req.body.nameProduct,
+            price: Number(req.body.priceProduct),
             description: req.body.Description,
             style: req.body.style,
             catalog: req.body.Catalog,
@@ -154,15 +176,16 @@ export class AppService {
             feature: listFe,
             createdAt: new Date(),
             color: listColor,
-            rebate:Number(req.body.rebate),
-            sellingPrice: Number(req.body.sellingPriceProduct)
-
+            rebate: Number(req.body.rebate),
+            sellingPrice: Number(req.body.sellingPriceProduct),
+            promotionalPrice: Number(tmp),
+            ratingAvg: 0,
         });
-        console.log(product);
-
+        product.status = StatusProductEnum.CON_HANG;
+        product.productCount = product.color.map((color) => color.size.map((size) => size.productCount)).map((item) => item.reduce((a, b) => a + b, 0)).reduce((a, b) => a + b, 0);
+        product.image = product.color.map((color) => color.image.map((image) => image)).map((item) => item.reduce((a, b) => a.concat(b), [])).reduce((a, b) => a.concat(b), []);
         await this.productRepository.save(product);
         res.redirect('/product');
-        res.writeHead()
     }
 
     async getDetailProduct(req, res, id) {
@@ -170,15 +193,15 @@ export class AppService {
         const product = await this.productRepository.findOneBy(id);
         var nameList = req.session.user.fullName.split(" ");
         var nameNav = "";
-        if(nameList.length >=2){
-            nameNav=  nameList[0]+" "+nameList[nameList.length -1]
-        }else {
-            nameNav=  nameList[0];
+        if (nameList.length >= 2) {
+            nameNav = nameList[0] + " " + nameList[nameList.length - 1]
+        } else {
+            nameNav = nameList[0];
         }
 
         var idUser = req.session.user.id;
 
-        return res.render('./detailProduct', {product: product,nameNav:nameNav,idUser:idUser})
+        return res.render('./detailProduct', {product: product, nameNav: nameNav, idUser: idUser})
     }
 
     async postSearchProduct(req, res) {
@@ -273,11 +296,9 @@ export class AppService {
             user.address = req.body.updateUserAddress;
             user.phone = req.body.updateUserPhone;
         } catch (e) {
-            // @ts-ignore
             console.log(e);
         }
         await this.userRepository.save(user)
-        // @ts-ignore
         return res.render('./profile', {user: user});
     }
 
@@ -358,6 +379,76 @@ export class AppService {
                 createdAt: format(new Date(oder.createdAt), 'dd-MM-yyyy')
             };
         });
-        res.render('./listBill', {listBill: ListBill});
+        var nameList = req.session.user.fullName.split(" ");
+
+        var nameNav = "";
+        if (nameList.length >= 2) {
+            nameNav = nameList[0] + " " + nameList[nameList.length - 1]
+        } else {
+            nameNav = nameList[0];
+        }
+        var idUser = req.session.user.id;
+        res.render('./listBill', {listBill: ListBill, nameNav: nameNav, idUser: idUser});
+    }
+
+    async getDetailBill(req, res, id) {
+        const bill = await this.oderRepository.findOneBy(id);
+        // @ts-ignore
+        bill.id = bill.id.toString();
+        // @ts-ignore
+        bill.createdAt = format(new Date(bill.createdAt), 'dd-MM-yyyy');
+
+        var nameList = req.session.user.fullName.split(" ");
+
+        var nameNav = "";
+        if (nameList.length >= 2) {
+            nameNav = nameList[0] + " " + nameList[nameList.length - 1]
+        } else {
+            nameNav = nameList[0];
+        }
+
+        var idUser = req.session.user.id;
+        return res.render('./detailBill', {bill: bill, nameNav: nameNav, idUser: idUser})
+    }
+
+    async postUpdateStatusBill(req, res, id): Promise<OderDto> {
+        const bill = await this.oderRepository.findOneBy(id);
+
+        if (!bill) {
+            throw new ErrorException(HttpStatus.NOT_FOUND, 'bill not found');
+        }
+        try {
+            bill.status = req.body.status;
+        } catch (e) {
+            console.log(e);
+        }
+        await this.oderRepository.save(bill)
+
+        var nameList = req.session.user.fullName.split(" ");
+
+        var nameNav = "";
+        if (nameList.length >= 2) {
+            nameNav = nameList[0] + " " + nameList[nameList.length - 1]
+        } else {
+            nameNav = nameList[0];
+        }
+        console.log(req.body.status);
+        console.log(bill.status);
+        var idUser = req.session.user.id;
+
+        return res.redirect('/detailBill/' + id);
+    }
+
+    //noti
+    getNoti(req, res) {
+        var nameList = req.session.user.fullName.split(" ");
+        var nameNav = "";
+        if (nameList.length >= 2) {
+            nameNav = nameList[0] + " " + nameList[nameList.length - 1]
+        } else {
+            nameNav = nameList[0];
+        }
+        var idUser
+        return res.render('./noti', {nameNav: nameNav, idUser: idUser})
     }
 }

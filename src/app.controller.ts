@@ -1,208 +1,243 @@
 import {
-  Controller,
-  Get, HttpCode,
-  HttpException,
-  HttpStatus,
-  Param,
-  Post,
-  Render,
-  Req,
-  Res,
-  UploadedFiles, UseGuards,
-  UseInterceptors
+    Controller,
+    Get, HttpCode,
+    HttpException,
+    HttpStatus,
+    Param,
+    Post,
+    Render,
+    Req,
+    Res,
+    UploadedFiles, UseGuards,
+    UseInterceptors
 } from "@nestjs/common";
-import { AppService } from "./app.service";
-import { ApiBearerAuth, ApiOkResponse, ApiTags } from "@nestjs/swagger";
+import {AppService} from "./app.service";
+import {ApiBearerAuth, ApiOkResponse, ApiTags} from "@nestjs/swagger";
 import * as multer from "multer";
-import { diskStorage } from "multer";
-import { FilesInterceptor } from "@nestjs/platform-express";
-import { extname } from "path";
-import { MongoClient } from "mongodb";
-import { JwtAuthGuard } from "./guards/jwt-auth.guard";
-import { AuthUserInterceptor } from "./interceptors/auth-user.interceptor";
-import { UserDto } from "./users/dto/user.dto";
+import {diskStorage} from "multer";
+import {FilesInterceptor} from "@nestjs/platform-express";
+import {extname} from "path";
+import {MongoClient} from "mongodb";
+import {JwtAuthGuard} from "./guards/jwt-auth.guard";
+import {AuthUserInterceptor} from "./interceptors/auth-user.interceptor";
+import {UserDto} from "./users/dto/user.dto";
 
 export const imageFileFilter = (req, file, callback) => {
-  console.log(file);
-  let permittedFileTypes = [
-    // images
-    ".jpg",
-    ".jpeg",
-    ".png",
-    ".gif",
-    ".ico"
-  ];
-  if (!permittedFileTypes.includes(extname(file.originalname.toLowerCase()))) {
-    return callback(
-      new HttpException(
-        "The file type are not allowed!",
-        HttpStatus.BAD_REQUEST
-      ),
-      false
-    );
-  }
+    console.log(file);
+    let permittedFileTypes = [
+        // images
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".gif",
+        ".ico"
+    ];
+    if (!permittedFileTypes.includes(extname(file.originalname.toLowerCase()))) {
+        return callback(
+            new HttpException(
+                "The file type are not allowed!",
+                HttpStatus.BAD_REQUEST
+            ),
+            false
+        );
+    }
 
-  callback(null, true);
+    callback(null, true);
 };
 export const editFileName = (req, file, callback) => {
-  const name = file.originalname.split(".")[0];
-  const fileExtName = extname(file.originalname);
-  const randomName = Array(4)
-    .fill(null)
-    .map(() => Math.round(Math.random() * 10).toString(10))
-    .join("");
-  callback(null, `${name}-${randomName}${fileExtName}`);
+    const name = file.originalname.split(".")[0];
+    const fileExtName = extname(file.originalname);
+    const randomName = Array(4)
+        .fill(null)
+        .map(() => Math.round(Math.random() * 10).toString(10))
+        .join("");
+    callback(null, `${name}-${randomName}${fileExtName}`);
 };
 
 @ApiTags("web")
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {
+    constructor(private readonly appService: AppService) {
 
-    var uploader = multer({ dest: "./tmp/" });
-  }
-
-  @Get()
-  @Render("listProduct")
-  root(@Req() req, @Res() res) {
-    if (!req.session.user) {
-      res.redirect("/login");
+        var uploader = multer({dest: "./tmp/"});
     }
-    return this.appService.getProduct(req, res);
-  }
 
-  @Get("product")
-  getListProduct(@Req() req, @Res() res) {
-    if (!req.session.user) {
-        res.redirect('login')
+    @Get()
+    @Render("listProduct")
+    root(@Req() req, @Res() res) {
+        if (!req.session.user) {
+            res.redirect("/login");
+        }
+        return this.appService.getProduct(req, res);
     }
-    return this.appService.getProduct(req, res);
-  }
 
-  @Get("product-add")
-  addProduct(@Req() req, @Res() res) {
-    return this.appService.getAddProduct(req, res);
-  }
-
-  @Post("product-add")
-  @Render("addProduct")
-  @UseInterceptors(
-    FilesInterceptor("colorImage", 100, {
-      storage: diskStorage({
-        destination: "./uploads/imageProduct",
-        filename: editFileName
-      }),
-      fileFilter: imageFileFilter
-    })
-  )
-
-  postAddProduct(@Req() req, @Res() res, @UploadedFiles() files
-  ) {
-    return this.appService.postAddProduct(req, res, files);
-  }
-
-  @Get("productDetail/:id")
-  getDetailProduct(@Req() req, @Res() res, @Param("id") param) {
-    return this.appService.getDetailProduct(req, res, param);
-  }
-
-  @Post("/searchProduct")
-  postSearchProduct(@Req() req, @Res() res
-  ) {
-    return this.appService.postSearchProduct(req, res);
-  }
-
-  @Post("/productDetail/:id")
-  postUpdateProduct(@Req() req, @Res() res
-  ) {
-    return this.appService.postUpdate(req, res);
-  }
-
-// user
-  @Get("profile")
-  @Render("profile")
-  getProfile() {
-    return this.appService.getHello();
-  }
-
-  //user
-  @Get("customers")
-  @Render("listUser")
-  getListUser(@Req() req, @Res() res) {
-    if (!req.session.user) {
-        res.redirect('/login')
+    @Get("product")
+    getListProduct(@Req() req, @Res() res) {
+        if (!req.session.user) {
+            res.redirect('login')
+        }
+        return this.appService.getProduct(req, res);
     }
-    return this.appService.getListCustomer(req, res);
-  }
 
-  @Get("userInfo/:id")
-  showUserInfo(@Req() req, @Res() res, @Param("id") param) {
-    return this.appService.getDetailUser(req, res, param);
-  }
+    @Get("product-add")
+    addProduct(@Req() req, @Res() res) {
+        if (!req.session.user) {
+            res.redirect('login')
+        }
+        return this.appService.getAddProduct(req, res);
+    }
 
-  @Post("userInfo/:id")
-  postUpdateUser(@Req() req, @Res() res
-  ) {
-    return this.appService.postUpdateUser(req, res);
-  }
+    @Post("product-add")
+    @Render("addProduct")
+    @UseInterceptors(
+        FilesInterceptor("colorImage", 100, {
+            storage: diskStorage({
+                destination: "./uploads/imageProduct",
+                filename: editFileName
+            }),
+            fileFilter: imageFileFilter
+        })
+    )
 
-  @Post("/searchUser")
-  postSearch(@Req() req, @Res() res
-  ) {
-    return this.appService.postSearchUser(req, res);
-  }
+    postAddProduct(@Req() req, @Res() res, @UploadedFiles() files
+    ) {
+        return this.appService.postAddProduct(req, res, files);
+    }
 
-  //login
-  @Get("login")
-  @Render("login")
-  getlogin(@Req() req, @Res() res
-  ) {
-    return this.appService.getLogin(req, res);
-  }
+    @Get("productDetail/:id")
+    getDetailProduct(@Req() req, @Res() res, @Param("id") param) {
+        if (!req.session.user) {
+            res.redirect('login')
+        }
+        return this.appService.getDetailProduct(req, res, param);
+    }
 
-  @Post("login")
-  @Render("login")
-  postlogin(@Req() req, @Res() res
-  ) {
-    return this.appService.postLogin(req, res);
-  }
+    @Post("/searchProduct")
+    postSearchProduct(@Req() req, @Res() res
+    ) {
+        if (!req.session.user) {
+            res.redirect('login')
+        }
+        return this.appService.postSearchProduct(req, res);
+    }
 
-  //dashboard
-  @Get("dashboard")
-  @Render("dashboard")
-  getDashboard() {
-    return this.appService.getHello();
-  }
+    @Post("/productDetail/:id")
+    postUpdateProduct(@Req() req, @Res() res
+    ) {
+
+        return this.appService.postUpdate(req, res);
+    }
+
+//noti
+
+// admin
+    @Get("profile")
+    @Render("profile")
+    getProfile() {
+        return this.appService.getHello();
+    }
+
+    //user
+    @Get("customers")
+    @Render("listUser")
+    getListUser(@Req() req, @Res() res) {
+        if (!req.session.user) {
+            res.redirect('/login')
+        }
+        return this.appService.getListCustomer(req, res);
+    }
+
+    @Get("userInfo/:id")
+    showUserInfo(@Req() req, @Res() res, @Param("id") param) {
+        if (!req.session.user) {
+            res.redirect('login')
+        }
+        return this.appService.getDetailUser(req, res, param);
+    }
+
+    @Post("userInfo/:id")
+    postUpdateUser(@Req() req, @Res() res
+    ) {
+        return this.appService.postUpdateUser(req, res);
+    }
+
+    @Post("/searchUser")
+    postSearch(@Req() req, @Res() res
+    ) {
+        return this.appService.postSearchUser(req, res);
+    }
+
+    //login
+    @Get("login")
+    @Render("login")
+    getlogin(@Req() req, @Res() res
+    ) {
+        return this.appService.getLogin(req, res);
+    }
+
+    @Post("login")
+    @Render("login")
+    postlogin(@Req() req, @Res() res
+    ) {
+        return this.appService.postLogin(req, res);
+    }
+
+    //dashboard
+    @Get("dashboard")
+    @Render("dashboard")
+    getDashboard() {
+        return this.appService.getHello();
+    }
 
 //bil
-  @Get("bills")
+    @Get("bills")
+    getListBill(@Req() req, @Res() res) {
+        return this.appService.getListBill(req, res);
+    }
+    @Get("detailBill/:id")
+    getDetailBill(@Req() req, @Res() res, @Param("id") param) {
+        if (!req.session.user) {
+            res.redirect('login')
+        }
+        return this.appService.getDetailBill(req, res, param);
+    }
+    @Post("updateStatus/:id")
+    postUpdateStatusBill(@Req() req, @Res() res, @Param("id") param
+    ) {
+        return this.appService.postUpdateStatusBill(req, res,param);
+    }
 
-  getListBill(@Req() req,@Res() res) {
-    return this.appService.getListBill(req, res);
-  }
+    @Get("noti")
+    getNoti(@Req() req, @Res() res) {
+        if (!req.session.user) {
+            res.redirect('login')
+        }
+        return this.appService.getNoti(req, res);
+    }
 }
 
 @ApiTags("service")
 @Controller("rss")
 export class rss {
-  constructor(private readonly appService: AppService) {}
+    constructor(private readonly appService: AppService) {
+    }
 
-  @Get()
-  async getRss() {
-    return fetch("https://www.toptal.com/developers/feed2json/convert?url=https%3A%2F%2Fmenback.com%2Fchu-de%2Fphong-cach%2Ffeed&minify=on").then((response) => response.json())
-      .then(data => {
-        data.items.map((value) => delete value.content_html);
-        return data
-      });
-  }
+    @Get()
+    async getRss() {
+        return fetch("https://www.toptal.com/developers/feed2json/convert?url=https%3A%2F%2Fmenback.com%2Fchu-de%2Fphong-cach%2Ffeed&minify=on").then((response) => response.json())
+            .then(data => {
+                data.items.map((value) => delete value.content_html);
+                return data
+            });
+    }
 
-  @Get("deleteUser")
-  @HttpCode(HttpStatus.OK)
-  @UseGuards(JwtAuthGuard)
-  @UseInterceptors(AuthUserInterceptor)
-  @ApiBearerAuth()
-  @ApiOkResponse({ type: UserDto, description: 'current user info' })
-  async getDeleteUser() {
-    return await this.appService.DeleteUserInActive();
-  }
+    @Get("deleteUser")
+    @HttpCode(HttpStatus.OK)
+    @UseGuards(JwtAuthGuard)
+    @UseInterceptors(AuthUserInterceptor)
+    @ApiBearerAuth()
+    @ApiOkResponse({type: UserDto, description: 'current user info'})
+    async getDeleteUser() {
+        return await this.appService.DeleteUserInActive();
+    }
 }
