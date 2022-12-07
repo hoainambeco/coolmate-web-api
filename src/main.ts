@@ -104,7 +104,7 @@ async function bootstrap() {
             childSrc: [`'self'`],
             prefetchSrc: [`'self'`],
             cssSrc: [`'self'`],
-            url: [`'self'`],
+            url: [`'self'`, `https:`],
           }
         },
         xssFilter: true
