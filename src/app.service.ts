@@ -45,15 +45,17 @@ export class AppService {
         const user = await this.userRepository.findOneBy({email: req.body.email});
         if (!user) {
             return res.render('./login', {
-                msg: '<div class="alert alert-danger" role="alert">\n' +
-                    'Không tìm thấy user' +
+                msg: '<div class="alert alert-danger alert-dismissible fade show" role="alert">\n' +
+                    '  <p style="margin: 0"> Không tìm thấy người dùng!</p>' +
+                    '  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>\n' +
                     '</div>',
             });
         }
         if (user.role.toString() != "ADMIN") {
             return res.render('./login', {
-                msg: '<div class="alert alert-danger" role="alert">\n' +
-                    'Không có quyền truy cập' +
+                msg: '<div class="alert alert-danger alert-dismissible fade show" role="alert">\n' +
+                    '  <p style="margin: 0"> Người dùng không có quyền truy cập!</p>' +
+                    '  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>\n' +
                     '</div>',
             });
         }
@@ -120,7 +122,7 @@ export class AppService {
     }
 
     async postAddProduct(req, res, files: IFile[]) {
-        console.log(req.body);
+        console.log(files)
         if (!files || !files.length) {
             return res.redirect('/product-add', {msgFile: `<h6 class="alert alert-danger">Add failed due to no files!</h6>`});
         }
@@ -159,7 +161,9 @@ export class AppService {
                 size: sizeList
             })
         }
+
         var tmp = Number(req.body.sellingPriceProduct) - (Number(req.body.rebate) * Number(req.body.sellingPriceProduct)) / 100;
+        tmp = Math.round(tmp);
         let listPurpose = [];
         listPurpose.push(req.body.purpose);
         let listFe = [];
@@ -189,7 +193,6 @@ export class AppService {
     }
 
     async getDetailProduct(req, res, id) {
-        console.log(id);
         const product = await this.productRepository.findOneBy(id);
         var nameList = req.session.user.fullName.split(" ");
         var nameNav = "";
@@ -212,8 +215,6 @@ export class AppService {
         if (req.body.SearchBy == 1) {
             // @ts-ignore
             listProducts = await this.productRepository.find({where: {productName: new RegExp(`${req.body.SearchValue}`)}});
-            console.log(new RegExp(`${req.body.SearchValue}`))
-            console.log(listProducts)
         } else if (req.body.SearchBy == 2) {
             listProducts = await this.productRepository.findBy({modelID: req.body.SearchValue});
         }
@@ -232,29 +233,123 @@ export class AppService {
             });
         }
     }
-
-    async postUpdate(req, res): Promise<ProductDto> {
+    async getUpdateProduct(req, res, id) {
+        const product = await this.productRepository.findOneBy(id);
+        console.log(product)
         // @ts-ignore
-        let product = await this.productRepository.findOneBy(req.body.updateProductID)
+        product.id = product.id.toString();
+        // @ts-ignore
+        product.createdAt = format(new Date(product.createdAt), 'dd-MM-yyyy');
+
+        var nameList = req.session.user.fullName.split(" ");
+
+        var nameNav = "";
+        if (nameList.length >= 2) {
+            nameNav = nameList[0] + " " + nameList[nameList.length - 1]
+        } else {
+            nameNav = nameList[0];
+        }
+
+        var idUser = req.session.user.id;
+        return res.render('./updateProduct', {product: product, nameNav: nameNav, idUser: idUser})
+    }
+    async postUpdate(req, res,id,files: IFile[]): Promise<ProductDto> {
+        // @ts-ignore
+        let product = await this.productRepository.findOneBy(id);
+
+
 
         if (!product) {
             throw new ErrorException(HttpStatus.NOT_FOUND, 'Product not found');
         }
-        try {
-            // @ts-ignore
-            product.modelID = req.body.updateProductIDModel;
-            product.productName = req.body.updateProductName;
-            product.type = req.body.updateProductType;
-            product.price = req.body.updateProductPrice;
-            product.status = req.body.updateProductStatus;
-            product.description = req.body.updateProductDescription;
-        } catch (e) {
-            // @ts-ignore
-            console.log(e);
-        }
-        await this.productRepository.save(product)
         // @ts-ignore
-        return res.render('./detailProduct', {product: product});
+        let listColor: [{ name: string, colorCode: string, image: string[], size: [{ name: string, productCount: number }] }] = [];
+        var productCount  = 0;
+        for (let i = 0; i < req.body.stt.length; i++) {
+            // @ts-ignore
+            let sizeList: [{ name: string, productCount: number }] = [];
+            var count = 'count_' + req.body.stt[i].toString()
+            var size = 'size_' + req.body.stt[i].toString()
+            for (let j = 0; j < req.body[size].length; j++) {
+                if (sizeList.length > 0) {
+                    var trung = false;
+                    sizeList.forEach((item) => {
+                        if (item.name === req.body[size][j]) {
+                            item.productCount = Number(parseInt(String(item.productCount)) + parseInt(req.body[count][j]));
+                            productCount += parseInt(req.body[count][j]);
+                            trung = true;
+                        } else if (item.name !== req.body[size][j] && !trung) {
+                            trung = false
+                        }
+                        return;
+                    })
+                    if (!trung) {
+                        sizeList.push({name: req.body[size][j], productCount: parseInt(req.body[count][j])});
+                        productCount += parseInt(req.body[count][j]);
+                    }
+                } else {
+                    sizeList.push({name: req.body[size][j], productCount: parseInt(req.body[count][j])});
+                    productCount += parseInt(req.body[count][j]);
+                }
+
+            }
+            var path = "";
+            if(files.length <1){
+                path = product.color[i].image[0];
+            }else {
+                var name = "colorImage_" +(i+1);
+                var trueImg = false;
+                for (let j = 0; j <files.length ; j++) {
+                  if(files[j].fieldname === name)  {
+                      trueImg = true;
+                      path = files[j].path;
+                      break;
+                  }
+
+                }
+                if(!trueImg){
+                    path = product.color[i].image[0];
+                }
+
+            }
+            console.log(path)
+            listColor.push({
+                name: req.body.nameColor[i],
+                colorCode: req.body.colorCode[i],
+                image: [path],
+                size: sizeList
+            })
+        }
+
+     /*   var tmp = Number(req.body.sellingPriceProduct) - (Number(req.body.rebate) * Number(req.body.sellingPriceProduct)) / 100;
+        tmp = Math.round(tmp)
+
+        let listPurpose = [];
+        listPurpose.push(req.body.purpose);
+        let listFe = [];
+        listFe.push(req.body.feature);
+        const productNew = this.productRepository.create({
+            modelID: req.body.idProduct,
+            productName: req.body.nameProduct,
+            price: Number(req.body.priceProduct),
+            description: req.body.Description,
+            style: req.body.style,
+            catalog: req.body.Catalog,
+            material: req.body.material,
+            purpose: listPurpose,
+            feature: listFe,
+            createdAt: new Date(),
+            color: listColor,
+            productCount: productCount,
+            rebate: Number(req.body.rebate),
+            sellingPrice: Number(req.body.sellingPriceProduct),
+            promotionalPrice: Number(tmp),
+            ratingAvg: product.ratingAvg,
+
+        });
+        console.table(productNew.color);*/
+     //   await this.productRepository.update(product.id, productNew);
+        return res.redirect('/update-product/' + id)
     }
 
 //user
@@ -269,7 +364,6 @@ export class AppService {
                 birthday: format(new Date(user.birthday), 'dd-MM-yyyy')
             };
         });
-        console.log(users);
         res.render('./listUser', {listUser: users});
 
     }
@@ -356,13 +450,11 @@ export class AppService {
             throw new ErrorException(HttpStatus.FORBIDDEN, 'Permission denied');
         }
         let user = await this.userRepository.findBy({status: 'INACTIVE'});
-        console.log(user);
         if (!user) {
             throw new ErrorException(HttpStatus.NOT_FOUND, 'user not found');
         }
         user.map(async (user) => {
             await this.userRepository.delete(user.id);
-            console.log(user.id);
         })
         return true
     }
@@ -423,18 +515,6 @@ export class AppService {
             console.log(e);
         }
         await this.oderRepository.save(bill)
-
-        var nameList = req.session.user.fullName.split(" ");
-
-        var nameNav = "";
-        if (nameList.length >= 2) {
-            nameNav = nameList[0] + " " + nameList[nameList.length - 1]
-        } else {
-            nameNav = nameList[0];
-        }
-        console.log(req.body.status);
-        console.log(bill.status);
-        var idUser = req.session.user.id;
 
         return res.redirect('/detailBill/' + id);
     }

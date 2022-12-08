@@ -420,7 +420,7 @@
                         <!--preview-->
                         <div class="col-5 row justify-content-end">
                             <div class="preview_color" id="preview_color">
-                                <div class="row_preview_color justify-content-end" id="row_preview_color">
+                                <div class="row_preview_color justify-content-end" id="row_preview_color_1">
                                     <div class=" img-row-preview ">
                                         <img class="img-preview " id="img_1" style="border: 0px">
                                         <div class=" color-preview  " id="color_1">
@@ -617,7 +617,7 @@
 
 
                         </tr>`);
-            $("#preview_color").prepend(`<div class=" row_preview_color justify-content-end" id="row_preview_color">
+            $("#preview_color").prepend(`<div class=" row_preview_color justify-content-end" id="row_preview_color_` + stt + `">
                                     <div class=" row img-row-preview " >
                                         <img class="img-preview" id="img_` + stt + `">
                                         <div class=" color-preview  " id="color_` + stt + `">
@@ -631,7 +631,11 @@
             stt -= 1;
             e.preventDefault();
             let row_item = $(this).parent().parent().parent();
+            let colorRow = $(this).parent().parent().parent();
+            let value = colorRow.children().children().children("#stt").val();
+            let row_preview = $("#row_preview_color_" + value);
             $(row_item).remove();
+            $(row_preview).remove();
         });
         $(document).on("click", ".remove_size_btn", function (e) {
             e.preventDefault();

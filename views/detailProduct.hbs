@@ -86,6 +86,7 @@
             overflow: auto;
             box-sizing: border-box;
         }
+
         .list-price {
             display: grid;
             grid-template-columns: auto auto;
@@ -258,7 +259,8 @@
                             {{product.description}}</p>
 
 
-                        <div class="row list-price" style="margin-left: 0;margin-right: 0;padding-left: 10px;margin-top: 10px">
+                        <div class="row list-price"
+                             style="margin-left: 0;margin-right: 0;padding-left: 10px;margin-top: 10px">
                             <div class="col-6 col-price">
                                 <p class="title-price">Giá bán</p>
                                 <input type="text" class="input-price" readonly value="{{product.sellingPrice}}">
@@ -311,9 +313,19 @@
                                     ;min-height:280px;overflow: auto;width: 800px">
                                 <thead>
                                 <tr>
-                                    <th class="col-2" scope="col">Tên màu</th>
-                                    <th class="col-2" scope="col">Màu</th>
-                                    <th class="col-8" scope="col">Size</th>
+                                    <th class="col-3" scope="col">Tên màu</th>
+                                    <th class="col-3" scope="col">Màu</th>
+                                    <th class="col-6" scope="col">
+                                        <div class="row">
+                                            <div class="col-5">
+                                                Size
+                                            </div>
+                                            <div class="col-2"></div>
+                                            <div class="col-5" >
+                                                Số lượng
+                                            </div>
+                                        </div>
+                                    </th>
                                 </tr>
                                 </thead>
                                 <tbody id="product_list_color">
@@ -326,9 +338,17 @@
                                         </th>
                                         <th scope="row" style="margin-bottom: 4px">
                                             {{#each this.size}}
-                                                <p style="margin-bottom: 0px">Size: {{this.name}} - Số
-                                                    lượng: {{this.productCount}}</p>
-                                                <hr style="margin: 0px 0px 0px 0px;width: 100%">
+                                                <div class="row">
+                                                    <div class="col-5" >
+                                                        {{this.name}}
+                                                    </div>
+                                                    <div class="col-2">-</div>
+                                                    <div class="col-5" >
+                                                        {{this.productCount}}
+                                                    </div>
+                                                </div>
+
+
                                             {{/each}}
                                         </th>
 
@@ -346,7 +366,6 @@
                                      style="border-radius: 56px;width: 258px;height: 54px; font-size: 20px">
                                     <p style="width: 100%; text-align: center;align-items: end;margin-bottom: 0; margin-top: 10px">
                                         Chỉnh sửa</p>
-
                                 </div>
                             </a>
                         </div>

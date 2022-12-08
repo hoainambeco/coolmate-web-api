@@ -189,6 +189,16 @@
             background-color: #2F5ACF;
             color: white;
         }
+
+        .btn-cancel {
+            border: 2px solid gray;
+            background-color: white;
+        }
+
+        .btn-cancel:hover {
+            background-color: gray;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -285,7 +295,7 @@
                 <div class="row" style="padding: 0px;margin-left: 16px">
                     <div class="box-show row" style="padding-left: 26px;padding-right: 0px;">
                         <div style="width: 100%;font-style: normal;
-                    font-size: 40px;line-height: 44px;color: #2F5ACF;height: 40px"><span>Add Product</span></div>
+                    font-size: 40px;line-height: 44px;color: #2F5ACF;height: 40px"><span>Update Product</span></div>
                         <div class="content-main col-7 ">
                             <div class="row">
                                 <div class="content-left col-8" style="width: 402px;padding: 0px;margin-top: 8px">
@@ -296,7 +306,7 @@
                                                 <input name="nameProduct" type="text" class="inputName"
                                                        id="inputNameProduct"
                                                        required placeholder="Tên sản phẩm"
-                                                       pattern="\S+.*">
+                                                       pattern="\S+.*" value="{{product.productName}}">
                                             </div>
                                         </div>
                                         <div style="width: 128px;height: 67px;margin-left: 10px">
@@ -304,7 +314,8 @@
                                             <div style="margin-top: 2px">
                                                 <input name="idProduct" type="text" class="inputID" id="inputIDProduct"
                                                        required
-                                                       pattern="\S+.*" placeholder="SP001">
+                                                       pattern="\S+.*" placeholder="Mã sản phẩm"
+                                                       value="{{product.modelID}}">
                                             </div>
                                         </div>
                                     </div>
@@ -313,7 +324,7 @@
                                         <label for="inputPriceProduct" class="labelInput">Mô tả sản phẩm</label>
                                         <textarea class="input-des" id="Description" name="Description" required
                                                   pattern="\S+.*" placeholder="Write something ..."
-                                                  style="padding: 10px;margin-top: 4px"></textarea>
+                                                  style="padding: 10px;margin-top: 4px">{{product.description}}</textarea>
                                     </div>
                                     <div class="col-12 row" style="width: 100%;margin-top: 12px">
                                         <div class="col" style="width: 162px;height: 55px">
@@ -321,7 +332,7 @@
                                             <div class="col-sm-5">
                                                 <input name="priceProduct" type="number" class="inputPrice"
                                                        id="inputPriceProduct" required
-                                                       min="0" placeholder="0.00">
+                                                       min="0" placeholder="0.00" value="{{product.price}}">
                                             </div>
                                         </div>
                                         <div class="col " style="width: 162px;height: 55px">
@@ -329,31 +340,42 @@
                                             <div class="col-sm-5">
                                                 <input name="sellingPriceProduct" type="number" class="inputPrice"
                                                        id="inputPriceProduct" required
-                                                       min="0" placeholder="0.00">
+                                                       min="0" placeholder="0.00" value="{{product.sellingPrice}}">
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div class="row align-items-center"
-                                         style="margin-top: 15px;margin-left: 16px;align-items: center">
-                                        <input class="col-1" type="checkbox" onclick="showInputChecked()"
-                                               id="checkRebate"
-                                               style="width: 24px;height: 24px;border-radius: 8px">
-                                        <label class="col" style="font-size: 16px;font-weight: 400;color: #000000">
-                                            Giảm giá
-                                        </label>
-
+                                    <div class="col-12 row" style="width: 100%;margin-top: 12px">
+                                        <div class="col " style="width: 162px;height: 55px">
+                                            <label for="inputPriceProduct" class="labelInput">Giảm giá</label>
+                                            <div class="col-sm-5">
+                                                <input name="sellingPriceProduct" type="number" class="inputPrice"
+                                                       id="inputPriceProduct" required
+                                                       min="0" value="{{product.rebate}}" max="100">
+                                            </div>
+                                        </div>
+                                        <div class="col" style="height: 65px;">
+                                            <label for="inputState" class="labelSelect">Tính năng</label>
+                                            <select id="selectFeature" class="fieldSelect" name="feature">
+                                                <option value="Chống nhăn"> Chống nhăn</option>
+                                                <option value="chống tia UV"> chống tia UV</option>
+                                                <option value="Chống nắng"> Chống nắng</option>
+                                                <option value="Co dãn tốt"> Co dãn tốt</option>
+                                                <option value="Mềm mại"> Mềm mại</option>
+                                                <option value="Thoải mái"> Thoải mái</option>
+                                                <option value="Nhanh khô"> Nhanh khô</option>
+                                                <option value="Thoáng khí"> Thoáng khí</option>
+                                                <option value="Thấm hút tốt"> Thấm hút tốt</option>
+                                            </select>
+                                        </div>
                                     </div>
-                                    <input name="rebate" type="number" class="inputPrice"
-                                           id="rebate" required value="0" style="display: none"
-                                           min="0" max="100">
+
                                 </div>
                                 <div class="content-right col-4" style="width: 230px">
                                     <!--category-->
                                     <div class="row">
                                         <div class="col-12" style="height: 65px">
                                             <label for="inputState" class="labelSelect">Kiểu dáng</label>
-                                            <select id="inputState" class="fieldSelect" name="style">
+                                            <select id="selectStyle" class="fieldSelect" name="style">
                                                 <option value="Oversize"> Oversize</option>
                                                 <option value="Regular fit"> Regular fit</option>
                                                 <option value="Áo ngắn tay"> Áo ngắn tay</option>
@@ -362,7 +384,7 @@
                                         </div>
                                         <div class="col-12" style="height: 65px;margin-top: 14px">
                                             <label for="inputState" class="labelSelect">Danh mục</label>
-                                            <select id="inputState" class="fieldSelect" name="Catalog">
+                                            <select id="selectCatalog" class="fieldSelect" name="Catalog">
                                                 <option value="Áo thun"> Áo thun</option>
                                                 <option value="Áo sơ mi"> Áo sơ mi</option>
                                                 <option value="Áo khoác"> Áo khoác</option>
@@ -375,7 +397,7 @@
                                         </div>
                                         <div class="col-12" style="height: 65px;margin-top: 14px">
                                             <label for="inputState" class="labelSelect">Chất liệu</label>
-                                            <select id="inputState" class="fieldSelect" name="material">
+                                            <select id="selectMaterial" class="fieldSelect" name="material">
                                                 <option value="Cotton"> Cotton</option>
                                                 <option value="Polyester"> Polyester</option>
                                                 <option value="Recycle"> Recycle</option>
@@ -388,7 +410,7 @@
                                         </div>
                                         <div class="col-12" style="height: 65px;margin-top: 14px">
                                             <label for="inputState" class="labelSelect">Mục đích</label>
-                                            <select id="inputState" class="fieldSelect" name="purpose">
+                                            <select id="selectPurpose" class="fieldSelect" name="purpose">
                                                 <option value="Chơi thể thao"> Chơi thể thao</option>
                                                 <option value="Đi làm"> Đi làm</option>
                                                 <option value="Đi chơi"> Đi chơi</option>
@@ -399,7 +421,7 @@
                                         </div>
                                         <div class="col-12" style="height: 65px;margin-top: 14px">
                                             <label for="inputState" class="labelSelect">Tính năng</label>
-                                            <select id="inputState" class="fieldSelect" name="feature">
+                                            <select id="selectFeature" class="fieldSelect" name="feature">
                                                 <option value="Chống nhăn"> Chống nhăn</option>
                                                 <option value="chống tia UV"> chống tia UV</option>
                                                 <option value="Chống nắng"> Chống nắng</option>
@@ -420,13 +442,7 @@
                         <!--preview-->
                         <div class="col-5 row justify-content-end">
                             <div class="preview_color" id="preview_color">
-                                <div class="row_preview_color justify-content-end" id="row_preview_color">
-                                    <div class=" img-row-preview ">
-                                        <img class="img-preview " id="img_1" style="border: 0px">
-                                        <div class=" color-preview  " id="color_1">
-                                        </div>
-                                    </div>
-                                </div>
+
                             </div>
                         </div>
 
@@ -462,79 +478,18 @@
                             </tr>
                             </thead>
                             <tbody id="product_list_color">
-                            <tr>
-                                <th>
-                                    <div>
-                                        <input name="stt[]" type="text" class="form-control" id="stt"
-                                               readonly
-                                               value="1" style="text-align: center">
-                                    </div>
-                                </th>
-                                <th>
-                                    <div>
-                                        <input name="nameColor[]" type="text" class="form-control"
-                                               id="inputCity"
-                                               required placeholder="Name Color"
-                                               pattern="\S+.*">
-                                    </div>
-                                </th>
-                                <th>
-                                    <div>
-                                        <input type="color" value="#ffffff" name="colorCode[]"
-                                               style="width: 38px;height: 38px;border-radius: 10px;padding: 0;border: none"
-                                               onchange="loadColor(event,1)">
-                                    </div>
-                                </th>
-                                <th>
-                                    <div>
-                                        <input name="colorImage" class="form-control" type="file" accept="image/*"
-                                               id="1" required onchange="loadFile(event,1)">
-                                    </div>
-                                </th>
-                                <th>
-                                    <div>
-                                        <div class="row">
-                                            <div class="col-4">
-                                                <select name="size_1[]" id="size" class="form-select">
-                                                    <option value="S">S</option>
-                                                    <option value="M">M</option>
-                                                    <option value="L">L</option>
-                                                    <option value="XL">XL</option>
-                                                    <option value="XXL">XXL</option>
-                                                    <option value="3XL">3XL</option>
-                                                    <option value="Over">Over Size</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-4">
-                                                <input name="count_1[]" type="number" class="form-control" id="count"
-                                                       min="0" required
-                                                       pattern="\S+.*" placeholder="Số lượng">
-                                            </div>
-                                            <div class="col-4 row align-items-end">
-                                                <button class="btn btn-success add_itemSize">Thêm size
-                                                </button>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </th>
-                                <th>
-                                    <div class="col-1">
-                                        <button class="btn btn-danger remove_item_btn" style="margin-left: 14px">Xóa
-                                        </button>
-                                    </div>
-                                </th>
-
-
-                            </tr>
                             </tbody>
                         </table>
                     </div>
 
                     <div style="width: 100%;text-align: right;margin-top: 30px">
 
+                        <button class=" btn-cancel" id="add_product" onclick="history.back()"
+                                style="border-radius: 56px;width: 100px;height: 54px; font-size: 20px;margin-right: 10px">
+                            Hủy
+                        </button>
                         <button type="submit" class=" btn-addProduct" id="add_product"
-                                style="border-radius: 56px;width: 258px;height: 54px; font-size: 20px">Thêm sản phẩm
+                                style="border-radius: 56px;width: 258px;height: 54px; font-size: 20px">Lưu chỉnh sửa
                         </button>
                     </div>
 
@@ -549,38 +504,50 @@
 </div>
 <script src="/vendor/jquery/jquery.min.js"></script>
 <script>
-    var stt = 1;
-    $(document).ready(function () {
-        $(".add_item_btn").click(function (e) {
-            stt += 1;
+    function selectElement(id, valueToSelect) {
+        let element = document.getElementById(id);
+        element.value = valueToSelect;
+    }
 
-            e.preventDefault();
+    selectElement('selectStyle', '{{product.style}}');
+    selectElement('selectCatalog', '{{product.catalog}}');
+    selectElement('selectMaterial', '{{product.material}}');
+    selectElement('selectFeature', '{{product.feature}}');
+    selectElement('selectPurpose', '{{product.purpose}}');
+    var stt = 0;
+    //start();
+
+    $(document).ready(function () {
+
+
+        $.fn.addColor = function () {
+            stt += 1;
             $("#product_list_color").prepend(`<tr>
                             <th>
                                 <div>
                                     <input name="stt[]" type="text" class="form-control" id="stt"
                                            readonly
-                                           value="` + stt + `" style="text-align: center">
+                                           value="${stt}" style="text-align: center">
                                 </div>
                             </th>
                             <th>
                                 <div>
                                     <input name="nameColor[]" type="text" class="form-control"
-                                        required placeholder="Name Color"  pattern="\\S+.*" >
+                                        required placeholder="Name Color"  pattern="\\S+.*"  >
                                 </div>
                             </th>
                             <th>
                                 <div>
                                     <input type="color" value="\#ffffff"
-                                           name="colorCode[]" onchange="loadColor(event,` + stt + `)"
+                                           name="colorCode[]" onchange="loadColor(event,${stt})"
                                            style="width: 38px;height: 38px;border-radius: 5px;padding: 0;border: none" >
                                 </div>
 
                             </th>
                             <th>
                                 <div>
-                                    <input name="colorImage" class="form-control" type="file" accept="image/*"
-                                           id="AddContentImage" onchange="loadFile(event,` + stt + `)"
+                                    <input name="colorImage_${stt}" class="form-control" type="file" accept="image/*"
+                                           id="AddContentImage" onchange="loadFile(event,${stt})"
                                            required>
                                 </div>
                             </th>
@@ -588,7 +555,7 @@
                                 <div>
                                     <div class="row">
                                         <div class="col-4">
-                                            <select name="size_` + stt + `[]" id="size" class="form-select">
+                                            <select name="size_${stt}[]" id="size" class="form-select">
                                                 <option value="S">S</option>
                                                 <option value="M">M</option>
                                                 <option value="L">L</option>
@@ -617,34 +584,100 @@
 
 
                         </tr>`);
-            $("#preview_color").prepend(`<div class=" row_preview_color justify-content-end" id="row_preview_color">
+
+            $("#preview_color").prepend(`<div class=" row_preview_color justify-content-end" id="row_preview_color_${stt}">
                                     <div class=" row img-row-preview " >
-                                        <img class="img-preview" id="img_` + stt + `">
-                                        <div class=" color-preview  " id="color_` + stt + `">
+                                        <img class="img-preview" id="img_${stt}">
+                                        <div class=" color-preview  " id="color_${stt}">
                                         </div>
                                     </div>
                                 </div>`)
 
-        });
+        }
 
-        $(document).on("click", ".remove_item_btn", function (e) {
-            stt -= 1;
-            e.preventDefault();
-            let row_item = $(this).parent().parent().parent();
-            $(row_item).remove();
-        });
-        $(document).on("click", ".remove_size_btn", function (e) {
-            e.preventDefault();
-            let row_item = $(this).parent().parent();
-            $(row_item).remove();
-        });
 
-        $(document).on("click", ".add_itemSize", function (e) {
-            e.preventDefault();
-            let row_size = $(this).parent().parent().parent();
-            $(row_size).prepend(`<div class="row" style="margin-bottom: 10px">
+        {{#each product.color}}
+            stt += 1;
+            $("#product_list_color").prepend(`<tr>
+                            <th>
+                                <div>
+                                    <input name="stt[]" type="text" class="form-control" id="stt"
+                                           readonly
+                                           value="` + stt + `" style="text-align: center" >
+                                </div>
+                            </th>
+                            <th>
+                                <div>
+                                    <input name="nameColor[]" type="text" class="form-control"
+                                        required placeholder="Name Color"  pattern="\\S+.*" value="{{this.name}}">
+                                </div>
+                            </th>
+                            <th>
+                                <div>
+                                    <input type="color" value="{{this.colorCode}}"
+                                           name="colorCode[]" onchange="loadColor(event,${stt})"
+                                           style="width: 38px;height: 38px;border-radius: 5px;padding: 0;border: none" >
+                                </div>
+
+                            </th>
+                            <th>
+                                <div>
+                                    <input name="colorImage_${stt}" class="form-control" type="file" accept="image/*"
+                                           id="AddContentImage" onchange="loadFile(event,${stt})">
+                                </div>
+                            </th>
+                            <th>
+                                <div id="list_row_size">
+                                    <div class="row" style="margin-bottom: 10px">
+                                        <div class="col-4">
+                                            <select name="size_${stt}[]" id="size_0" class="form-select">
+                                                <option value="S">S</option>
+                                                <option value="M">M</option>
+                                                <option value="L">L</option>
+                                                <option value="XL">XL</option>
+                                                <option value="XXL">XXL</option>
+                                                <option value="3XL">3XL</option>
+                                                <option value="Over">Over Size</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-4">
+                                            <input name="count_${stt}[]" type="number" class="form-control" id="count"
+                                                   min="0" placeholder="Số lượng" required  pattern="\S+.*" value="{{this.size.[0].productCount}}">
+                                        </div>
+                                        <div class="col-4 row align-items-end">
+                                            <button class="btn btn-success add_itemSize">Thêm size</button>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </th>
+                            <th>
+                                    <div class="col-1">
+                                        <button class="btn btn-danger remove_item_btn" style="margin-left: 14px">Xóa </button>
+                                    </div>
+                                </th>
+
+
+                        </tr>`);
+            $("#preview_color").prepend(`<div class=" row_preview_color justify-content-end" id="row_preview_color_${stt}">
+                                    <div class=" row img-row-preview " >
+                                        <img class="img-preview" id="img_${stt}" src="../{{this.image.[0]}}">
+                                        <div class=" color-preview  " id="color_${stt}" style="background-color:{{this.colorCode}} ">
+                                        </div>
+                                    </div>
+                                </div>`)
+            var tmp = 0;
+
+
+
+            {{#each this.size}}
+                tmp++;
+                if (tmp < {{../size.length}}) {
+                    console.log(tmp);
+                    $('#list_row_size').prepend(`<div class="row" style="margin-bottom: 10px">
                                 <div class="col-4">
-                                    <select name="size_` + stt + `[]" id="size" class="form-select">
+                                    <select name="size_${stt}[]" id="size_${tmp}" class="form-select">
                                         <option value="S">S</option>
                                         <option value="M">M</option>
                                         <option value="L">L</option>
@@ -655,7 +688,69 @@
                                     </select>
                                 </div>
                                 <div class="col-4">
-                                    <input name="count_` + stt + `[]" type="number" class="form-control"
+                                    <input name="count_${stt}[]" type="number" class="form-control"
+                                        id="count_${tmp}" required pattern="\S+.*" placeholder="Số lượng" >
+                                </div>
+                                <div class="col-4 row align-items-end" >
+                                    <button class="btn btn-danger remove_size_btn" name="" >Xóa</button>
+                                </div>
+                            </div>`);
+                }else {
+
+                }
+            {{/each}}
+
+            {{#each this.size}}
+                $("#size_{{@index}}").val("{{this.name}}").change();
+                $("#count_{{@index}}").val("{{this.productCount}}").change();
+            {{/each}}
+
+
+        {{/each}}
+
+
+        $(".add_item_btn").click(function (e) {
+
+            e.preventDefault();
+            $(this).addColor();
+
+        });
+
+        $(document).on("click", ".remove_item_btn", function (e) {
+            stt -= 1;
+            e.preventDefault();
+            let row_item = $(this).parent().parent().parent();
+            let colorRow = $(this).parent().parent().parent();
+            let value = colorRow.children().children().children("#stt").val();
+            let row_preview = $("#row_preview_color_" + value);
+            $(row_item).remove();
+            $(row_preview).remove();
+        });
+        $(document).on("click", ".remove_size_btn", function (e) {
+            e.preventDefault();
+            let row_item = $(this).parent().parent();
+            $(row_item).remove();
+        });
+
+        $(document).on("click", ".add_itemSize", function (e) {
+            e.preventDefault();
+            let row_size = $(this).parent().parent().parent();
+            let colorRow = $(this).parent().parent().parent().parent().parent();
+            let value = colorRow.children().children().children("#stt").val();
+            $(row_size).prepend(`<div class="row" style="margin-bottom: 10px">
+                                <div class="col-4">
+                                    <select name="size_${value}[]" id="size" class="form-select">
+                                        <option value="S">S</option>
+                                        <option value="M">M</option>
+                                        <option value="L">L</option>
+                                        <option value="XL">XL</option>
+                                        <option value="XXL">XXL</option>
+                                        <option value="3XL">3XL</option>
+                                        <option value="Over">Over Size</option>
+                                    </select>
+                                </div>
+                                <div class="col-4">
+                                    <input name="count_${value}[]" type="number" class="form-control"
                                         id="count" required pattern="\S+.*" placeholder="Số lượng">
                                 </div>
                                 <div class="col-4 row align-items-end" >
@@ -665,19 +760,11 @@
         });
     });
 
-    function showInputChecked() {
-        // Get the checkbox
-        var checkBox = document.getElementById("checkRebate");
-        // Get the output text
-        var text = document.getElementById("rebate");
+    function loadSizeName() {
 
-        // If the checkbox is checked, display the output text
-        if (checkBox.checked == true) {
-            text.style.display = "block";
-        } else {
-            text.style.display = "none";
-        }
-    };
+    }
+
+    loadSizeName();
 
     var loadFile = function (event, stt) {
         var output = document.getElementById('img_' + stt);

@@ -75,7 +75,7 @@ export class AppController {
     @Get("product")
     getListProduct(@Req() req, @Res() res) {
         if (!req.session.user) {
-            res.redirect('login')
+            res.redirect('/login')
         }
         return this.appService.getProduct(req, res);
     }
@@ -83,7 +83,7 @@ export class AppController {
     @Get("product-add")
     addProduct(@Req() req, @Res() res) {
         if (!req.session.user) {
-            res.redirect('login')
+            res.redirect('/login')
         }
         return this.appService.getAddProduct(req, res);
     }
@@ -94,12 +94,11 @@ export class AppController {
         FilesInterceptor("colorImage", 100, {
             storage: diskStorage({
                 destination: "./uploads/imageProduct",
-                filename: editFileName
+                filename: editFileName,
             }),
             fileFilter: imageFileFilter
         })
     )
-
     postAddProduct(@Req() req, @Res() res, @UploadedFiles() files
     ) {
         return this.appService.postAddProduct(req, res, files);
@@ -108,7 +107,7 @@ export class AppController {
     @Get("productDetail/:id")
     getDetailProduct(@Req() req, @Res() res, @Param("id") param) {
         if (!req.session.user) {
-            res.redirect('login')
+            res.redirect('/login')
         }
         return this.appService.getDetailProduct(req, res, param);
     }
@@ -117,19 +116,34 @@ export class AppController {
     postSearchProduct(@Req() req, @Res() res
     ) {
         if (!req.session.user) {
-            res.redirect('login')
+            res.redirect('/login')
         }
         return this.appService.postSearchProduct(req, res);
     }
-
-    @Post("/productDetail/:id")
-    postUpdateProduct(@Req() req, @Res() res
+    @Get("/update-product/:id")
+    getUpdateStatusBill(@Req() req, @Res() res, @Param("id") param
     ) {
-
-        return this.appService.postUpdate(req, res);
+        return this.appService.getUpdateProduct(req, res,param);
     }
 
-//noti
+
+
+    @Post("/update-product/:id")
+    @UseInterceptors(
+        FilesInterceptor("colorImage", 100, {
+            storage: diskStorage({
+                destination: "./uploads/imageProduct",
+                filename: editFileName
+            }),
+            fileFilter: imageFileFilter
+        })
+    )
+    postUpdateProduct(@Req() req, @Res() res, @Param("id") param,@UploadedFiles() files
+    ) {
+        console.log(req.body);
+        console.log(files);
+        return this.appService.postUpdate(req, res,param,files);
+    }
 
 // admin
     @Get("profile")
@@ -151,7 +165,7 @@ export class AppController {
     @Get("userInfo/:id")
     showUserInfo(@Req() req, @Res() res, @Param("id") param) {
         if (!req.session.user) {
-            res.redirect('login')
+            res.redirect('/login')
         }
         return this.appService.getDetailUser(req, res, param);
     }
@@ -198,7 +212,7 @@ export class AppController {
     @Get("detailBill/:id")
     getDetailBill(@Req() req, @Res() res, @Param("id") param) {
         if (!req.session.user) {
-            res.redirect('login')
+            res.redirect('/login')
         }
         return this.appService.getDetailBill(req, res, param);
     }
@@ -211,7 +225,7 @@ export class AppController {
     @Get("noti")
     getNoti(@Req() req, @Res() res) {
         if (!req.session.user) {
-            res.redirect('login')
+            res.redirect('/login')
         }
         return this.appService.getNoti(req, res);
     }
