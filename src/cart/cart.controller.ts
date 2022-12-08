@@ -39,14 +39,14 @@ export class CartController {
     return this.cartService.findAll();
   }
 
-  @Get(':id')
+  @Get('cartsById/:id')
   findOne(@Param('id') id: string) {
     return this.cartService.findOne(id);
   }
 
-  @Get('cartsByUser/:userId')
-  findByUserId(@Param('userId') userId: string) {
-    return this.cartService.findByUserId(userId);
+  @Get('cartsByUser/')
+  findByUserId() {
+    return this.cartService.findByUserId();
   }
 
   @Patch(':id')

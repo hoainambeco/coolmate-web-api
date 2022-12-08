@@ -47,6 +47,7 @@ export class ProductController {
   async findAll(@Query(new ValidationPipe({ transform: true }))
                   queryProductDto: QueryProductDto,) {
     // console.log(queryProductDto);
+    this.productService.updateProduct();
     return await this.productService.findAll(queryProductDto);
   }
 

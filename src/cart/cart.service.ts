@@ -61,12 +61,15 @@ export class CartService {
   }
 
   async findAll(): Promise<CartDto[]> {
-    const carts = await this.itemCartsRepository.find();
+    const carts = await this.cartsRepository.find();
     const listProducts = [];
+    console.log(carts);
     for (const cart of carts) {
-      for (const product of cart.products) {
+      // @ts-ignore
+      for (const product of cart.carts) {
         listProducts.push({
           ...product,
+          // @ts-ignore
           product: await this.productRepository.findOneBy(ObjectId(product.productId))
         });
       }
@@ -79,14 +82,15 @@ export class CartService {
 
   async findOne(id: string) {
     // @ts-ignore
-    const cart = await this.itemCartsRepository.findOneBy(id);
+    const cart = await this.cartsRepository.findOneBy(id);
     if (!cart) {
       throw new ErrorException(404, "Cart not found");
     }
     const listProducts = [];
-    for (const product of cart.products) {
+    for (const product of cart.carts) {
       listProducts.push({
         ...product,
+        //@ts-ignore
         product: await this.productRepository.findOneBy(ObjectId(product.productId))
       });
     }
@@ -95,16 +99,18 @@ export class CartService {
     return await JSON.parse(JSON.stringify(cart));
   }
 
-  async findByUserId(id: string) {
-    const carts = await this.itemCartsRepository.find({ where: { userId: id } });
+  async findByUserId() {
+    let user = AuthService.getAuthUser();
+    const carts = await this.cartsRepository.find({ where: { userId: user.id } });
     if (carts.length <= 0) {
       throw new ErrorException(404, "Cart not found");
     }
     const listProducts = [];
     for (const cart of carts) {
-      for (const product of cart.products) {
+      for (const product of cart.carts) {
         listProducts.push({
           ...product,
+          // @ts-ignore
           product: await this.productRepository.findOneBy(ObjectId(product.productId))
         });
       }
@@ -115,7 +121,8 @@ export class CartService {
   }
 
   async update(id: string, updateCartDto: UpdateCartDto) {
-    const cart = this.findByUserId(id);
+
+    const cart = this.findByUserId();
     return await this.itemCartsRepository.update(id, updateCartDto);
   }
 
