@@ -140,8 +140,6 @@ export class AppController {
     )
     postUpdateProduct(@Req() req, @Res() res, @Param("id") param,@UploadedFiles() files
     ) {
-        console.log(req.body);
-        console.log(files);
         return this.appService.postUpdate(req, res,param,files);
     }
 

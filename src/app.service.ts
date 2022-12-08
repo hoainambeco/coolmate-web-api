@@ -122,7 +122,6 @@ export class AppService {
     }
 
     async postAddProduct(req, res, files: IFile[]) {
-        console.log(files)
         if (!files || !files.length) {
             return res.redirect('/product-add', {msgFile: `<h6 class="alert alert-danger">Add failed due to no files!</h6>`});
         }
@@ -233,9 +232,9 @@ export class AppService {
             });
         }
     }
+
     async getUpdateProduct(req, res, id) {
         const product = await this.productRepository.findOneBy(id);
-        console.log(product)
         // @ts-ignore
         product.id = product.id.toString();
         // @ts-ignore
@@ -253,18 +252,18 @@ export class AppService {
         var idUser = req.session.user.id;
         return res.render('./updateProduct', {product: product, nameNav: nameNav, idUser: idUser})
     }
-    async postUpdate(req, res,id,files: IFile[]): Promise<ProductDto> {
+
+    async postUpdate(req, res, id, files: IFile[]): Promise<ProductDto> {
+        console.log(req.body);
         // @ts-ignore
         let product = await this.productRepository.findOneBy(id);
-
-
-
         if (!product) {
             throw new ErrorException(HttpStatus.NOT_FOUND, 'Product not found');
         }
+        var listDataUpdateImage = req.body.dataUpdate.split(",");
         // @ts-ignore
         let listColor: [{ name: string, colorCode: string, image: string[], size: [{ name: string, productCount: number }] }] = [];
-        var productCount  = 0;
+        var productCount = 0;
         for (let i = 0; i < req.body.stt.length; i++) {
             // @ts-ignore
             let sizeList: [{ name: string, productCount: number }] = [];
@@ -294,25 +293,23 @@ export class AppService {
 
             }
             var path = "";
-            if(files.length <1){
-                path = product.color[i].image[0];
-            }else {
-                var name = "colorImage_" +(i+1);
+            if (files.length < 1) {
+                path = product.color[req.body.stt.length - i - 1].image[0];
+            } else {
                 var trueImg = false;
-                for (let j = 0; j <files.length ; j++) {
-                  if(files[j].fieldname === name)  {
-                      trueImg = true;
-                      path = files[j].path;
-                      break;
-                  }
-
+                for (let j = 0; j < files.length; j++) {
+                    if (listDataUpdateImage[j] === req.body.stt[i].toString()) {
+                        trueImg = true;
+                        path = files[j].path;
+                        console.log(product.color[i].name + "-thay anh stt" + listDataUpdateImage[j]);
+                        break;
+                    }
                 }
-                if(!trueImg){
-                    path = product.color[i].image[0];
+                if (!trueImg) {
+                    path = product.color[req.body.stt.length - i - 1].image[0];
                 }
 
             }
-            console.log(path)
             listColor.push({
                 name: req.body.nameColor[i],
                 colorCode: req.body.colorCode[i],
@@ -321,7 +318,7 @@ export class AppService {
             })
         }
 
-     /*   var tmp = Number(req.body.sellingPriceProduct) - (Number(req.body.rebate) * Number(req.body.sellingPriceProduct)) / 100;
+        var tmp = Number(req.body.sellingPriceProduct) - (Number(req.body.rebate) * Number(req.body.sellingPriceProduct)) / 100;
         tmp = Math.round(tmp)
 
         let listPurpose = [];
@@ -345,11 +342,11 @@ export class AppService {
             sellingPrice: Number(req.body.sellingPriceProduct),
             promotionalPrice: Number(tmp),
             ratingAvg: product.ratingAvg,
-
+            status: req.body.status
         });
-        console.table(productNew.color);*/
-     //   await this.productRepository.update(product.id, productNew);
-        return res.redirect('/update-product/' + id)
+        console.table(productNew.color);
+        await this.productRepository.update(product.id, productNew);
+        return res.redirect('/update-product/' + id);
     }
 
 //user

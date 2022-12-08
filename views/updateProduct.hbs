@@ -348,23 +348,20 @@
                                         <div class="col " style="width: 162px;height: 55px">
                                             <label for="inputPriceProduct" class="labelInput">Giảm giá</label>
                                             <div class="col-sm-5">
-                                                <input name="sellingPriceProduct" type="number" class="inputPrice"
+                                                <input name="rebate" type="number" class="inputPrice"
                                                        id="inputPriceProduct" required
                                                        min="0" value="{{product.rebate}}" max="100">
                                             </div>
                                         </div>
-                                        <div class="col" style="height: 65px;">
-                                            <label for="inputState" class="labelSelect">Tính năng</label>
-                                            <select id="selectFeature" class="fieldSelect" name="feature">
-                                                <option value="Chống nhăn"> Chống nhăn</option>
-                                                <option value="chống tia UV"> chống tia UV</option>
-                                                <option value="Chống nắng"> Chống nắng</option>
-                                                <option value="Co dãn tốt"> Co dãn tốt</option>
-                                                <option value="Mềm mại"> Mềm mại</option>
-                                                <option value="Thoải mái"> Thoải mái</option>
-                                                <option value="Nhanh khô"> Nhanh khô</option>
-                                                <option value="Thoáng khí"> Thoáng khí</option>
-                                                <option value="Thấm hút tốt"> Thấm hút tốt</option>
+                                        <div class="col" style="width: 162px;height: 55px">
+                                            <label for="inputPriceProduct" class="labelInput" style="font-weight: 800">Trạng thái</label>
+                                            <select id="status" name="status" style="background: #FFFFFF;  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
+                                                border-radius: 8px;  width: 162px; height: 38px; font-size: 16px;  padding-left: 10px;
+                                                padding-right: 10px;  border: none; margin-top: 7px;">
+                                                <option value="Còn hàng">Còn hàng</option>
+                                                <option value="Hết hàng">Hết hàng</option>
+                                                <option value="Sắp ra mắt">Sắp ra mắt</option>
+                                                <option value="Ngừng kinh doanh">Ngừng kinh doanh</option>
                                             </select>
                                         </div>
                                     </div>
@@ -483,13 +480,14 @@
                     </div>
 
                     <div style="width: 100%;text-align: right;margin-top: 30px">
-
+                        <input type="text" id="dataUpdate" style="display: none" name="dataUpdate">
                         <button class=" btn-cancel" id="add_product" onclick="history.back()"
                                 style="border-radius: 56px;width: 100px;height: 54px; font-size: 20px;margin-right: 10px">
                             Hủy
                         </button>
                         <button type="submit" class=" btn-addProduct" id="add_product"
-                                style="border-radius: 56px;width: 258px;height: 54px; font-size: 20px">Lưu chỉnh sửa
+                                style="border-radius: 56px;width: 258px;height: 54px; font-size: 20px"
+                                onclick="logData(event)">Lưu chỉnh sửa
                         </button>
                     </div>
 
@@ -514,6 +512,7 @@
     selectElement('selectMaterial', '{{product.material}}');
     selectElement('selectFeature', '{{product.feature}}');
     selectElement('selectPurpose', '{{product.purpose}}');
+    selectElement('status', '{{product.status}}');
     var stt = 0;
     //start();
 
@@ -546,8 +545,8 @@
                             </th>
                             <th>
                                 <div>
-                                    <input name="colorImage_${stt}" class="form-control" type="file" accept="image/*"
-                                           id="AddContentImage" onchange="loadFile(event,${stt})"
+                                    <input name="colorImage" class="form-control" type="file" accept="image/*"
+                                           id="AddContentImage" onchange="loadFile(event,${stt}),loadDataUpdateFile(event,'${stt}')"
                                            required>
                                 </div>
                             </th>
@@ -622,8 +621,8 @@
                             </th>
                             <th>
                                 <div>
-                                    <input name="colorImage_${stt}" class="form-control" type="file" accept="image/*"
-                                           id="AddContentImage" onchange="loadFile(event,${stt})">
+                                    <input name="colorImage" class="form-control" type="file" accept="image/*"
+                                           id="AddContentImage" onchange="loadFile(event,${stt}),loadDataUpdateFile(event,'${stt}')">
                                 </div>
                             </th>
                             <th>
@@ -695,7 +694,7 @@
                                     <button class="btn btn-danger remove_size_btn" name="" >Xóa</button>
                                 </div>
                             </div>`);
-                }else {
+                } else {
 
                 }
             {{/each}}
@@ -760,11 +759,6 @@
         });
     });
 
-    function loadSizeName() {
-
-    }
-
-    loadSizeName();
 
     var loadFile = function (event, stt) {
         var output = document.getElementById('img_' + stt);
@@ -773,6 +767,20 @@
             URL.revokeObjectURL(output.src)
         }
     };
+    var arr = new Set();
+    var loadDataUpdateFile = function (event, stt) {
+        arr.add(stt);
+        const sortedNumbers = Array.from(arr).sort((a, b) => b - a);
+        document.getElementById("dataUpdate").value = sortedNumbers;
+
+    };
+
+
+    var logData = function (event) {
+        console.log(arr)
+    };
+
+
     var loadColor = function (event, stt) {
         var output = document.getElementById('color_' + stt);
         output.style.backgroundColor = event.target.value;

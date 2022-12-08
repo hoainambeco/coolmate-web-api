@@ -26,7 +26,7 @@ async function bootstrap() {
   loadEnviroment();
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.disable("x-powered-by");
-  app.use(
+ /* app.use(
     helmet({
         // contentSecurityPolicy: {
         //   directives: {
@@ -62,7 +62,7 @@ async function bootstrap() {
         crossOriginEmbedderPolicy: false,
         xssFilter: true
       }
-    ));
+    ));*/
   app.enableCors();
   app.use(compression());
   app.use(morgan("combined"));
