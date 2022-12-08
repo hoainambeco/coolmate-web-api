@@ -60,38 +60,47 @@ export class ProductService {
     return product;
   }
 
-  async findAll(queryProductDto: QueryProductDto): Promise<ProductDto[]> {
+  async updateProduct() {
     const products = await this.productRepository.find();
-    products.map((item) =>
-      {
-        try {
-          item.image = item.color.map((color) => color.image.map((image) => image)).map((item) => item.reduce((a, b) => a.concat(b), [])).reduce((a, b) => a.concat(b), []);
-          item.ratingAvg = item.rating.map((item) => item.score).reduce((a, b) => a + b, 0) / item.rating.length
-          item.price = parseInt(item.price.toString());
-        }
-        catch (e) {
-          item.ratingAvg = 0;
-        }
+    products.map(async (element) => {
+      const item = { ...element };
+      item.image = item.color.map((color) => color.image.map((image) => image)).map((item) => item.reduce((a, b) => a.concat(b), [])).reduce((a, b) => a.concat(b), []);
+      try {
+        item.ratingAvg = item.rating.map((item) => item.score).reduce((a, b) => a + b, 0) / item.rating.length;
+      } catch (e) {
+        item.ratingAvg = 0;
       }
-    );
+      item.price = parseInt(item.price.toString());
+      if (item.price < 1000) {
+        item.price = item.price * 1000;
+      }
+      if (item.sellingPrice < 1000) {
+        item.sellingPrice = item.sellingPrice * 1000;
+      }
+      item.productCount = item.color.map((color) => color.size.map((size) => size.productCount)).map((item) => item.reduce((a, b) => a + b, 0)).reduce((a, b) => a + b, 0);
+
+    });
     await this.productRepository.save(products);
+  }
+
+  async findAll(queryProductDto: QueryProductDto): Promise<ProductDto[]> {
     let options = {
       where: {
-        type: {$regex: queryProductDto.type, $options: "i"},
-        productName: {$regex : queryProductDto.productName, $options: "i"},
+        type: { $regex: queryProductDto.type, $options: "i" },
+        productName: { $regex: queryProductDto.productName, $options: "i" },
         status: queryProductDto.status,
-        brand: {$regex : queryProductDto.brand, $options: "i"},
+        brand: { $regex: queryProductDto.brand, $options: "i" },
         price: {
           $gte: queryProductDto.priceTo,
           $lte: queryProductDto.priceFrom
         },
         //gte là lớn hơn hoặc bằng; lte là nhỏ hơn hoặc bằng
-        ratingAvg: {$gte: queryProductDto.rating},
+        ratingAvg: { $gte: queryProductDto.rating },
         style: queryProductDto.style,
         catalog: queryProductDto.catalog,
         purpose: queryProductDto.purpose,
-        features: queryProductDto.feature,
-        },
+        features: queryProductDto.feature
+      },
       // skip: queryProductDto.skip,
       // take: queryProductDto.take,
       order: {}
@@ -103,40 +112,40 @@ export class ProductService {
         }
       });
     }
-    if(!queryProductDto.type){
+    if (!queryProductDto.type) {
       delete options.where.type;
     }
-    if(!queryProductDto.productName){
+    if (!queryProductDto.productName) {
       delete options.where.productName;
     }
-    if(!queryProductDto.status){
+    if (!queryProductDto.status) {
       delete options.where.status;
     }
-    if(!queryProductDto.brand){
+    if (!queryProductDto.brand) {
       delete options.where.brand;
     }
-    if(!queryProductDto.priceFrom){
+    if (!queryProductDto.priceFrom) {
       delete options.where.price.$lte;
     }
-    if(!queryProductDto.priceTo){
+    if (!queryProductDto.priceTo) {
       delete options.where.price.$gte;
     }
-    if(!queryProductDto.priceFrom && !queryProductDto.priceTo){
+    if (!queryProductDto.priceFrom && !queryProductDto.priceTo) {
       delete options.where.price;
     }
-    if(!queryProductDto.rating){
+    if (!queryProductDto.rating) {
       delete options.where.ratingAvg;
     }
-    if(!queryProductDto.style){
+    if (!queryProductDto.style) {
       delete options.where.style;
     }
-    if(!queryProductDto.catalog){
+    if (!queryProductDto.catalog) {
       delete options.where.catalog;
     }
-    if(!queryProductDto.purpose){
+    if (!queryProductDto.purpose) {
       delete options.where.purpose;
     }
-    if(!queryProductDto.feature){
+    if (!queryProductDto.feature) {
       delete options.where.features;
     }
     console.log(options);

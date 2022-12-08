@@ -26,7 +26,43 @@ async function bootstrap() {
   loadEnviroment();
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.disable("x-powered-by");
-
+  app.use(
+    helmet({
+        // contentSecurityPolicy: {
+        //   directives: {
+        //     defaultSrc: [`'self'`],
+        //     styleSrc: [`'self'`, `'unsafe-inline'`],
+        //     imgSrc: [`'self'`, "data:", "validator.swagger.io", `https:`],
+        //     scriptSrc: [`'self'`, `https: 'unsafe-inline'`]
+        //   }
+        // },
+        contentSecurityPolicy: {
+          directives: {
+            defaultSrc: [`'self'`, `https:`],
+            styleSrc: [`'self'`, `'unsafe-inline'`, `https:`],
+            imgSrc: [`'self'`, "data:", "validator.swagger.io", `https:`],
+            scriptSrc: [`'self'`, `https: 'unsafe-inline'`],
+            fontSrc: [`'self'`, `https:`, `data:`],
+            connectSrc: [`'self'`, `https:`, `wss:`],
+            frameSrc: [`'self'`, `https:`, `wss:`],
+            objectSrc: [`'self'`, `https:`, `wss:`],
+            mediaSrc: [`'self'`, `https:`, `wss:`],
+            frameAncestors: [`'self'`],
+            formAction: [`'self'`],
+            baseUri: [`'self'`, `https:`],
+            manifestSrc: [`'self'`],
+            workerSrc: [`'self'`],
+            childSrc: [`'self'`],
+            prefetchSrc: [`'self'`],
+            cssSrc: [`'self'`],
+            url: [`'self'`],
+          }
+        },
+        crossOriginResourcePolicy: false,
+        crossOriginEmbedderPolicy: false,
+        xssFilter: true
+      }
+    ));
   app.enableCors();
   app.use(compression());
   app.use(morgan("combined"));
@@ -71,43 +107,6 @@ async function bootstrap() {
   app.use(passport.session());
 
   await app.listen(process.env.PORT || 3000);
-  app.use(
-    helmet({
-        contentSecurityPolicy: {
-          directives: {
-            defaultSrc: [`'self'`],
-            styleSrc: [`'self'`, `'unsafe-inline'`],
-            imgSrc: [`'self'`, "data:", "validator.swagger.io"],
-            scriptSrc: [`'self'`, `https: 'unsafe-inline'`]
-          }
-        },
-        // contentSecurityPolicy: {
-        //   directives: {
-        //     defaultSrc: [`'self'`, `https:`],
-        //     styleSrc: [`'self'`, `'unsafe-inline'`, `https:`],
-        //     imgSrc: [`'self'`, "data:", "validator.swagger.io", `https:`],
-        //     scriptSrc: [`'self'`, `https: 'unsafe-inline'`],
-        //     fontSrc: [`'self'`, `https:`, `data:`],
-        //     connectSrc: [`'self'`, `https:`, `wss:`],
-        //     frameSrc: [`'self'`, `https:`, `wss:`],
-        //     objectSrc: [`'self'`, `https:`, `wss:`],
-        //     mediaSrc: [`'self'`, `https:`, `wss:`],
-        //     frameAncestors: [`'self'`],
-        //     formAction: [`'self'`],
-        //     baseUri: [`'self'`, `https:`],
-        //     manifestSrc: [`'self'`],
-        //     workerSrc: [`'self'`],
-        //     childSrc: [`'self'`],
-        //     prefetchSrc: [`'self'`],
-        //     cssSrc: [`'self'`],
-        //     url: [`'self'`, `https:`],
-        //   }
-        // },
-        crossOriginResourcePolicy: false,
-        crossOriginEmbedderPolicy: false,
-        xssFilter: true
-      }
-    ));
   Logger.debug(`Application is running on: ${await app.getUrl()}`, "Main");
 }
 
