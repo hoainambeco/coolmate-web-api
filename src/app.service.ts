@@ -528,4 +528,17 @@ export class AppService {
         var idUser
         return res.render('./noti', {nameNav: nameNav, idUser: idUser})
     }
+    //masage
+    async getMessage(req, res) {
+        var nameList = req.session.user.fullName.split(" ");
+
+        var nameNav = "";
+        if (nameList.length >= 2) {
+            nameNav = nameList[0] + " " + nameList[nameList.length - 1]
+        } else {
+            nameNav = nameList[0];
+        }
+        var idUser = req.session.user.id;
+        res.render('./message', { nameNav: nameNav, idUser: idUser});
+    }
 }

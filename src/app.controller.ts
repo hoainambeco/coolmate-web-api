@@ -227,6 +227,13 @@ export class AppController {
         }
         return this.appService.getNoti(req, res);
     }
+    @Get("message")
+    getMessage(@Req() req, @Res() res) {
+        if (!req.session.user) {
+            res.redirect('/login')
+        }
+        return this.appService.getMessage(req, res);
+    }
 }
 
 @ApiTags("service")
