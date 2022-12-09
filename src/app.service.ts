@@ -558,8 +558,6 @@ export class AppService {
         //   }
         // }
         const registrationToken = [...new Set(user.map((item) => {if (item.registrationToken) return item.registrationToken}))];
-        console.log(registrationToken);
-        console.log(notification);
         registrationToken.forEach((item) => {
             if(item){
 
@@ -568,7 +566,7 @@ export class AppService {
                         notification: {
                             title: notification.title,
                             body: notification.content,
-                            imageUrl: notification.file,
+                            imageUrl: notification.file.split('\\').join('/')
                         }
                     },
                     tokens: [item]
