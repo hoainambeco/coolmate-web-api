@@ -7,7 +7,7 @@ import {
     Post,
     Render,
     Req,
-    Res,
+    Res, UploadedFile,
     UploadedFiles, UseGuards,
     UseInterceptors
 } from "@nestjs/common";
@@ -15,7 +15,7 @@ import {AppService} from "./app.service";
 import {ApiBearerAuth, ApiOkResponse, ApiTags} from "@nestjs/swagger";
 import * as multer from "multer";
 import {diskStorage} from "multer";
-import {FilesInterceptor} from "@nestjs/platform-express";
+import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
 import {extname} from "path";
 import {MongoClient} from "mongodb";
 import {JwtAuthGuard} from "./guards/jwt-auth.guard";
@@ -233,6 +233,45 @@ export class AppController {
             res.redirect('/login')
         }
         return this.appService.getMessage(req, res);
+    }
+    @Post("noti")
+    @UseInterceptors(
+      FileInterceptor('imgNoti', {
+          storage: diskStorage({
+              destination: './uploads/noti',
+              filename: (req, file, callback) => {
+                  const name = file.originalname.split('.')[0];
+                  const fileExtName = extname(file.originalname);
+                  const randomName = Math.round(Date.now() / 1000);
+                  callback(null, `${name}-${randomName}${fileExtName}`);
+              },
+          }),
+          fileFilter: (req, file, callback) => {
+              const imageMimeType = [
+                  'image/jpeg',
+                  'image/png',
+                  'image/gif',
+                  'image/webp',
+                  'image/*',
+              ];
+              if (!imageMimeType.includes(file.mimetype)) {
+                  return callback(
+                    new HttpException(
+                      'Only image files are allowed!',
+                      HttpStatus.BAD_REQUEST,
+                    ),
+                    false,
+                  );
+              }
+              callback(null, true);
+          },
+      }),
+    )
+    postNoti(@Req() req, @Res() res,@UploadedFile() file) {
+        if (!req.session.user) {
+            res.redirect('/login')
+        }
+        return this.appService.postNoti(req, res, file);
     }
 }
 

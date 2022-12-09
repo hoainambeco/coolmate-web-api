@@ -20,6 +20,7 @@ import {Oder} from "./oders/entities/oder.entity";
 import {OderDto} from "./oders/dto/oder.dto";
 import * as Process from "process";
 import {StatusProductEnum} from "./enum/product";
+import { getMessaging } from "firebase-admin/messaging";
 
 @Injectable()
 export class AppService {
@@ -540,5 +541,49 @@ export class AppService {
         }
         var idUser = req.session.user.id;
         res.render('./message', { nameNav: nameNav, idUser: idUser});
+    }
+    async postNoti(req, res,file) {
+        const notification = {title: '',file:'', content: '', name: '', createdAt: new Date(), updatedAt: new Date};
+        notification.title = req.body.title;
+        notification.content = req.body.content;
+        notification.name = req.body.name;
+        notification.file = `${process.env.HOST_NAME}/${file.path}`;
+        notification.createdAt = new Date();
+        notification.updatedAt = new Date();
+        const user = await this.userRepository.find();
+        // for (const item of user) {
+        //   if (!item.registrationToken) {
+        //     item.registrationToken = "fmVvbYa5TLeE_cAwprIbFA:APA91bH-7t8CJRr-b1PRAHh_i1nmg4Xd76RLCvi0_NyWhOiX_cMGtm0HBOe6jC4B1Ieb1VnqSjWupSNx4Z3yiRg4IxvhLxwdVEPN5KHb0QKQLuhZ_TwozsDqvjnxehc-M3h30asWeX5m";
+        //     await this.userRepository.save(item);
+        //   }
+        // }
+        const registrationToken = [...new Set(user.map((item) => {if (item.registrationToken) return item.registrationToken}))];
+        console.log(registrationToken);
+        console.log(notification);
+        registrationToken.forEach((item) => {
+            if(item){
+
+                const message = {
+                    android: {
+                        notification: {
+                            title: notification.title,
+                            body: notification.content,
+                            imageUrl: notification.file,
+                        }
+                    },
+                    tokens: [item]
+                };
+                getMessaging().sendMulticast(message)
+                  .then((response) => {
+                        console.log("Successfully sent message:", response);
+                    }
+                  )
+                  .catch((error) => {
+                      console.log("Error sending message:", error);
+                  });
+            }
+        });
+
+        return res.redirect('/noti');
     }
 }
