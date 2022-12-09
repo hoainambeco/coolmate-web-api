@@ -547,7 +547,7 @@ export class AppService {
         notification.title = req.body.title;
         notification.content = req.body.content;
         notification.name = req.body.name;
-        notification.file = `${process.env.HOST_NAME}/${file.path}`;
+        notification.file = `http://coolmate.pimob.me/${file.path}`;
         notification.createdAt = new Date();
         notification.updatedAt = new Date();
         const user = await this.userRepository.find();
