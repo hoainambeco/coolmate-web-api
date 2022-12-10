@@ -585,28 +585,29 @@ export class AppService {
       const registrationToken = [...new Set(user.map((item) => {
         if (item.registrationToken) return item.registrationToken;
       }))];
+      let message = {
+        android: {
+          notification: {
+            title: notification.title,
+            body: notification.content,
+            imageUrl: notification.file.split("\\").join("/")
+          }
+        },
+        tokens: []
+      };
       registrationToken.forEach((item) => {
         if (item) {
-          const message = {
-            android: {
-              notification: {
-                title: notification.title,
-                body: notification.content,
-                imageUrl: notification.file.split("\\").join("/")
-              }
-            },
-            tokens: [item]
-          };
-          getMessaging().sendMulticast(message)
-            .then((response) => {
-                console.log("Successfully sent message:", response);
-              }
-            )
-            .catch((error) => {
-              console.log("Error sending message:", error);
-            });
+          message.tokens.push(item);
         }
       });
+      await getMessaging().sendMulticast(message)
+        .then((response) => {
+            console.log("Successfully sent message:", response);
+          }
+        )
+        .catch((error) => {
+          console.log("Error sending message:", error);
+        });
     }
 
 
