@@ -234,6 +234,10 @@ export class AppController {
         }
         return this.appService.getMessage(req, res);
     }
+    @Get('getUser/:email')
+    getUser(@Req() req, @Res() res, @Param("email") email) {
+        return this.appService.getUserNoti(req, res,email);
+    }
     @Post("noti")
     @UseInterceptors(
       FileInterceptor('imgNoti', {

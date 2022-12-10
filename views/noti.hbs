@@ -1,202 +1,280 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8"/>
-    <link rel="shortcut icon" href="https://www.coolmate.me/images/favicon.png"/>
-    <title>Áo Thun, Áo Phông Nam - Cool Mate</title>
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
-    <link href="../css/hover.css" rel="stylesheet">
-    <script src="../js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-    <style>
-        body {
-            font-family: Helvetica;
-            font-size: 16px;
-        }
+  <meta charset="utf-8" />
+  <link rel="shortcut icon" href="https://www.coolmate.me/images/favicon.png" />
+  <title>Áo Thun, Áo Phông Nam - Cool Mate</title>
+  <link href="../css/bootstrap.min.css" rel="stylesheet">
+  <link href="../css/hover.css" rel="stylesheet">
+  <script src="../js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  <style>
+    body {
+      font-family: Helvetica;
+      font-size: 16px;
+    }
 
-        .nav_app {
-            font-size: 18px;
-        }
+    .nav_app {
+      font-size: 18px;
+    }
 
-        .input-noti {
-            padding: 0px;
-            width: 500px;
-            height: 40px;
-            background: #FFFFFF;
-            border: 1px solid rgba(97, 117, 134, 0.2);
-            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-            border-radius: 20px;
-            padding: 10px;
-        }
+    .input-noti {
+      padding: 0px;
+      width: 500px;
+      height: 40px;
+      background: #FFFFFF;
+      border: 1px solid rgba(97, 117, 134, 0.2);
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+      border-radius: 20px;
+      padding: 10px;
+    }
 
-        .title-input-noti {
-            font-size: 20px;
-            margin-bottom: 10px;
-        }
+    .title-input-noti {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
 
-        .row-noti {
-            margin-bottom: 16px;
-        }
-        .btn-push-noti{
-            border: 2px solid #2F5ACF;
-            background-color: white;
-        }
-        .btn-push-noti:hover {
-            background-color: #2F5ACF
-        ;
-            color: white;
-        }
-    </style>
+    .row-noti {
+      margin-bottom: 16px;
+    }
+
+    .btn-push-noti {
+      border: 2px solid #2F5ACF;
+      background-color: white;
+    }
+
+    .btn-push-noti:hover {
+      background-color: #2F5ACF;
+      color: white;
+    }
+  </style>
 </head>
 <body>
 <div class="container-fluid">
-    <div class="row flex-nowrap">
-        <!-- Navbar -->
-        <div class="nav_app col-auto col-md-3 col-xl-2 px-sm-2 px-0"
-             style="box-shadow: 4px 4px 40px rgba(0, 0, 0, 0.06);">
-            <div class="d-flex flex-column align-items-center  px-3 pt-2 text-black min-vh-100">
-                <a href="/" class="d-flex align-items-center  mb-md-3 mt-md-3 text-black text-decoration-none">
-                    <img src="../image/logo-app.svg" width="126" height="45">
-                </a>
-                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start w-100"
-                    id="menu"
-                    style="width: 126px">
-                    <li class="nav-item ps-1">
-                        <a href="/dashboard" class="nav-link align-middle px-0 align-self-center" id="nav-btn">
-                            <img src="../image/icon/dashboard-icon.svg" width="30" height="30"> <span
-                                class="ms-1 d-none d-sm-inline " style="color: black">Thống kê</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/message" class="nav-link align-middle px-0 align-self-center" id="nav-btn">
-                            <img src="../image/icon/Chat-icon.svg" width="30" height="30"> <span
-                                class="ms-1 d-none d-sm-inline" style="color: black">Tin nhắn</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/product" id="nav-btn" class="nav-link align-middle px-0 align-self-center"
-                           >
-                            <img src="../image/icon/product-icon.svg" width="30" height="30"> <span
-                                class="ms-1 d-none d-sm-inline" style="color: black">Sản phẩm</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/customers" id="nav-btn" class="nav-link align-middle px-0 align-self-center">
-                            <img src="../image/icon/customer-icon.svg" width="30" height="30"> <span
-                                class="ms-1 d-none d-sm-inline" style="color: black">Người dùng</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/bills" id="nav-btn" class="nav-link align-middle px-0 align-self-center">
-                            <img src="../image/icon/bill-icon.svg" width="30" height="30"> <span
-                                class="ms-1 d-none d-sm-inline" style="color: black">Hóa đơn</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" id="nav-btn" class="nav-link align-middle px-0 align-self-center">
-                            <img src="../image/icon/voucher-icon.svg" width="30" height="30"> <span
-                                class="ms-1 d-none d-sm-inline" style="color: black">Phiếu giảm giá</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/noti" id="nav-btn" class="nav-link align-middle px-0 align-self-center"style="background-color: #b6b6b6">
-                            <img src="../image/icon/notifi-icon.svg" width="30" height="30"> <span
-                                class="ms-1 d-none d-sm-inline" style="color: black">Thông báo</span>
-                        </a>
-                    </li>
-                </ul>
-                <hr style="width: 100%; color: black;margin-bottom: 12px">
-                <div class="dropdown align-items-center" style="width: 100% ;height: 60px;padding-bottom: 10px">
-                    <a href="#"
-                       class=" rounded d-flex align-items-center text-black text-decoration-none dropdown-toggle"
-                       id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false"
-                       style="width: 100%; height: 100%;margin-bottom: 20px">
-                        <img src="../image/chengwei-pan-2.jpg" width="30" height="30"
-                             class="rounded-circle" style="margin-left: 30px;margin-right: 20px">
-                        <span class="d-none d-sm-inline mx-1" style="color: black">{{nameNav}}</span>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-                        <li><a class="dropdown-item" href="/profile">Profile</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item" href="/login">Sign out
-                            <img src="../image/icon/logout-icon.svg" width="30" height="30"
-                                 style="margin-left: 40px"></a>
-                        </li>
-                    </ul>
-                </div>
-
-            </div>
+  <div class="row flex-nowrap">
+    <!-- Navbar -->
+    <div class="nav_app col-auto col-md-3 col-xl-2 px-sm-2 px-0"
+         style="box-shadow: 4px 4px 40px rgba(0, 0, 0, 0.06);">
+      <div class="d-flex flex-column align-items-center  px-3 pt-2 text-black min-vh-100">
+        <a href="/" class="d-flex align-items-center  mb-md-3 mt-md-3 text-black text-decoration-none">
+          <img src="../image/logo-app.svg" width="126" height="45">
+        </a>
+        <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start w-100"
+            id="menu"
+            style="width: 126px">
+          <li class="nav-item ps-1">
+            <a href="/dashboard" class="nav-link align-middle px-0 align-self-center" id="nav-btn">
+              <img src="../image/icon/dashboard-icon.svg" width="30" height="30"> <span
+              class="ms-1 d-none d-sm-inline " style="color: black">Thống kê</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/message" class="nav-link align-middle px-0 align-self-center" id="nav-btn">
+              <img src="../image/icon/Chat-icon.svg" width="30" height="30"> <span
+              class="ms-1 d-none d-sm-inline" style="color: black">Tin nhắn</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/product" id="nav-btn" class="nav-link align-middle px-0 align-self-center"
+            >
+              <img src="../image/icon/product-icon.svg" width="30" height="30"> <span
+              class="ms-1 d-none d-sm-inline" style="color: black">Sản phẩm</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/customers" id="nav-btn" class="nav-link align-middle px-0 align-self-center">
+              <img src="../image/icon/customer-icon.svg" width="30" height="30"> <span
+              class="ms-1 d-none d-sm-inline" style="color: black">Người dùng</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/bills" id="nav-btn" class="nav-link align-middle px-0 align-self-center">
+              <img src="../image/icon/bill-icon.svg" width="30" height="30"> <span
+              class="ms-1 d-none d-sm-inline" style="color: black">Hóa đơn</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" id="nav-btn" class="nav-link align-middle px-0 align-self-center">
+              <img src="../image/icon/voucher-icon.svg" width="30" height="30"> <span
+              class="ms-1 d-none d-sm-inline" style="color: black">Phiếu giảm giá</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/noti" id="nav-btn" class="nav-link align-middle px-0 align-self-center"
+               style="background-color: #b6b6b6">
+              <img src="../image/icon/notifi-icon.svg" width="30" height="30"> <span
+              class="ms-1 d-none d-sm-inline" style="color: black">Thông báo</span>
+            </a>
+          </li>
+        </ul>
+        <hr style="width: 100%; color: black;margin-bottom: 12px">
+        <div class="dropdown align-items-center" style="width: 100% ;height: 60px;padding-bottom: 10px">
+          <a href="#"
+             class=" rounded d-flex align-items-center text-black text-decoration-none dropdown-toggle"
+             id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false"
+             style="width: 100%; height: 100%;margin-bottom: 20px">
+            <img src="../image/chengwei-pan-2.jpg" width="30" height="30"
+                 class="rounded-circle" style="margin-left: 30px;margin-right: 20px">
+            <span class="d-none d-sm-inline mx-1" style="color: black">{{nameNav}}</span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+            <li><a class="dropdown-item" href="/profile">Profile</a></li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item" href="/login">Sign out
+              <img src="../image/icon/logout-icon.svg" width="30" height="30"
+                   style="margin-left: 40px"></a>
+            </li>
+          </ul>
         </div>
-        <!-- end Navbar -->
 
-
-        <div class="col pt-5 pe-0">
-            <div style="width: 100%;margin: 0px" class="row">
-                <div class="col-3 row align-items-center "
-                     style="height: 40px; text-align:left; font-size: 20px ;margin-left: 20px">
-                    <div class="col-1" style="margin: 0;padding: 0">
-                        <div style="text-align: right ;">
-                            <img src="../image/icon/Info.svg" width="20px" height="20px" style="margin-bottom: 6px">
-                        </div>
-
-                    </div>
-                    <div class="col-8 p-0">
-                        <p style="text-align: left;margin: 0;padding-left: 5px">
-                            Notification
-                        </p>
-                    </div>
-                </div>
-                <div class="col-12" style="height: 600px;padding-left: 46px">
-                    <div style="width: 100%;height: 100%;border-left:1px solid #000000;padding-left: 42px;padding-top: 20px">
-                        <form method="post" action="" class="content-noti" enctype="multipart/form-data">
-                            <div class="row-noti" style="">
-                                <p class="title-input-noti">Notification Title </p>
-                                <input class="input-noti" type="text" placeholder="Điền tiêu đề thông báo"
-                                       name="title" required>
-
-                            </div>
-
-                            <div class="row-noti" style="">
-                                <p class="title-input-noti">Notification Content </p>
-                                <textarea name="content" class="input-noti" placeholder="Điền tiêu đề thông báo"
-                                          style="padding: 8px;height: 108px;" required></textarea>
-                            </div>
-
-                            <div class="row-noti" style="">
-                                <p class="title-input-noti">Notification Image(Optinal)</p>
-                                <input name="imgNoti" class="form-control input-noti" type="file" id="formFile" style="padding-top: 7px;padding-bottom: 0">
-
-                            </div>
-                            <div class="row-noti" style="">
-                                <p class="title-input-noti">Notification Name(Optinal)</p>
-                                <input class="input-noti" type="text" placeholder="Điền tiêu đề thông báo"
-                                       name="name" required>
-
-                            </div>
-                            <div class="col-12" style="height: 60px;text-align: right;margin-top: 56px" >
-                                <button class="btn-push-noti" type="submit"
-                                        style="border-radius: 56px;width: 258px;height: 54px; font-size: 20px">Đẩy thông báo
-                                </button>
-                            </div>
-                        </form>
-
-
-                    </div>
-
-
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
+    <!-- end Navbar -->
 
-</div>
 
+    <div class="col pt-5 pe-0">
+      <div style="width: 100%;margin: 0px" class="row">
+        <div class="col-3 row align-items-center "
+             style="height: 40px; text-align:left; font-size: 20px ;margin-left: 20px">
+          <div class="col-1" style="margin: 0;padding: 0">
+            <div style="text-align: right ;">
+              <img src="../image/icon/Info.svg" width="20px" height="20px" style="margin-bottom: 6px">
+            </div>
 
-</div>
+          </div>
+          <div class="col-8 p-0">
+            <p style="text-align: left;margin: 0;padding-left: 5px">
+              Notification
+            </p>
+          </div>
+        </div>
+        <div class="col-12" style="height: 600px;padding-left: 46px">
+          <div style="width: 100%;height: 100%;border-left:1px solid #000000;padding-left: 42px;padding-top: 20px">
+            <form method="post" action="" class="content-noti" enctype="multipart/form-data">
+              <div class="row-noti" style="">
+                <p class="title-input-noti">Tiêu đề thông báo </p>
+                <input class="input-noti" type="text" placeholder="Điền tiêu đề thông báo"
+                       name="title" required>
+
+              </div>
+
+              <div class="row-noti" style="">
+                <p class="title-input-noti">Nội dung thông báo </p>
+                <textarea name="content" class="input-noti" placeholder="Điền nội dung thông báo"
+                          style="padding: 8px;height: 108px;" required></textarea>
+              </div>
+
+              <div class="row-noti" style="">
+                <p class="title-input-noti">Ảnh của thông báo</p>
+                <input name="imgNoti" class="form-control input-noti" type="file" id="formFile"
+                       style="padding-top: 7px;padding-bottom: 0">
+
+              </div>
+              <div class="row align-items-center"
+                   style="margin-top: 15px;margin-left: 16px;align-items: center">
+                <!--                            <input class="col-1" type="checkbox" onclick="showInputChecked()"-->
+                <!--                                   id="checkRebate"-->
+                <!--                                   style="width: 24px;height: 24px;border-radius: 8px">-->
+                <input type="radio" id="all" name="fav_language" checked onclick="showInputChecked()"
+                       style="width: auto;">
+                <label for="all" style="width: auto;">Gửi cho toàn bộ khách hàng</label><br>
+                <input type="radio" id="checkRebate" name="fav_language" onclick="showInputChecked()"
+                       style="width: auto;">
+                <label for="checkRebate" style="width: auto;">Gửi riêng cho khách hàng</label><br>
+              </div>
+<!--              <from method="get" action="/getUser" id="user" style="display: none">-->
+                <div class="row-noti" id="user"style="display: none">
+                  <p class="title-input-noti">Người nhận</p>
+                  <label for="email" id="error"></label><br>
+                  <input class="input-noti" type="email" id="email" placeholder="Điền email người nhận thông báo"
+                         name="email">
+                  <input class="input-noti" type="text" id="userId"
+                         name="userId" hidden="true">
+                  <div class=" col-6">
+                    <table class="table table">
+                      <thead>
+                      <tr>
+                        <th scope="col">Email</th>
+                        <th scope="col">Tên</th>
+                        <th scope="col">Số điện thoại</th>
+                        <th scope="col">Địa chỉ</th>
+                      </tr>
+                      </thead>
+                      <tbody id="table">
+                      <th id="emailUser"></th>
+                      <th id="nameUser"></th>
+                      <th id="phoneUser"></th>
+                      <th id="addressUser"></th>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+<!--              </form>-->
+              <div class="col-12" style="height: 60px;text-align: right;margin-top: 56px;width: 500px;">
+                <button class="btn-push-noti" type="submit" id="submit"
+                        style="border-radius: 56px;width: 258px;height: 54px; font-size: 20px">Tạo thông báo
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 <script>
+  $(document).ready(function() {
+    $("#email").focusout(function() {
+      var email = $("#email").val();
+      $.ajax({
+        url: `/getUser/${email}`,
+        type: "GET",
+        success: function(data) {
+          if (data == "false") {
+            alert("Email không tồn tại");
+          }
+          else {
+            $("#userId").val(data.id.toString());
+            $("#emailUser").text(data.email);
+            $("#nameUser").text(data.fullName);
+            $("#phoneUser").text(data.phone == null ? "Trống" : data.phone);
+            $("#addressUser").text(data.address);
+          }
+          $('#userId').text(data.id.toString());
+        },
+        statusCode: {
+          404: function() {
+            $("#error").text("Email không tồn tại").css("color", "red");
+            $('#submit').attr('disabled', true);
+          },
+          200: function() {
+            $("#error").text("").style = "display: none";
+            $('#submit').attr('disabled', false);
+          }
+        },
+        emit: function() {
+          $("#error").text("").style = "display: none";
+          $('#submit').attr('disabled', false);
+        }
+      });
+    });
+  })
 
+  function showInputChecked() {
+    const checkBox = document.getElementById("checkRebate");
+    const text = document.getElementById("user");
+
+    // If the checkbox is checked, display the output text
+    if (checkBox.checked == true) {
+      text.style.display = "block";
+    } else {
+      text.style.display = "none";
+      $('#submit').attr('disabled', false);
+    }
+  }
 </script>
 </body>
 </html>
