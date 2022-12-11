@@ -204,9 +204,12 @@ export class AppController {
         return this.appService.getHello();
     }
 
-//bil
+//bill
     @Get("bills")
     getListBill(@Req() req, @Res() res) {
+        if (!req.session.user) {
+            res.redirect('/login')
+        }
         return this.appService.getListBill(req, res);
     }
     @Get("detailBill/:id")

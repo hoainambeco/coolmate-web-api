@@ -103,57 +103,43 @@
 
 
         <div class="col py-3">
-            <!--<div style="width: 100%">
+            <div style="width: 100%">
                 <form action="/#" class="d-flex" method="POST" style="width: 60%;margin: auto" autocomplete="off">
                     <div class="me-2" style="margin: auto">
                         <select style="margin: auto;height: 38px;border-radius: 5px">
-                            <option value="1">Name</option>
-                            <option value="2">ID</option>
+                            <option value="1">Tên khách hàng</option>
+                            <option value="2">Tên sản phẩm</option>
                         </select>
                     </div>
                     <input class="form-control me-2" type="search" placeholder="Search here" aria-label="Search"
                            name="searchUser">
-                    <button class="btn btn-outline-secondary" type="submit" style="width: 150px">Search</button>
+                    <button class="btn btn-outline-secondary" type="submit" style="width: 150px">Tìm kiếm</button>
                 </form>
-            </div>-->
+            </div>
             <div class="panel panel-default mt-2" style="width: 100%">
                 <div class="panel-body table-responsive" style="max-height: 600px; min-height: 480px">
                     <table class="table table-bordered">
                         <thead>
                         <tr>
-                            <th class="col-1" scope="col">DateTime</th>
-                            <th class="col-1" scope="col">Status</th>
-                            <th class="col-2" scope="col">Name Customer</th>
-                            <th class="col-1" scope="col">Product</th>
-                            <th class="col-1" scope="col">Count</th>
-                            <th class="col-1" scope="col">Type</th>
-                            <th class="col-1" scope="col">Price</th>
-                            <th class="col-1" scope="col">Total</th>
-                            <th class="col-2" scope="col">Place</th>
-                            <th class="col-1" scope="col">Action</th>
+                            <th class="col-2" scope="col">Trạng thái</th>
+                            <th class="col-2" scope="col">Tên khác hàng</th>
+                            <th class="col-1" scope="col">Thanh toán</th>
+                            <th class="col-1" scope="col">Tổng</th>
+                            <th class="col-2" scope="col">Địa chỉ</th>
+                            <th class="col-1" scope="col"></th>
                         </tr>
                         </thead>
                         <tbody>
                         {{#each listBill}}
                             <tr>
-                                <td>{{this.createdAt}}</td>
                                 <td>{{this.status}}</td>
                                 <td>{{this.customerName}}</td>
-                                <td></td>
-                                <td>{{this.numberPro}}</td>
                                 <td>{{this.paymentMethod}}</td>
-                                <td>price</td>
                                 <td>{{this.total}}</td>
                                 <td>{{this.placeCustomer}}</td>
                                 <td>
-                                    <div class="dropdown">
-                                        <button class="btn btn-secondary dropdown-toggle" type="button"
-                                                id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                            Action
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                            <li><a class="dropdown-item" href="detailBill/{{this.id}}">Xem thông tin chi tiết</a></li>
-                                        </ul>
+                                    <div >
+                                            <a class="btn btn-outline-primary" href="detailBill/{{this.id}}">Chi tiết</a></li>
                                     </div>
                                 </td>
                             </tr>

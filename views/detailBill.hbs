@@ -10,12 +10,14 @@
     <link href='https://fonts.googleapis.com/css?family=Outfit' rel='stylesheet'>
     <style>
         body {
-            font-family: Outfit;
+            font-family: Helvetica;
             font-size: 16px;
         }
-        .nav_app{
+
+        .nav_app {
             font-size: 18px;
         }
+
         .fieldSelect {
             background: #FFFFFF;
             box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
@@ -57,7 +59,7 @@
                     </li>
                     <li class="nav-item">
                         <a href="/product" id="nav-btn" class="nav-link align-middle px-0 align-self-center"
-                           >
+                        >
                             <img src="../image/icon/product-icon.svg" width="30" height="30"> <span
                                 class="ms-1 d-none d-sm-inline" style="color: black">Sản phẩm</span>
                         </a>
@@ -69,7 +71,8 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/bills" id="nav-btn" class="nav-link align-middle px-0 align-self-center" style="background-color: #b6b6b6">
+                        <a href="/bills" id="nav-btn" class="nav-link align-middle px-0 align-self-center"
+                           style="background-color: #b6b6b6">
                             <img src="../image/icon/bill-icon.svg" width="30" height="30"> <span
                                 class="ms-1 d-none d-sm-inline" style="color: black">Hóa đơn</span>
                         </a>
@@ -112,18 +115,120 @@
             </div>
         </div>
         <!-- end Navbar -->
-        <div class="col" style="padding-right: 0px;padding-left: 12px">
-            <div style="width: 100%; height: 100%">
-                <h1>Detail Bill</h1>
-                <p>id: {{bill.id}}</p>
-                <p>customer: {{bill.customerName}}</p>
-                <p>pay: {{bill.paymentMethod}}</p>
-                <p>status: {{bill.status}}</p>
-                <p>place: {{bill.placeCustomer}}</p>
+        <div class="col" style="padding:0">
+            <h1 style="color: #2F5ACF;margin-left: 20px">Chi tiết hóa đơn</h1>
+            <div class="row" style="width: 100%; height: 90%;padding: 0;margin: 0">
+
+                <div style="width: 100%;padding: 0;height: 200px">
+                    <div class="row" style="width: 100%;height: 100%;margin: 0;padding: 0">
+                        <div class="col-3">
+                            <div><span> id:</span> <span style="color: black;font-weight: 700">{{bill.id}}</span></div>
+                            <div><span> Tên khách hàng: </span> <span
+                                    style="color: black;font-weight: 700">{{bill.customerName}}</span></div>
+                            <div><span> Phương thức thanh toán:</span> <span
+                                    style="color: black;font-weight: 700">{{bill.paymentMethod}}</span></div>
+                            <div><span> Trạng thái:</span> <span
+                                    style="color: black;font-weight: 700">{{bill.status}}</span></div>
+                            <div><span> Địa điểm:</span> <span
+                                    style="color: black;font-weight: 700">{{bill.placeCustomer}}</span></div>
+
+                        </div>
+                        <div class="col-3">
+                            <div><span> Voucher:</span> <span style="color: black;font-weight: 700">001 </span></div>
+                            <div><span> Giảm:</span> <span style="color: black;font-weight: 700">-10000 vnđ</span></div>
+                            <div><span> Tổng thanh toán:</span> <span style="color: black;font-weight: 700">807000 vnđ</span>
+                            </div>
+                            <div><span> Ghi chú</span>
+                                <p style="font-weight: 400;font-size: 12px;height: 80px; margin-bottom: 0px; max-height: 80px;
+                        line-height: 19px;color: #000000;padding-left: 10px;overflow: auto">
+                                    aaaaaaaaâ fadssssssssssssssssssssssssssssssssss
+                                    sssssssssssssssssssssss
+                                    sssssssssssssssssssssss
+                                    sssssssssssssssssssssss
+                                    sssssssssssssssssssssss
+                                    sssssssssssssssssssssss
+                                    sssssssssssssssssssssss
+                                    sssssssssssssssssssssss
+                                    sssssssssssssssssssssss
+                                    sssssssssssssssssssssss
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
                 <!-- Button trigger modal -->
-                <button class="btn btn-outline-primary btn-lg px-4 mb-3" data-bs-toggle="modal"
-                        data-bs-target="#updateUser" onclick="editUser('{{bill.status}}')">Update status bill
-                </button>
+                <div style="width: 100%;padding: 0;height: 52px;padding-left: 20px">
+                    <button class="btn btn-outline-primary btn-lg" data-bs-toggle="modal"
+                            style="width: 250px;height: 50px;font-size: 16px"
+                            data-bs-target="#updateUser" onclick="editUser('{{bill.status}}')">Chỉnh sửa trạng thái hóa
+                        đơn
+                    </button>
+                </div>
+
+                <div style="width: 100%;padding: 0;height: 330px;padding-left: 20px">
+                    <div class="table-responsive mt-3" style="max-height: 327px">
+                        <table class="table table-bordered table-responsive" style="text-align: centermargin-bottom: 0px
+                    ;min-height:327px;overflow: auto">
+                            <thead>
+                            <tr style="font-size: 20px">
+                                <th class="col-1" scope="col">STT</th>
+                                <th class="col-2" scope="col">Tên sản phẩm</th>
+                                <th class="col-2" scope="col">Số lượng</th>
+                                <th class="col-2" scope="col"> Chi tiết</th>
+                                <th class="col-2" scope="col">Giá</th>
+                            </tr>
+                            </thead>
+                            <tbody id="product_list_color">
+                            <tr>
+                                <th>
+                                    <p>1</p>
+                                </th>
+
+                                <th>
+                                    <p>"Áo thun Cotton Compact in "Hôm nào cà phê nhé!" - Màu đen"</p>
+                                </th>
+                                <th>
+                                    <p>1</p>
+                                </th>
+
+                                <th>
+                                    <p>Đen - S</p>
+                                </th>
+                                <th>
+                                    <p>279000 vnđ</p>
+                                </th>
+
+                            </tr>
+
+                            <tr>
+                                <th>
+                                    <p>2</p>
+                                </th>
+
+                                <th>
+                                    <p>Áo thun Cotton Compact in Cột sống em ổn không V2 - Màu đen</p>
+                                </th>
+                                <th>
+                                    <p>2</p>
+                                </th>
+
+                                <th>
+                                    <p>Đen - XXL</p>
+                                </th>
+                                <th>
+                                    <p>269000 vnđ</p>
+                                </th>
+
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
                 </di>
 
                 <div class="modal fade" id="updateUser" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -141,7 +246,7 @@
                                     <div class="col-auto">
                                         <div class="col-12" style="height: 65px">
                                             <label for="inputStatus" class="labelSelect">Status:</label>
-                                            <select  id="inputStatus" class="fieldSelect" name="status">
+                                            <select id="inputStatus" class="fieldSelect" name="status">
                                                 <option value="Chưa thanh toán">Chưa thanh toán</option>
                                                 <option value="Đã thanh toán">Đã thanh toán</option>
                                                 <option value="Chờ xác nhận">Chờ xác nhận</option>
@@ -178,7 +283,7 @@
 </div>
 <script>
     function editUser(status) {
-            document.getElementById("inputStatus").value = status;
+        document.getElementById("inputStatus").value = status;
     }
 </script>
 </body>
