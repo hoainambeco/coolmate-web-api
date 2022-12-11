@@ -9,7 +9,7 @@ var myPieChart = new Chart(ctx, {
   data: {
     labels: ["Đã kích hoạt", "Chưa kích hoạt", "Bị xóa","Bị chặn"],
     datasets: [{
-      data: [55, 30, 15,10],
+      data: [55, 30, 15,15],
       backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#ffff00'],
       hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf','#ffff00'],
       hoverBorderColor: "rgba(234, 236, 244, 1)",
