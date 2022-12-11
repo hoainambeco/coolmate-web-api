@@ -19,7 +19,10 @@ export class OdersService {
     private voucherRepository: Repository<Voucher>,
 
     @InjectRepository(Carts)
-    private cartRepository: Repository<Carts>
+    private cartRepository: Repository<Carts>,
+
+    @InjectRepository(ItemCarts)
+    private itemCartRepository: Repository<ItemCarts>
   ) {
   }
 
@@ -28,22 +31,38 @@ export class OdersService {
     console.log(createOderDto);
     const oder = await this.oderRepository.create({...createOderDto, cartProduct: null});
     let vouchers = [];
-    createOderDto.voucherId.map(async (voucherId) => {
-      // @ts-ignore
-      const voucher = await this.voucherRepository.findOneBy(voucherId);
-      if (!voucher) {
-        throw new ErrorException(HttpStatus.NOT_FOUND, "Voucher not found");
-      }
-      // console.log(voucher);
-      vouchers.push(voucher);
-    });
+    let discount = 0;
+    if(createOderDto.voucherId){
+      createOderDto.voucherId.map(async (voucherId) => {
+        // @ts-ignore
+        const voucher = await this.voucherRepository.findOneBy(voucherId);
+        if (!voucher) {
+          throw new ErrorException(HttpStatus.NOT_FOUND, "Voucher not found");
+        }
+        // console.log(voucher);
+        vouchers.push(voucher);
+        discount += voucher.discount;
+      });
+    }
     // @ts-ignore
     const cart = await this.cartRepository.findOneBy(createOderDto.cartId);
     if (!cart) {
       throw new ErrorException(HttpStatus.NOT_FOUND, "Cart not found");
     }
     console.log(cart);
-    oder.userId = user.id;
+    let oderTotal = 0;
+      cart.carts.map((item: ItemCarts) => {
+        // @ts-ignore
+        const sellingPrice = item.products.product.sellingPrice;
+        // @ts-ignore
+        const quantity = item.products.quantity;
+      // @ts-ignore
+      oderTotal = oderTotal + (sellingPrice * quantity);
+        return oderTotal
+      });
+    oder.total =  oderTotal - (oderTotal*discount/100);
+    oder.numberPro = cart.carts.length;
+      oder.userId = user.id;
     return await this.oderRepository.save({ ...oder, carts: cart, vouchers: vouchers });
   }
   async createByProductId(createOderDto: CreateOderByProductDto) {

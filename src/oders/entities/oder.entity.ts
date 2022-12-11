@@ -48,6 +48,9 @@ export class Oder {
   @Column()
   shippingStatus:string;
 
+  @Column()
+  note: string;
+
   constructor(partial: Partial<Oder>) {
     Object.assign(this, partial);
   }

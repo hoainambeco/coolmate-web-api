@@ -1,67 +1,64 @@
 import {
-    Controller,
-    Get, HttpCode,
-    HttpException,
-    HttpStatus,
-    Param,
-    Post,
-    Render,
-    Req,
-    Res, UploadedFile,
-    UploadedFiles, UseGuards,
-    UseInterceptors
+  Controller,
+  Get, HttpCode,
+  HttpException,
+  HttpStatus,
+  Param,
+  Post, Render,
+  Req,
+  Res, UploadedFile,
+  UploadedFiles, UseGuards,
+  UseInterceptors
 } from "@nestjs/common";
-import {AppService} from "./app.service";
-import {ApiBearerAuth, ApiOkResponse, ApiTags} from "@nestjs/swagger";
+import { AppService } from "./app.service";
+import { ApiBearerAuth, ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import * as multer from "multer";
-import {diskStorage} from "multer";
+import { diskStorage } from "multer";
 import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
-import {extname} from "path";
-import {MongoClient} from "mongodb";
-import {JwtAuthGuard} from "./guards/jwt-auth.guard";
-import {AuthUserInterceptor} from "./interceptors/auth-user.interceptor";
-import {UserDto} from "./users/dto/user.dto";
+import { extname } from "path";
+import { MongoClient } from "mongodb";
+import { JwtAuthGuard } from "./guards/jwt-auth.guard";
+import { AuthUserInterceptor } from "./interceptors/auth-user.interceptor";
+import { UserDto } from "./users/dto/user.dto";
 import fetch from "node-fetch";
 
 export const imageFileFilter = (req, file, callback) => {
-    console.log(file);
-    let permittedFileTypes = [
-        // images
-        ".jpg",
-        ".jpeg",
-        ".png",
-        ".gif",
-        ".ico"
-    ];
-    if (!permittedFileTypes.includes(extname(file.originalname.toLowerCase()))) {
-        return callback(
-            new HttpException(
-                "The file type are not allowed!",
-                HttpStatus.BAD_REQUEST
-            ),
-            false
-        );
-    }
+  console.log(file);
+  let permittedFileTypes = [
+    // images
+    ".jpg",
+    ".jpeg",
+    ".png",
+    ".gif",
+    ".ico"
+  ];
+  if (!permittedFileTypes.includes(extname(file.originalname.toLowerCase()))) {
+    return callback(
+      new HttpException(
+        "The file type are not allowed!",
+        HttpStatus.BAD_REQUEST
+      ),
+      false
+    );
+  }
 
-    callback(null, true);
+  callback(null, true);
 };
 export const editFileName = (req, file, callback) => {
-    const name = file.originalname.split(".")[0];
-    const fileExtName = extname(file.originalname);
-    const randomName = Array(4)
-        .fill(null)
-        .map(() => Math.round(Math.random() * 10).toString(10))
-        .join("");
-    callback(null, `${name}-${randomName}${fileExtName}`);
+  const name = file.originalname.split(".")[0];
+  const fileExtName = extname(file.originalname);
+  const randomName = Array(4)
+    .fill(null)
+    .map(() => Math.round(Math.random() * 10).toString(10))
+    .join("");
+  callback(null, `${name}-${randomName}${fileExtName}`);
 };
 
 @ApiTags("web")
 @Controller()
 export class AppController {
-    constructor(private readonly appService: AppService) {
-
-        var uploader = multer({dest: "./tmp/"});
-    }
+  constructor(private readonly appService: AppService) {
+  }
 
     @Get()
     @Render("listProduct")
@@ -127,21 +124,20 @@ export class AppController {
     }
 
 
-
-    @Post("/update-product/:id")
-    @UseInterceptors(
-        FilesInterceptor("colorImage", 100, {
-            storage: diskStorage({
-                destination: "./uploads/imageProduct",
-                filename: editFileName
-            }),
-            fileFilter: imageFileFilter
-        })
-    )
-    postUpdateProduct(@Req() req, @Res() res, @Param("id") param,@UploadedFiles() files
-    ) {
-        return this.appService.postUpdate(req, res,param,files);
-    }
+  @Post("/update-product/:id")
+  @UseInterceptors(
+    FilesInterceptor("colorImage", 100, {
+      storage: diskStorage({
+        destination: "./uploads/imageProduct",
+        filename: editFileName
+      }),
+      fileFilter: imageFileFilter
+    })
+  )
+  postUpdateProduct(@Req() req, @Res() res, @Param("id") param, @UploadedFiles() files
+  ) {
+    return this.appService.postUpdate(req, res, param, files);
+  }
 
 // admin
     @Get("adminInfo/:id")
@@ -170,17 +166,17 @@ export class AppController {
         return this.appService.getDetailUser(req, res, param);
     }
 
-    @Post("userInfo/:id")
-    postUpdateUser(@Req() req, @Res() res
-    ) {
-        return this.appService.postUpdateUser(req, res);
-    }
+  @Post("userInfo/:id")
+  postUpdateUser(@Req() req, @Res() res
+  ) {
+    return this.appService.postUpdateUser(req, res);
+  }
 
-    @Post("/searchUser")
-    postSearch(@Req() req, @Res() res
-    ) {
-        return this.appService.postSearchUser(req, res);
-    }
+  @Post("/searchUser")
+  postSearch(@Req() req, @Res() res
+  ) {
+    return this.appService.postSearchUser(req, res);
+  }
 
     //login
     @Get("login")
@@ -287,8 +283,8 @@ export class AppController {
 @ApiTags("service")
 @Controller("rss")
 export class rss {
-    constructor(private readonly appService: AppService) {
-    }
+  constructor(private readonly appService: AppService) {
+  }
 
     @Get()
     async getRss() {

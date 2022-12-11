@@ -5,20 +5,10 @@ import { CreateCartProductDto } from "../../cart/dto/create-cart.dto";
 import { Type } from "class-transformer";
 
 export class CreateOderDto {
-  @ApiProperty({default: null})
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   customerName: string;
-
-  @ApiProperty({default: null})
-  @IsNumber()
-  @IsNotEmpty()
-  numberPro: number;
-
-  @ApiProperty({default: null})
-  @IsNumber()
-  @IsNotEmpty()
-  total: number;
 
   @ApiProperty({enum : ShippingStatus, default: ShippingStatus.CHUA_THANH_TOAN})
   @IsEnum(ShippingStatus)
@@ -32,19 +22,19 @@ export class CreateOderDto {
   @IsNotEmpty()
   paymentMethod: string;
 
-  @ApiProperty({default: null})
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   placeStore: string;
 
-  @ApiProperty({default: null})
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   placeCustomer: string;
 
-  @ApiPropertyOptional({default: null})
+  @ApiProperty()
   @IsString()
-  @IsOptional()
+  @IsNotEmpty()
   cartId: string;
 
   @ApiPropertyOptional()
@@ -57,6 +47,11 @@ export class CreateOderDto {
   @IsNotEmpty()
   @IsString()
   shippingStatus:string;
+
+  @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
+  note: string;
 
 }
 export class CreateOderByProductDto {

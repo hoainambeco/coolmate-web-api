@@ -63,6 +63,9 @@ export class OderDto {
   @ApiProperty()
   shippingStatus:[string];
 
+  @ApiProperty()
+  note: string;
+
   constructor(partial: Partial<OderDto>) {
     Object.assign(this, partial);
   }
