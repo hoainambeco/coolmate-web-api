@@ -144,8 +144,8 @@ export class AppController {
     }
 
 // admin
-    @Get("profile")
-    @Render("profile")
+    @Get("admin-info")
+    @Render("adminInfor")
     getProfile() {
         return this.appService.getHello();
     }

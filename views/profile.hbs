@@ -16,6 +16,24 @@
         .nav_app {
             font-size: 18px;
         }
+        .fieldSelect {
+            background: #FFFFFF;
+            box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            width: 208px;
+            height: 44px;
+            font-size: 16px;
+            padding-left: 10px;
+            padding-right: 10px;
+            border: none;
+        }
+
+        .labelSelect {
+            font-size: 16px;
+            line-height: 20px;
+            margin: 0px;
+            color: black;
+        }
     </style>
 </head>
 <body>
@@ -45,13 +63,14 @@
                     </li>
                     <li class="nav-item">
                         <a href="/product" id="nav-btn" class="nav-link align-middle px-0 align-self-center"
-                          >
+                        >
                             <img src="../image/icon/product-icon.svg" width="30" height="30"> <span
                                 class="ms-1 d-none d-sm-inline" style="color: black">Sản phẩm</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/customers" id="nav-btn" class="nav-link align-middle px-0 align-self-center"style="background-color: #b6b6b6">
+                        <a href="/customers" id="nav-btn" class="nav-link align-middle px-0 align-self-center"
+                           style="background-color: #b6b6b6">
                             <img src="../image/icon/customer-icon.svg" width="30" height="30"> <span
                                 class="ms-1 d-none d-sm-inline" style="color: black">Người dùng</span>
                         </a>
@@ -101,60 +120,71 @@
         </div>
         <!-- end Navbar -->
         <!-- Content -->
-        <div class="col py-3">
+        <div class="col" style="padding: 0">
             <section style=" height: 100%">
-                <div class="row d-flex align-items-center h-100">
-                    <div class="col-12">
-                        <div class="card-body text-center">
-                            <div class=" mb-4">
-                                <img src="../image/chengwei-pan-2.jpg"
-                                     class="rounded-circle img-fluid" style="width: 100px; height: 100px"/>
-                            </div>
-                            <h4 class="mb-2">{{user.fullName}}</h4>
-                            <p class="text-muted mb-1">@{{user.role}} <span class="mx-2">|</span>{{user.email}}</p>
-                            <p class="text-muted mb-1">Phone: {{user.phone}}</p>
+                <div class="row d-flex align-items-center" style="width: 100%;height: 100%;margin: 0">
+                    <div class="col-12" style="width: 100%;height: 100%;padding: 0">
+                        <div class="card-body text-center" style="width: 100%;height: 100%">
+                            <div class="row" style="padding: 0;margin: 0;width: 100%;height: 100%">
+                                <div class="col-6 pt-4">
+                                    <div class=" mb-4">
+                                        <img src="{{user.avatar}}"
+                                             class="rounded-circle img-fluid" style="width: 247px; height: 247px"/>
+                                    </div>
+                                    <h4 class="mb-2">{{user.fullName}}</h4>
+                                    <p class="text-muted mb-1">Quyền hạn: {{user.role}} <span
+                                            class="mx-2">|</span>{{user.email}}</p>
+                                    <p class="text-muted mb-1">Số điện thoại: {{user.phone}}</p>
+                                    <p>Trạng thái:{{user.status}} </p>
 
-                            <div style="width: 500px;margin: auto;" class="mt-1">
-                                <div class="row mb-3">
-                                    <label for="inputNameuser" class="col-sm-3 col-form-label">Gender</label>
-                                    <div class="col-sm-8">
-                                        <input type="email" class="form-control" id="inputNameuser"
-                                               value="{{user.gender}}" readonly>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label for="inputNameuser" class="col-sm-3 col-form-label">Birthday</label>
-                                    <div class="col-sm-8">
-                                        <input type="email" class="form-control" id="inputNameuser"
-                                               value="{{user.birthday}}" readonly>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label for="inputNameuser" class="col-sm-3 col-form-label">Status</label>
-                                    <div class="col-sm-8">
-                                        <input type="email" class="form-control" id="inputNameuser"
-                                               value="{{user.status}}" readonly>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label for="inputNameUser" class="col-sm-3 col-form-label">Address</label>
-                                    <div class="col-sm-8">
-                                        <input type="email" class="form-control" id="inputNameuser"
-                                               value="{{user.address}}" readonly>
-                                    </div>
-                                </div>
-                                <button class="btn btn-outline-primary btn-lg px-4 mb-3" data-bs-toggle="modal"
-                                        data-bs-target="#updateUser">Edit Profile
-                                </button>
-                                </di>
 
-                                <div class="modal fade" id="updateUser" tabindex="-1" aria-labelledby="exampleModalLabel"
-                                        aria-hidden="true" >
+                                </div>
+                                <div class="col-6 pt-5">
+
+                                    <div style="width: 100%;margin: auto;" class="mt-1">
+                                        <div style="width: 100%;font-style: normal;font-size: 40px;line-height: 44px;
+                                        color: #2F5ACF;height: 40px;margin-bottom: 20px">
+                                            <span>Thông tin chi tiết người dùng</span>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label for="inputNameuser" class="col-sm-3 col-form-label">Giới tính</label>
+                                            <div class="col-sm-8">
+                                                <input type="email" class="form-control" id="inputNameuser"
+                                                       value="{{user.gender}}" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label for="inputNameuser" class="col-sm-3 col-form-label">Ngày sinh</label>
+                                            <div class="col-sm-8">
+                                                <input type="email" class="form-control" id="inputNameuser"
+                                                       value="{{user.birthday}}" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label for="inputNameUser" class="col-sm-3 col-form-label">Địa chỉ</label>
+                                            <div class="col-sm-8">
+                                                <input type="email" class="form-control" id="inputNameuser"
+                                                       value="{{user.address}}" readonly>
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-outline-primary btn-lg px-4 mb-3" data-bs-toggle="modal"
+                                                data-bs-target="#updateUser">Sửa trạng thái
+                                        </button>
+                                        </di>
+
+
+                                    </div>
+
+                                </div>
+                                <!--model update-->
+                                <div class="modal fade" id="updateUser" tabindex="-1"
+                                     aria-labelledby="exampleModalLabel"
+                                     aria-hidden="true">
                                     <div class="modal-dialog">
                                         <form action="" method="post" autocomplete="off" accept-charset="UTF-8">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Update user!</h5>
+                                                    <h5 class="modal-title" id="exampleModalLabel">Sửa trạng thái!</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                             aria-label="Close"></button>
                                                 </div>
@@ -164,75 +194,21 @@
                                                             <label for="updateUserID" class="col-sm-2 col-form-label">ID:</label>
                                                             <div class="col-sm-10">
                                                                 <input readonly name="updateUserID" type="text" class="form-control
-                                                text-dark" id="updateUserID" placeholder="ID" value="{{user.id}}"
+                                                                    text-dark" id="updateUserID" placeholder="ID" value="{{user.id}}"
                                                                        style="background-color: #adadad"/>
                                                             </div>
                                                         </div>
-                                                        <div class="mb-3 row">
-                                                            <label for="updateUserName" class="col-sm-2 col-form-label">Full
-                                                                Name:</label>
-                                                            <div class="col-sm-10">
-                                                                <input name="updateUserName" type="text"
-                                                                       class="form-control text-dark"
-                                                                       id="updateUserName" placeholder="name"
-                                                                       value="{{user.fullName}}"/>
-                                                            </div>
+
+                                                        <div class="col-12" style="height: 65px;text-align: left">
+                                                            <label for="inputState" class="labelSelect">Trạng thái: </label>
+                                                            <select id="updateUserStatus" class="fieldSelect" name="updateUserStatus">
+                                                                <option value="ACTIVE"> ACTIVE</option>
+                                                                <option value="INACTIVE"> INACTIVE</option>
+                                                                <option value="DELETED"> DELETED</option>
+                                                                <option value="BAN"> BAN</option>
+                                                            </select>
                                                         </div>
-                                                        <div class="mb-3 row">
-                                                            <label for="updateUserType" class="col-sm-2 col-form-label">Email:</label>
-                                                            <div class="col-sm-10">
-                                                                <input name="updateUserEmail" type="email"
-                                                                       class="form-control text-dark"
-                                                                       id="updateUserEmail" placeholder="name"
-                                                                       value="{{user.email}}"/>
-                                                            </div>
-                                                        </div>
-                                                        <div class="mb-3 row">
-                                                            <label for="updateUserName" class="col-sm-2 col-form-label">Gender:</label>
-                                                            <div class="col-sm-10">
-                                                                <input name="updateUserGender" type="text"
-                                                                       class="form-control text-dark"
-                                                                       id="updateUserGender" placeholder="name"
-                                                                       value="{{user.gender}}"/>
-                                                            </div>
-                                                        </div>
-                                                        <div class="mb-3 row">
-                                                            <label for="updateUserName" class="col-sm-2 col-form-label">Birthday:</label>
-                                                            <div class="col-sm-10">
-                                                                <input name="updateUserBirthday" type="text"
-                                                                       class="form-control text-dark"
-                                                                       id="updateUserBirthday" placeholder="name"
-                                                                       value="{{user.birthday}}"/>
-                                                            </div>
-                                                        </div>
-                                                        <div class="mb-3 row">
-                                                            <label for="updateUserName" class="col-sm-2 col-form-label">Status:</label>
-                                                            <div class="col-sm-10">
-                                                                <input name="updateUserStatus" type="text"
-                                                                       class="form-control text-dark"
-                                                                       id="updateUserStatus" placeholder="name"
-                                                                       value="{{user.status}}"/>
-                                                            </div>
-                                                        </div>
-                                                        <div class="mb-3 row">
-                                                            <label for="updateUserName" class="col-sm-2 col-form-label">Address:</label>
-                                                            <div class="col-sm-10">
-                                                                <input name="updateUserAddress" type="text"
-                                                                       class="form-control text-dark"
-                                                                       id="updateUserAddress" placeholder="name"
-                                                                       value="{{user.address}}"/>
-                                                            </div>
-                                                        </div>
-                                                        <div class="mb-3 row">
-                                                            <label for="updateUserName" class="col-sm-2 col-form-label">Phone
-                                                                Number:</label>
-                                                            <div class="col-sm-10">
-                                                                <input name="updateUserPhone" type="text"
-                                                                       class="form-control text-dark"
-                                                                       id="updateUserPhone" placeholder="name"
-                                                                       value="{{user.phone}}"/>
-                                                            </div>
-                                                        </div>
+
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary"
                                                                     data-bs-dismiss="modal">Đóng
@@ -255,5 +231,16 @@
 
     </div>
 </div>
+
+<script>
+    function selectElement(id, valueToSelect) {
+        let element = document.getElementById(id);
+        element.value = valueToSelect;
+    }
+
+    selectElement('updateUserStatus', '{{user.status}}');
+
+</script>
+
 </body>
 </html>

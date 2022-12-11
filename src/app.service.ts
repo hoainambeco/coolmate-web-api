@@ -361,13 +361,37 @@ export class AppService {
                 birthday: format(new Date(user.birthday), 'dd-MM-yyyy')
             };
         });
-        res.render('./listUser', {listUser: users});
+        var nameList = req.session.user.fullName.split(" ");
+
+        var nameNav = "";
+        if (nameList.length >= 2) {
+            nameNav = nameList[0] + " " + nameList[nameList.length - 1]
+        } else {
+            nameNav = nameList[0];
+        }
+
+        var idUser = req.session.user.id;
+        res.render('./listUser', {listUser: users, nameNav: nameNav, idUser: idUser});
 
     }
 
     async getDetailUser(req, res, id) {
         const user = await this.userRepository.findOneBy(id);
-        return res.render('./profile', {user: user})
+
+        // @ts-ignore
+        user.birthday = format(new Date(user.birthday), 'dd-MM-yyyy');
+        var nameList = req.session.user.fullName.split(" ");
+
+        var nameNav = "";
+        if (nameList.length >= 2) {
+            nameNav = nameList[0] + " " + nameList[nameList.length - 1]
+        } else {
+            nameNav = nameList[0];
+        }
+
+        var idUser = req.session.user.id;
+
+        return res.render('./profile', {user: user, nameNav: nameNav, idUser: idUser})
     }
 
     async postUpdateUser(req, res): Promise<UserDto> {
@@ -379,13 +403,7 @@ export class AppService {
         }
         try {
             // @ts-ignore
-            user.fullName = req.body.updateUserName;
-            user.email = req.body.updateUserEmail;
-            user.gender = req.body.updateUserGender;
-            user.birthday = req.body.updateUserBirthday;
             user.status = req.body.updateUserStatus;
-            user.address = req.body.updateUserAddress;
-            user.phone = req.body.updateUserPhone;
         } catch (e) {
             console.log(e);
         }
