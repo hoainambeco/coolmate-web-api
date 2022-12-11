@@ -577,6 +577,23 @@ export class AppService {
 
     return res.redirect("/detailBill/" + id);
   }
+//dashboard
+  async getDashboard(req, res) {
+
+    var nameList = req.session.user.fullName.split(" ");
+
+    var nameNav = "";
+    if (nameList.length >= 2) {
+      nameNav = nameList[0] + " " + nameList[nameList.length - 1]
+    } else {
+      nameNav = nameList[0];
+    }
+
+    var idUser = req.session.user.id;
+    var avatar = req.session.user.avatar;
+
+    res.render("./dashboard", { nameNav: nameNav, idUser: idUser, avatar: avatar });
+  }
 
   //noti
   getNoti(req, res) {

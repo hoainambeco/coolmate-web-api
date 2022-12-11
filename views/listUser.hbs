@@ -109,18 +109,15 @@
                 <form action="/searchUser" class="d-flex" method="POST" style="width: 60%;margin: auto" autocomplete="off">
                     <div class="me-2" style="margin: auto">
                         <select style="margin: auto;height: 38px;border-radius: 5px" name="SearchBy">
-                            <option value="1">Name</option>
+                            <option value="1">Tên khách hàng</option>
                             <option value="2">ID</option>
                             <option value="3">Email</option>
                         </select>
                     </div>
                     <input class="form-control me-2" type="search" placeholder="Search here" aria-label="Search"
                            name="SearchValue">
-                    <button class="btn btn-outline-secondary" type="submit" style="width: 150px">Search</button>
+                    <button class="btn btn-outline-secondary" type="submit" style="width: 150px">Tìm kiếm</button>
                 </form>
-            </div>
-            <div class=" mt-4" style="width: 100%;text-align: end">
-                <button class="btn btn-outline-secondary" type="submit" style="width: 150px">Add User</button>
             </div>
             <div class="panel panel-default mt-2" style="width: 100%">
                 {{#if msg}}
@@ -130,14 +127,13 @@
                     <table class="table table-bordered">
                         <thead>
                         <tr>
-                            <th class="col-2" scope="col">FullName</th>
+                            <th class="col-2" scope="col">Họ và tên</th>
                             <th class="col-2" scope="col">Email</th>
-                            <th class="col-1" scope="col">Avatar</th>
-                            <th class="col-1" scope="col">Gender</th>
-                            <th class="col-1" scope="col">DateOfBirth</th>
-                            <th class="col-1" scope="col">PhoneNumber</th>
-                            <th class="col-2" scope="col">Address</th>
-                            <th class="col-1" scope="col">Status</th>
+                            <th class="col-1" scope="col">Ảnh</th>
+                            <th class="col-1" scope="col">Giới tính</th>
+                            <th class="col-1" scope="col">Ngày sinh</th>
+                            <th class="col-2" scope="col">SĐT</th>
+                            <th class="col-1" scope="col">Trạng thái</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -154,20 +150,9 @@
                                 <td>{{this.gender}}</td>
                                 <td>{{this.birthday}}</td>
                                 <td>{{this.phone}}</td>
-                                <td>{{this.address}}</td>
                                 <td>{{this.status}}</td>
                                 <td>
-                                    <div class="dropdown">
-                                        <button class="btn btn-secondary dropdown-toggle" type="button"
-                                                id="dropdownMenuButton1" data-bs-toggle="dropdown"
-                                                aria-expanded="false">
-                                            Action
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                            <li><a class="dropdown-item" href="userInfo/{{this.id}}">Show Detail</a>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                    <a class="btn btn-outline-primary" href="userInfo/{{this.id}}">Chi tiết</a>
                                 </td>
                             </tr>
                         {{/each}}

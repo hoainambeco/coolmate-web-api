@@ -195,12 +195,11 @@ export class AppController {
 
     //dashboard
     @Get("dashboard")
-    @Render("dashboard")
-    getDashboard() {
-        return this.appService.getHello();
+    getDashboard(@Req() req, @Res() res) {
+        return this.appService.getDashboard(req, res);
     }
 
-//bill
+    //bill
     @Get("bills")
     getListBill(@Req() req, @Res() res) {
         if (!req.session.user) {
@@ -220,7 +219,7 @@ export class AppController {
     ) {
         return this.appService.postUpdateStatusBill(req, res,param);
     }
-
+//noti
     @Get("noti")
     getNoti(@Req() req, @Res() res) {
         if (!req.session.user) {
@@ -228,13 +227,7 @@ export class AppController {
         }
         return this.appService.getNoti(req, res);
     }
-    @Get("message")
-    getMessage(@Req() req, @Res() res) {
-        if (!req.session.user) {
-            res.redirect('/login')
-        }
-        return this.appService.getMessage(req, res);
-    }
+
     @Get('getUser/:email')
     getUser(@Req() req, @Res() res, @Param("email") email) {
         return this.appService.getUserNoti(req, res,email);
@@ -278,6 +271,16 @@ export class AppController {
         }
         return this.appService.postNoti(req, res, file);
     }
+    //message
+    @Get("message")
+    getMessage(@Req() req, @Res() res) {
+        if (!req.session.user) {
+            res.redirect('/login')
+        }
+        return this.appService.getMessage(req, res);
+    }
+    //voucher
+
 }
 
 @ApiTags("service")
