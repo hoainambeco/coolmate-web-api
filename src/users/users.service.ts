@@ -10,13 +10,15 @@ import { AuthService } from "../auth/auth.service";
 import { sendMail } from "../utils/sendMail.util";
 import { newUserMailTemplate2, resetPasswordSubject, resetPasswordTemplate } from "./mail.template";
 import * as OtpGenerator from "otp-generator";
-import { UserResetPasswordDto } from "../auth/dto/user-change-password.dto";
+import { UserChangePasswordDto, UserResetPasswordDto } from "../auth/dto/user-change-password.dto";
 import { IFile } from "./file.interface";
 import { StatusAccount } from "../enum/status-account";
 import { Product } from "../product/entities/product.entity";
 import { GoogleLoginDto } from "../auth/dto/google-login.dto";
 import { GenderEnum } from "../enum/gender";
 import { format } from "date-fns";
+import * as Mongoose from "mongoose";
+import { MongooseModule } from "@nestjs/mongoose";
 
 @Injectable()
 export class UsersService {
@@ -26,8 +28,10 @@ export class UsersService {
     @InjectRepository(Favorite)
     private readonly favoriteRepository: MongoRepository<Favorite>,
     @InjectRepository(Product)
-    private productRepository: Repository<Product>
-  ) {
+    private productRepository: Repository<Product>,
+    @InjectRepository(User)
+    private readonly userRepo: MongoRepository<User>,
+  ){
   }
 
   async create(userData: UserCreatDto): Promise<UserDto> {
@@ -371,5 +375,33 @@ export class UsersService {
       user = await this.userRepository.save(newUser);
     }
     return JSON.parse(JSON.stringify(user));
+  }
+  async thongKeNguoiDung() {
+    const user = await this.userRepo.aggregate([]
+    );
+    return user;
+  }
+  async changePassword(changePasswordDto: UserChangePasswordDto) {
+    const dataUser = AuthService.getAuthUser();
+    const user = await this.userRepository.findOneBy({ id: dataUser.id });
+    const isPasswordValid = await bcrypt.compare(changePasswordDto.currentPassword, user.password);
+    if (!isPasswordValid) {
+      throw new ErrorException(
+        HttpStatus.BAD_REQUEST,
+        "PASSWORD_INVALID"
+      );
+    }
+    if (changePasswordDto.newPassword !== changePasswordDto.confirmPassword) {
+      throw new ErrorException(
+        HttpStatus.BAD_REQUEST,
+        "NEW_PASSWORD_AND_CONFIRM_PASSWORD_NOT_MATCH"
+      );
+    }
+    user.password = await bcrypt.hashSync(changePasswordDto.newPassword, 10);
+    await this.userRepository.update(user.id, user);
+    return {
+      ...user,
+      id: user.id.toString()
+    };
   }
 }

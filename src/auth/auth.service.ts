@@ -84,4 +84,8 @@ export class AuthService {
       user: req.user
     }
   }
+  async thongKeNguoiDung(req){
+    const user = await this.UserService.thongKeNguoiDung();
+    return user;
+  }
 }

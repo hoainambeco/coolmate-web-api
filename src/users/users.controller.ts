@@ -13,13 +13,14 @@ import {
 import { UsersService } from "./users.service";
 import { ApiBearerAuth, ApiProperty, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { FavoriteDto, UserDto } from "./dto/user.dto";
-import { OtpDto, UserCreatDto, UserUpdateDto } from "./dto/user-data.dto";
+import { OtpDto, UserCreatDto, UserUpdateDto, UserUpdatePassDto } from "./dto/user-data.dto";
 import { AuthUserInterceptor } from "../interceptors/auth-user.interceptor";
 import { JwtAuthGuard } from "../guards/jwt-auth.guard";
 import { AuthGuard } from "@nestjs/passport";
 import { extname } from "path";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from 'multer';
+import { UserChangePasswordDto } from "../auth/dto/user-change-password.dto";
 
 @Controller("users")
 @ApiTags("Users")
@@ -107,6 +108,12 @@ export class UsersController {
   @ApiResponse({ status: 200, description: "The found record", type: UserDto })
   verify(@Body() otp: OtpDto) {
     return this.usersService.verifyOtp(otp);
+  }
+  @Put("change-password")
+  @UseGuards(AuthGuard("jwt"))
+  @ApiResponse({ status: 200, description: "The found record", type: UserDto })
+  changePass(@Body() passDto: UserChangePasswordDto) {
+    return this.usersService.changePassword(passDto);
   }
 
   @Delete(":id")

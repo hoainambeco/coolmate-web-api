@@ -106,4 +106,9 @@ export class AuthController {
   googleAuthRedirect(@Req() req) {
     return this.AuthService.googleLogin(req)
   }
+  @Get('thong-ke-nguoi-dung')
+  @HttpCode(HttpStatus.OK)
+  async thongKeNguoiDung(): Promise<any> {
+    return await this.userService.thongKeNguoiDung();
+  }
 }
