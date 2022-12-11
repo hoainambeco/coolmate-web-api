@@ -67,6 +67,25 @@
             margin: 0px;
             color: black;
         }
+        .labelSelect2 {
+            font-size: 16px;
+            width: 100%;
+            line-height: 20px;
+            margin: 0px;
+            color: black;
+        }
+        .fieldSelect2 {
+            background: #FFFFFF;
+            box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            width: 208px;
+            height: 44px;
+            font-size: 16px;
+            padding-left: 10px;
+            padding-right: 10px;
+            border: none;
+            margin-left: 20px;
+        }
     </style>
 </head>
 <body>
@@ -204,6 +223,11 @@
                                 </select>
                             </div>
                             <div class="row-noti" style="">
+                                <p class="title-input-noti">Ngày bắt đầu</p>
+                                <input name="content" class="input-noti" value="0"
+                                       min="0" required type="date">
+                            </div>
+                            <div class="row-noti" style="">
                                 <p class="title-input-noti">Ngày hết hạn</p>
                                 <input name="content" class="input-noti" value="0"
                                        min="0" required type="date">
@@ -213,7 +237,56 @@
                                     style="border-radius: 56px;width: 258px;height: 54px; font-size: 20px">
                                 Tạo mã giảm giá
                             </button>
+
                         </form>
+                        <button class="btn btn-outline-primary btn-lg px-4 mb-3" data-bs-toggle="modal"
+                                data-bs-target="#updateUser" style="display: none">Sửa trạng thái
+                        </button>
+                        <!--model update-->
+                        <div class="modal fade" id="updateUser" tabindex="-1"
+                             aria-labelledby="exampleModalLabel"
+                             aria-hidden="true">
+                            <div class="modal-dialog">
+                                <form action="" method="post" autocomplete="off" accept-charset="UTF-8">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Sửa trạng thái!</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="col-auto">
+                                                <div class="mb-3 row">
+                                                    <label for="updateUserID" class="col-sm-2 col-form-label">ID:</label>
+                                                    <div class="col-sm-10">
+                                                        <input readonly name="updateUserID" type="text" class="form-control
+                                                                    text-dark" id="updateUserID" placeholder="ID" value="{{user.id}}"
+                                                               style="background-color: #adadad"/>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-12" style="height: 65px;text-align: left">
+                                                    <label for="inputState" class="labelSelect">Trạng thái: </label>
+                                                    <select id="updateUserStatus" class="fieldSelect" name="updateUserStatus">
+                                                        <option value="ACTIVE"> ACTIVE</option>
+                                                        <option value="INACTIVE"> INACTIVE</option>
+                                                        <option value="DELETED"> DELETED</option>
+                                                        <option value="BAN"> BAN</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Đóng
+                                                    </button>
+                                                    <button type="submit" class="btn btn-primary">Sửa</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
