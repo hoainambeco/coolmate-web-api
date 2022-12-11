@@ -351,6 +351,24 @@ export class AppService {
   }
 
 //user
+  async getProfileAdmin(req, res, id) {
+    const user = await this.userRepository.findOneBy(id);
+
+    // @ts-ignore
+    user.birthday = format(new Date(user.birthday), 'dd-MM-yyyy');
+    var nameList = req.session.user.fullName.split(" ");
+
+    var nameNav = "";
+    if (nameList.length >= 2) {
+      nameNav = nameList[0] + " " + nameList[nameList.length - 1]
+    } else {
+      nameNav = nameList[0];
+    }
+
+    var idUser = req.session.user.id;
+    var avatar = req.session.user.avatar;
+    return res.render('./adminInfo', {user: user, nameNav: nameNav, idUser: idUser, avatar: avatar})
+  }
   async getListCustomer(req, res) {
     const listUser = await this.userRepository.find({});
     let users: UserDto[];
