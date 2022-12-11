@@ -218,17 +218,28 @@ export class AppService {
       listProducts = await this.productRepository.findBy({ modelID: req.body.SearchValue });
     }
     let products: ProductDto[];
-    products = JSON.parse(JSON.stringify(listProducts));
 
+    products = JSON.parse(JSON.stringify(listProducts));
+    var nameList = req.session.user.fullName.split(" ");
+    var nameNav = "";
+    if (nameList.length >= 2) {
+      nameNav = nameList[0] + " " + nameList[nameList.length - 1]
+    } else {
+      nameNav = nameList[0];
+    }
+    var idUser = req.session.user.id;
+    var avatar = req.session.user.avatar;
 
     if (products.length > 0) {
       return res.render("./listProduct", {
         listProduct: products,
-        msg: `<h6 class="alert alert-success">Tìm được sản phẩm</h6>`
+        msg: `<h6 class="alert alert-success">Tìm được sản phẩm</h6>`,
+        nameNav: nameNav, idUser: idUser, avatar: avatar
       });
     } else {
       return res.render("./listProduct", {
-        msg: `<h6 class="alert alert-danger">Không tìm thấy</h6>`
+        msg: `<h6 class="alert alert-danger">Không tìm thấy</h6>`,
+        nameNav: nameNav, idUser: idUser, avatar: avatar
       });
     }
   }
@@ -466,15 +477,25 @@ export class AppService {
         otp: user.otp
       };
     });
-
+    var nameList = req.session.user.fullName.split(" ");
+    var nameNav = "";
+    if (nameList.length >= 2) {
+      nameNav = nameList[0] + " " + nameList[nameList.length - 1]
+    } else {
+      nameNav = nameList[0];
+    }
+    var idUser = req.session.user.id;
+    var avatar = req.session.user.avatar;
     if (users.length > 0) {
       return res.render("./listUser", {
         listUser: users,
-        msg: `<h6 class="alert alert-success">Tìm được sản phẩm</h6>`
+        msg: `<h6 class="alert alert-success">Tìm được sản phẩm</h6>`,
+        nameNav: nameNav, idUser: idUser, avatar: avatar
       });
     } else {
       return res.render("./listUser", {
-        msg: `<h6 class="alert alert-danger">Không tìm thấy</h6>`
+        msg: `<h6 class="alert alert-danger">Không tìm thấy</h6>`,
+        nameNav: nameNav, idUser: idUser, avatar: avatar
       });
     }
   }
@@ -589,7 +610,6 @@ export class AppService {
   }
 
   async postNoti(req, res, file) {
-    console.log(req.body);
     const notification = new Notification();
     notification.title = req.body.title || null;
     notification.content = req.body.content || null;
@@ -651,8 +671,6 @@ export class AppService {
           console.log("Error sending message:", error);
         });
     }
-
-
     return res.redirect("/noti");
   }
 
