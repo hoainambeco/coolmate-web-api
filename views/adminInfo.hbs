@@ -76,20 +76,20 @@
                 </ul>
                 <hr style="width: 100%; color: black;margin-bottom: 12px">
                 <div class="dropdown align-items-center" style="width: 100% ;height: 60px;padding-bottom: 10px">
-                    <a href="#"
-                       class=" rounded d-flex align-items-center text-black text-decoration-none dropdown-toggle"
-                       id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false"
-                       style="width: 100%; height: 100%;margin-bottom: 20px">
-                        <img src="../image/chengwei-pan-2.jpg" width="30" height="30"
-                             class="rounded-circle" style="margin-left: 30px;margin-right: 20px">
+                    <div
+                            class=" rounded d-flex align-items-center text-black text-decoration-none dropdown-toggle"
+                            id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false"
+                            style="width: 100%; height: 100%;margin-bottom: 20px">
+                        <img src="../{{avatar}}" width="30" height="30"
+                             class="rounded-circle" style="margin-left: 10px;margin-right: 10px">
                         <span class="d-none d-sm-inline mx-1" style="color: black">{{nameNav}}</span>
-                    </a>
+                    </div>
                     <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-                        <li><a class="dropdown-item" href="/profile">Profile</a></li>
+                        <li><a class="dropdown-item" href="/adminInfo/{{idUser}}">Profile</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" href="/login">Sign out
+                        <li><a class="dropdown-item" href="/login">Đăng xuất
                             <img src="../image/icon/logout-icon.svg" width="30" height="30"
                                  style="margin-left: 40px"></a>
                         </li>
@@ -101,44 +101,134 @@
         <!-- end Navbar -->
 
         <!-- Content -->
-        <div class="col py-3" style=" width: 100%;text-align: center">
-            <h2>User Info</h2>
-            <div style="width: 100%">
-                <img src="../image/chengwei-pan-2.jpg" width="50" height="50" style="margin: auto">
-            </div>
-            <form style="width: 500px;margin: auto" class="mt-5">
-                <div class="row mb-3">
-                    <label for="inputNameProduct" class="col-sm-2 col-form-label">ID</label>
-                    <div class="col-sm-10">
-                        <input type="email" class="form-control" id="inputNameProduct" value="128974-18-1" readonly>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <label for="inputNameProduct" class="col-sm-2 col-form-label"  >Name</label>
-                    <div class="col-sm-10">
-                        <input type="email" class="form-control" id="inputNameProduct"readonly value="UserName">
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <label for="inputNameProduct" class="col-sm-2 col-form-label"  >Email</label>
-                    <div class="col-sm-10">
-                        <input type="email" class="form-control" id="inputNameProduct"readonly value="huyngu@gmail.com">
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <label for="inputNameProduct" class="col-sm-2 col-form-label"  >Date of birth</label>
-                    <div class="col-sm-10">
-                        <input type="email" class="form-control" id="inputNameProduct"readonly value="11/11/2011">
-                    </div>
-                </div>
+        <div class="col" style="padding: 0">
+            <section style=" height: 100%">
+                <div class="row d-flex align-items-center" style="width: 100%;height: 100%;margin: 0">
+                    <div class="col-12" style="width: 100%;height: 100%;padding: 0">
+                        <div class="card-body text-center" style="width: 100%;height: 100%">
+                            <div class="row" style="padding: 0;margin: 0;width: 100%;height: 100%">
+                                <div class="col-6 pt-4">
+                                    <div class=" mb-4">
+                                        <img src="../{{user.avatar}}"
+                                             class="rounded-circle img-fluid" style="width: 247px; height: 247px"/>
+                                    </div>
+                                    <h4 class="mb-2">{{user.fullName}}</h4>
+                                    <p class="text-muted mb-1">Quyền hạn: {{user.role}} <span
+                                            class="mx-2">|</span>{{user.email}}</p>
+                                    <p class="text-muted mb-1">Số điện thoại: {{user.phone}}</p>
 
-                <div style="width: 100%" class="mt-4">
-                    <button type="submit" class="btn btn-danger col-3" >Ban</button>
-                    <button class="btn btn-secondary col-3" style="margin-left: 200px">Cancel</button>
+
+                                </div>
+                                <div class="col-6 pt-5">
+
+                                    <div style="width: 100%;margin: auto;" class="mt-1">
+                                        <div style="width: 100%;font-style: normal;font-size: 40px;line-height: 44px;
+                                        color: #2F5ACF;height: 40px;margin-bottom: 20px">
+                                            <span>Thông tin chi tiết quản lý</span>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label for="inputNameuser" class="col-sm-3 col-form-label">Giới tính</label>
+                                            <div class="col-sm-8">
+                                                <input type="email" class="form-control" id="inputNameuser"
+                                                       value="{{user.gender}}" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label for="inputNameuser" class="col-sm-3 col-form-label">Ngày sinh</label>
+                                            <div class="col-sm-8">
+                                                <input type="email" class="form-control" id="inputNameuser"
+                                                       value="{{user.birthday}}" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label for="inputNameUser" class="col-sm-3 col-form-label">Địa chỉ</label>
+                                            <div class="col-sm-8">
+                                                <input type="email" class="form-control" id="inputNameuser"
+                                                       value="{{user.address}}" readonly>
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-outline-primary btn-lg px-4 mb-3" data-bs-toggle="modal"
+                                                data-bs-target="#updateUser">Đổi mật khẩu
+                                        </button>
+                                        <button class="btn btn-outline-secondary btn-lg px-4 mb-3" data-bs-toggle="modal"
+                                                data-bs-target="#logout">Đăng xuất
+                                        </button>
+                                        </di>
+
+
+                                    </div>
+
+                                </div>
+                                <!--model update-->
+                                <div class="modal fade" id="updateUser" tabindex="-1"
+                                     aria-labelledby="exampleModalLabel"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <form action="" method="post" autocomplete="off" accept-charset="UTF-8">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Đổi mật khẩu!</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="col-auto">
+                                                        <div class="mb-3 row">
+                                                            <label for="updateUserID" class="col-sm-2 col-form-label">ID:</label>
+                                                            <div class="col-sm-10">
+                                                                <input readonly name="updateUserID" type="text" class="form-control
+                                                                    text-dark" id="updateUserID" placeholder="ID" value="{{user.id}}"
+                                                                       style="background-color: #adadad"/>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                    data-bs-dismiss="modal">Đóng
+                                                            </button>
+                                                            <button type="submit" class="btn btn-primary">Đổi</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <!--model log out-->
+                                <div class="modal fade" id="logout" tabindex="-1"
+                                     aria-labelledby="exampleModalLabel"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <form action="" method="post" autocomplete="off" accept-charset="UTF-8">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Đăng xuất!</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="col-auto">
+                                                        <div class="mb-3 row">
+                                                            <p> Bạn có muốn đăng xuất</p>
+                                                        </div>
+
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                    data-bs-dismiss="modal">Đóng
+                                                            </button>
+                                                            <button type="submit" class="btn btn-primary">Đăng xuất</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-            </form>
-
+            </section>
         </div>
 
 

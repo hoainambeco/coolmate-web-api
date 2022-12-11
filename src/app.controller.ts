@@ -144,10 +144,12 @@ export class AppController {
     }
 
 // admin
-    @Get("admin-info")
-    @Render("adminInfor")
-    getProfile() {
-        return this.appService.getHello();
+    @Get("adminInfo/:id")
+    getProfile(@Req() req, @Res() res, @Param("id") param) {
+        if (!req.session.user) {
+            res.redirect('/login')
+        }
+        return this.appService.getProfileAdmin(req, res, param);
     }
 
     //user

@@ -96,20 +96,20 @@
                 </ul>
                 <hr style="width: 100%; color: black;margin-bottom: 12px">
                 <div class="dropdown align-items-center" style="width: 100% ;height: 60px;padding-bottom: 10px">
-                    <a href="#"
-                       class=" rounded d-flex align-items-center text-black text-decoration-none dropdown-toggle"
-                       id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false"
-                       style="width: 100%; height: 100%;margin-bottom: 20px">
-                        <img src="../image/chengwei-pan-2.jpg" width="30" height="30"
-                             class="rounded-circle" style="margin-left: 30px;margin-right: 20px">
+                    <div
+                            class=" rounded d-flex align-items-center text-black text-decoration-none dropdown-toggle"
+                            id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false"
+                            style="width: 100%; height: 100%;margin-bottom: 20px">
+                        <img src="../{{avatar}}" width="30" height="30"
+                             class="rounded-circle" style="margin-left: 10px;margin-right: 10px">
                         <span class="d-none d-sm-inline mx-1" style="color: black">{{nameNav}}</span>
-                    </a>
+                    </div>
                     <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-                        <li><a class="dropdown-item" href="/profile">Profile</a></li>
+                        <li><a class="dropdown-item" href="/adminInfo/{{idUser}}">Profile</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" href="/login">Sign out
+                        <li><a class="dropdown-item" href="/login">Đăng xuất
                             <img src="../image/icon/logout-icon.svg" width="30" height="30"
                                  style="margin-left: 40px"></a>
                         </li>
@@ -128,7 +128,7 @@
                             <div class="row" style="padding: 0;margin: 0;width: 100%;height: 100%">
                                 <div class="col-6 pt-4">
                                     <div class=" mb-4">
-                                        <img src="{{user.avatar}}"
+                                        <img src="../{{user.avatar}}"
                                              class="rounded-circle img-fluid" style="width: 247px; height: 247px"/>
                                     </div>
                                     <h4 class="mb-2">{{user.fullName}}</h4>
