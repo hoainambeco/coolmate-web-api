@@ -5,7 +5,7 @@ import { Injectable, HttpStatus } from "@nestjs/common";
 import { CreateOderByProductDto, CreateOderDto, UpdateShippingStatusDto } from "./dto/create-oder.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Voucher } from "../voucher/entities/voucher.entity";
-import { ItemCarts } from "../cart/entities/cart.entity";
+import { Carts, ItemCarts } from "../cart/entities/cart.entity";
 import { AuthService } from "../auth/auth.service";
 import { ShippingStatus } from "../enum/bull";
 
@@ -18,8 +18,8 @@ export class OdersService {
     @InjectRepository(Voucher)
     private voucherRepository: Repository<Voucher>,
 
-    @InjectRepository(ItemCarts)
-    private cartRepository: Repository<ItemCarts>
+    @InjectRepository(Carts)
+    private cartRepository: Repository<Carts>
   ) {
   }
 
