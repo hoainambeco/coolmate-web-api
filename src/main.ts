@@ -16,7 +16,6 @@ import { setupSwagger } from "./swagger.setup";
 import helmet from "helmet";
 import * as session from "express-session";
 import * as passport from "passport";
-import { fcmSetup } from "./fcm.setup";
 import * as admin from "firebase-admin";
 import { ServiceAccount } from "firebase-admin";
 

@@ -56,3 +56,17 @@ export class Favorite {
     }
   }
 }
+
+@Entity('notifications')
+export class Notification {
+  @ObjectIdColumn({default: null}) id: string;
+  @Column({default: null}) userId: string;
+  @Column({default: null}) title: string;
+  @Column({default: null}) content: string;
+  @Column({default: null}) file: string;
+  @Column({default: null}) status: string;
+  @CreateDateColumn() createdAt: Date;
+  @UpdateDateColumn() updatedAt: Date;
+  @DeleteDateColumn({default: null}) deletedAt: Date;
+
+}

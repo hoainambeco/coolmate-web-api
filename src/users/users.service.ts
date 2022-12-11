@@ -96,14 +96,15 @@ export class UsersService {
 
   async update(user: UserUpdateDto): Promise<UserDto> {
     let users = AuthService.getAuthUser();
+    console.log(user);
     users = await Object.assign(users, user);
     if (user.password) {
       users.password = await bcrypt.hashSync(user.password, 10);
-      await this.userRepository.update(users.id.toString(), users);
     }
     if (user.phoneActive !== StatusAccount.INACTIVE) {
       users.phoneActive = StatusAccount.ACTIVE;
     }
+    await this.userRepository.update(users.id.toString(), users);
     return {
       ...users,
       id: users.id.toString()

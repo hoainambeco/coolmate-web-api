@@ -57,7 +57,7 @@ export class CartService {
     } else {
       await this.cartsRepository.save({ userId: user.id, carts: listItemCarts });
     }
-    return await JSON.parse(JSON.stringify(itemCart));
+    return await JSON.parse(JSON.stringify(createCartDto));
   }
 
   async findAll(): Promise<CartDto[]> {
