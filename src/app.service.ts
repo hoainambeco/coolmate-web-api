@@ -94,13 +94,14 @@ export class AppService {
 
     var nameNav = "";
     if (nameList.length >= 2) {
-      nameNav = nameList[0] + " " + nameList[nameList.length - 1];
+      nameNav = nameList[0] + " " + nameList[nameList.length - 1]
     } else {
       nameNav = nameList[0];
     }
 
     var idUser = req.session.user.id;
-    res.render("./listProduct", { listProduct: products, nameNav: nameNav, idUser: idUser });
+    var avatar = req.session.user.avatar;
+    res.render("./listProduct", { listProduct: products, nameNav: nameNav, idUser: idUser, avatar: avatar});
 
   }
 
@@ -109,13 +110,14 @@ export class AppService {
 
     var nameNav = "";
     if (nameList.length >= 2) {
-      nameNav = nameList[0] + " " + nameList[nameList.length - 1];
+      nameNav = nameList[0] + " " + nameList[nameList.length - 1]
     } else {
       nameNav = nameList[0];
     }
 
     var idUser = req.session.user.id;
-    res.render("./addProduct", { nameNav: nameNav, idUser: idUser });
+    var avatar = req.session.user.avatar;
+    res.render("./addProduct", { nameNav: nameNav, idUser: idUser, avatar: avatar});
 
   }
 
@@ -194,14 +196,14 @@ export class AppService {
     var nameList = req.session.user.fullName.split(" ");
     var nameNav = "";
     if (nameList.length >= 2) {
-      nameNav = nameList[0] + " " + nameList[nameList.length - 1];
+      nameNav = nameList[0] + " " + nameList[nameList.length - 1]
     } else {
       nameNav = nameList[0];
     }
 
     var idUser = req.session.user.id;
-
-    return res.render("./detailProduct", { product: product, nameNav: nameNav, idUser: idUser });
+    var avatar = req.session.user.avatar;
+    return res.render("./detailProduct", { product: product, nameNav: nameNav, idUser: idUser, avatar: avatar});
   }
 
   async postSearchProduct(req, res) {
@@ -242,13 +244,14 @@ export class AppService {
 
     var nameNav = "";
     if (nameList.length >= 2) {
-      nameNav = nameList[0] + " " + nameList[nameList.length - 1];
+      nameNav = nameList[0] + " " + nameList[nameList.length - 1]
     } else {
       nameNav = nameList[0];
     }
 
     var idUser = req.session.user.id;
-    return res.render("./updateProduct", { product: product, nameNav: nameNav, idUser: idUser });
+    var avatar = req.session.user.avatar;
+    return res.render("./updateProduct", { product: product, nameNav: nameNav, idUser: idUser, avatar: avatar });
   }
 
   async postUpdate(req, res, id, files: IFile[]): Promise<ProductDto> {
@@ -363,13 +366,14 @@ export class AppService {
 
     var nameNav = "";
     if (nameList.length >= 2) {
-      nameNav = nameList[0] + " " + nameList[nameList.length - 1];
+      nameNav = nameList[0] + " " + nameList[nameList.length - 1]
     } else {
       nameNav = nameList[0];
     }
 
     var idUser = req.session.user.id;
-    res.render("./listUser", { listUser: users, nameNav: nameNav, idUser: idUser });
+    var avatar = req.session.user.avatar;
+    res.render("./listUser", { listUser: users, nameNav: nameNav, idUser: idUser, avatar: avatar});
 
   }
 
@@ -382,14 +386,14 @@ export class AppService {
 
     var nameNav = "";
     if (nameList.length >= 2) {
-      nameNav = nameList[0] + " " + nameList[nameList.length - 1];
+      nameNav = nameList[0] + " " + nameList[nameList.length - 1]
     } else {
       nameNav = nameList[0];
     }
 
     var idUser = req.session.user.id;
-
-    return res.render("./profile", { user: user, nameNav: nameNav, idUser: idUser });
+    var avatar = req.session.user.avatar;
+    return res.render("./profile", { user: user, nameNav: nameNav, idUser: idUser, avatar: avatar});
   }
 
   async postUpdateUser(req, res): Promise<UserDto> {
@@ -488,12 +492,14 @@ export class AppService {
 
     var nameNav = "";
     if (nameList.length >= 2) {
-      nameNav = nameList[0] + " " + nameList[nameList.length - 1];
+      nameNav = nameList[0] + " " + nameList[nameList.length - 1]
     } else {
       nameNav = nameList[0];
     }
+
     var idUser = req.session.user.id;
-    res.render("./listBill", { listBill: ListBill, nameNav: nameNav, idUser: idUser });
+    var avatar = req.session.user.avatar;
+    res.render("./listBill", { listBill: ListBill, nameNav: nameNav, idUser: idUser, avatar: avatar });
   }
 
   async getDetailBill(req, res, id) {
@@ -507,13 +513,14 @@ export class AppService {
 
     var nameNav = "";
     if (nameList.length >= 2) {
-      nameNav = nameList[0] + " " + nameList[nameList.length - 1];
+      nameNav = nameList[0] + " " + nameList[nameList.length - 1]
     } else {
       nameNav = nameList[0];
     }
 
     var idUser = req.session.user.id;
-    return res.render("./detailBill", { bill: bill, nameNav: nameNav, idUser: idUser });
+    var avatar = req.session.user.avatar;
+    return res.render("./detailBill", { bill: bill,nameNav: nameNav, idUser: idUser, avatar: avatar});
   }
 
   async postUpdateStatusBill(req, res, id): Promise<OderDto> {
@@ -537,12 +544,14 @@ export class AppService {
     var nameList = req.session.user.fullName.split(" ");
     var nameNav = "";
     if (nameList.length >= 2) {
-      nameNav = nameList[0] + " " + nameList[nameList.length - 1];
+      nameNav = nameList[0] + " " + nameList[nameList.length - 1]
     } else {
       nameNav = nameList[0];
     }
-    var idUser;
-    return res.render("./noti", { nameNav: nameNav, idUser: idUser });
+
+    var idUser = req.session.user.id;
+    var avatar = req.session.user.avatar;
+    return res.render("./noti", {nameNav: nameNav, idUser: idUser, avatar: avatar });
   }
 
   //masage
@@ -551,12 +560,14 @@ export class AppService {
 
     var nameNav = "";
     if (nameList.length >= 2) {
-      nameNav = nameList[0] + " " + nameList[nameList.length - 1];
+      nameNav = nameList[0] + " " + nameList[nameList.length - 1]
     } else {
       nameNav = nameList[0];
     }
+
     var idUser = req.session.user.id;
-    res.render("./message", { nameNav: nameNav, idUser: idUser });
+    var avatar = req.session.user.avatar;
+    res.render("./message", { nameNav: nameNav, idUser: idUser, avatar: avatar});
   }
 
   async postNoti(req, res, file) {
