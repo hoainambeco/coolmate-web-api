@@ -280,7 +280,13 @@ export class AppController {
         return this.appService.getMessage(req, res);
     }
     //voucher
-
+    @Get("voucher")
+    getVoucher(@Req() req, @Res() res) {
+        if (!req.session.user) {
+            res.redirect('/login')
+        }
+        return this.appService.getVoucher(req, res);
+    }
 }
 
 @ApiTags("service")

@@ -577,7 +577,7 @@ export class AppService {
 
     return res.redirect("/detailBill/" + id);
   }
-//dashboard
+  //dashboard
   async getDashboard(req, res) {
 
     var nameList = req.session.user.fullName.split(" ");
@@ -588,7 +588,6 @@ export class AppService {
     } else {
       nameNav = nameList[0];
     }
-
     var idUser = req.session.user.id;
     var avatar = req.session.user.avatar;
 
@@ -609,23 +608,6 @@ export class AppService {
     var avatar = req.session.user.avatar;
     return res.render("./noti", {nameNav: nameNav, idUser: idUser, avatar: avatar });
   }
-
-  //masage
-  async getMessage(req, res) {
-    var nameList = req.session.user.fullName.split(" ");
-
-    var nameNav = "";
-    if (nameList.length >= 2) {
-      nameNav = nameList[0] + " " + nameList[nameList.length - 1]
-    } else {
-      nameNav = nameList[0];
-    }
-
-    var idUser = req.session.user.id;
-    var avatar = req.session.user.avatar;
-    res.render("./message", { nameNav: nameNav, idUser: idUser, avatar: avatar});
-  }
-
   async postNoti(req, res, file) {
     const notification = new Notification();
     notification.title = req.body.title || null;
@@ -697,5 +679,35 @@ export class AppService {
       throw new ErrorException(HttpStatus.NOT_FOUND, "user not found");
     }
     return res.json(user);
+  }
+  //masage
+  async getMessage(req, res) {
+    var nameList = req.session.user.fullName.split(" ");
+
+    var nameNav = "";
+    if (nameList.length >= 2) {
+      nameNav = nameList[0] + " " + nameList[nameList.length - 1]
+    } else {
+      nameNav = nameList[0];
+    }
+
+    var idUser = req.session.user.id;
+    var avatar = req.session.user.avatar;
+    res.render("./message", { nameNav: nameNav, idUser: idUser, avatar: avatar});
+  }
+  //voucher
+  async getVoucher(req, res) {
+    var nameList = req.session.user.fullName.split(" ");
+
+    var nameNav = "";
+    if (nameList.length >= 2) {
+      nameNav = nameList[0] + " " + nameList[nameList.length - 1]
+    } else {
+      nameNav = nameList[0];
+    }
+
+    var idUser = req.session.user.id;
+    var avatar = req.session.user.avatar;
+    res.render("./voucher", { nameNav: nameNav, idUser: idUser, avatar: avatar});
   }
 }
