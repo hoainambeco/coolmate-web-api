@@ -19,7 +19,8 @@ import { GenderEnum } from "../enum/gender";
 import { format } from "date-fns";
 import * as Mongoose from "mongoose";
 import { MongooseModule } from "@nestjs/mongoose";
-
+import * as mongoose from "mongoose";
+const userSchema = mongoose.model("users", new mongoose.Schema(User))
 @Injectable()
 export class UsersService {
   constructor(
@@ -31,7 +32,7 @@ export class UsersService {
     private productRepository: Repository<Product>,
     @InjectRepository(User)
     private readonly userRepo: MongoRepository<User>,
-  ){
+  ) {
   }
 
   async create(userData: UserCreatDto): Promise<UserDto> {
@@ -376,11 +377,43 @@ export class UsersService {
     }
     return JSON.parse(JSON.stringify(user));
   }
-  async thongKeNguoiDung() {
-    const user = await this.userRepo.aggregate([]
-    );
-    return user;
+
+  async statistical() {
+    const statistical = {
+      user: [{_id: null,status:'', count: 0}],
+      turnOver: {},
+    }
+    const user = await userSchema.aggregate([
+      {
+        $group: {
+          _id: "$status",
+          status: { $first: "$status" },
+          count: { $sum: 1 }
+        },
+      }]);
+    user.sort((a,b) => {
+      if(a.count > b.count) return -1;
+      if(a.count < b.count) return 1;
+      return 0;
+    })
+    statistical.user = user.map((item) => {
+      if (item.status === StatusAccount.ACTIVE) {
+        item.status = "Đã kích hoạt";
+      }
+      if (item.status === StatusAccount.INACTIVE) {
+        item.status = "Chưa kích hoạt";
+      }
+      if (item.status === StatusAccount.DELETED) {
+        item.status = "Bị xóa";
+      }
+      if (item.status === StatusAccount.BAN) {
+        item.status = "Bị chặn";
+      }
+      return item;
+    });
+    return statistical
   }
+
   async changePassword(changePasswordDto: UserChangePasswordDto) {
     const dataUser = AuthService.getAuthUser();
     const user = await this.userRepository.findOneBy({ id: dataUser.id });

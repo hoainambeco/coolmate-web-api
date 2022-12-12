@@ -1,7 +1,7 @@
 import { HttpStatus, Injectable, UnauthorizedException } from "@nestjs/common";
 import { UsersService } from "../users/users.service";
 import { JwtService } from "@nestjs/jwt";
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from "bcrypt";
 import { UserLoginDto } from "./dto/user-login.dto";
 import { User } from "../users/entities/user.entity";
 import { ErrorException } from "../exceptions/error.exception";
@@ -84,8 +84,7 @@ export class AuthService {
       user: req.user
     }
   }
-  async thongKeNguoiDung(req){
-    const user = await this.UserService.thongKeNguoiDung();
-    return user;
+  async statistical(req){
+    return await this.UserService.statistical();
   }
 }
