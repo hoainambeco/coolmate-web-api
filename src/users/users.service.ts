@@ -16,10 +16,11 @@ import { StatusAccount } from "../enum/status-account";
 import { Product } from "../product/entities/product.entity";
 import { GoogleLoginDto } from "../auth/dto/google-login.dto";
 import { GenderEnum } from "../enum/gender";
-import { format } from "date-fns";
-import * as Mongoose from "mongoose";
-import { MongooseModule } from "@nestjs/mongoose";
 import * as mongoose from "mongoose";
+import { StatusProductEnum } from "../enum/product";
+import { Oder } from "../oders/entities/oder.entity";
+import { ShippingStatus } from "../enum/bull";
+
 const userSchema = mongoose.model("users", new mongoose.Schema(User))
 @Injectable()
 export class UsersService {
@@ -32,6 +33,8 @@ export class UsersService {
     private productRepository: Repository<Product>,
     @InjectRepository(User)
     private readonly userRepo: MongoRepository<User>,
+    @InjectRepository(Oder)
+    private readonly billRepository: MongoRepository<Oder>
   ) {
   }
 
@@ -382,6 +385,8 @@ export class UsersService {
     const statistical = {
       user: [{_id: null,status:'', count: 0}],
       turnOver: {},
+      product:{},
+      bill:{},
     }
     const user = await userSchema.aggregate([
       {
@@ -411,6 +416,26 @@ export class UsersService {
       }
       return item;
     });
+    // const product = await productSchema.find({}).sort({createdAt: -1}).limit(5);
+    statistical.product = {
+      "all": await this.productRepository.count(),
+      "CON_HANG": await this.productRepository.countBy({ status: StatusProductEnum.CON_HANG }),
+      "HET_HANG": await this.productRepository.countBy({ status: StatusProductEnum.HET_HANG }),
+      "NGUNG_KINH_DOANH": await this.productRepository.countBy({ status: StatusProductEnum.NGUNG_KINH_DOANh }),
+      "SAP_RA_MAT": await this.productRepository.countBy({ status: StatusProductEnum.SAP_RA_MAT }),
+    };
+    statistical.bill = {
+      "all": await this.billRepository.count(),
+      "CHUA_THANH_TOAN": await this.billRepository.countBy({ status: ShippingStatus.CHUA_THANH_TOAN }),
+      "DA_THANH_TOAN": await this.billRepository.countBy({ status: ShippingStatus.DA_THANH_TOAN }),
+      "CHO_XAC_NHAN": await this.billRepository.countBy({ status: ShippingStatus.CHO_XAC_NHAN }),
+      "BI_HUY": await this.billRepository.countBy({ status: ShippingStatus.BI_HUY }),
+      "DANG_CHUAN_BI_HANG": await this.billRepository.countBy({ status: ShippingStatus.DANG_CHUAN_BI_HANG }),
+      "DANG_VAN_CHUYEN": await this.billRepository.countBy({ status: ShippingStatus.DANG_VAN_CHUYEN }),
+      "DA_GIAO_HANG": await this.billRepository.countBy({ status: ShippingStatus.DA_GIAO_HANG }),
+      "DA_TRA_HANG": await this.billRepository.countBy({ status: ShippingStatus.DA_TRA_HANG }),
+      "DA_NHAN": await this.billRepository.countBy({ status: ShippingStatus.DA_NHAN }),
+    };
     return statistical
   }
 

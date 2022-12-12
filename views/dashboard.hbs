@@ -130,7 +130,7 @@
                                 <div class="col-xl-3 col-md-6">
                                   <div class="card bg-primary text-white mb-4">
                                     <div class="card-body">Tổng số đơn hàng</div>
-                                    <p class="card-body ms-0 mt-0 fs-1">100</p>
+                                    <p class="card-body ms-0 mt-0 fs-1">{{#if statistical.bill.all}} {{statistical.bill.all}} {{else}} 0 {{/if}}</p>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
                                       <a class="small text-white stretched-link"></a>
                                       <div class="small text-white"><svg class="svg-inline--fa" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="null" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><undefined></undefined></svg><!-- <i class="fas"></i> Font Awesome fontawesome.com --></div>
@@ -138,9 +138,19 @@
                                   </div>
                                 </div>
                                 <div class="col-xl-3 col-md-6">
+                                  <div class="card bg-danger text-white mb-4">
+                                    <div class="card-body">Đơn hàng chưa thanh toán</div>
+                                    <p class="card-body ms-0 mt-0 fs-1">{{#if statistical.bill.CHUA_THANH_TOAN}} {{statistical.bill.CHUA_THANH_TOAN}} {{else}} 0 {{/if}}</p>
+                                    <div class="card-footer d-flex align-items-center justify-content-between">
+                                      <a class="small text-white stretched-link" href="/canceled-orders">Chi tiết</a>
+                                      <div class="small text-white"><svg class="svg-inline--fa fa-angle-right" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="angle-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512" data-fa-i2svg=""><path fill="currentColor" d="M64 448c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L178.8 256L41.38 118.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l160 160c12.5 12.5 12.5 32.75 0 45.25l-160 160C80.38 444.9 72.19 448 64 448z"></path></svg><!-- <i class="fas fa-angle-right"></i> Font Awesome fontawesome.com --></div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-xl-3 col-md-6">
                                   <div class="card text-white mb-4" style="background-color: #7e7e80; color: #7e7e80; border-color: #7e7e80">
                                     <div class="card-body">Đơn hàng đang chờ</div>
-                                    <p class="card-body ms-0 mt-0 fs-1">10</p>
+                                    <p class="card-body ms-0 mt-0 fs-1">{{#if statistical.bill.CHO_XAC_NHAN}} {{statistical.bill.CHO_XAC_NHAN}} {{else}} 0 {{/if}}</p>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
                                       <a class="small text-white stretched-link" href="/pending-orders">Chi tiết</a>
                                       <div class="small text-white"><svg class="svg-inline--fa fa-angle-right" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="angle-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512" data-fa-i2svg=""><path fill="currentColor" d="M64 448c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L178.8 256L41.38 118.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l160 160c12.5 12.5 12.5 32.75 0 45.25l-160 160C80.38 444.9 72.19 448 64 448z"></path></svg><!-- <i class="fas fa-angle-right"></i> Font Awesome fontawesome.com --></div>
@@ -148,9 +158,29 @@
                                   </div>
                                 </div>
                                 <div class="col-xl-3 col-md-6">
+                                  <div class="card bg-danger text-white mb-4">
+                                    <div class="card-body">Đơn hàng bị huỷ</div>
+                                    <p class="card-body ms-0 mt-0 fs-1">{{#if statistical.bill.BI_HUY}} {{statistical.bill.BI_HUY}} {{else}} 0 {{/if}}</p>
+                                    <div class="card-footer d-flex align-items-center justify-content-between">
+                                      <a class="small text-white stretched-link" href="/canceled-orders">Chi tiết</a>
+                                      <div class="small text-white"><svg class="svg-inline--fa fa-angle-right" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="angle-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512" data-fa-i2svg=""><path fill="currentColor" d="M64 448c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L178.8 256L41.38 118.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l160 160c12.5 12.5 12.5 32.75 0 45.25l-160 160C80.38 444.9 72.19 448 64 448z"></path></svg><!-- <i class="fas fa-angle-right"></i> Font Awesome fontawesome.com --></div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-xl-3 col-md-6">
+                                  <div class="card bg-info text-white mb-4">
+                                    <div class="card-body">Đang chuẩn bị hàng</div>
+                                    <p class="card-body ms-0 mt-0 fs-1">{{#if statistical.bill.DANG_CHUAN_BI_HANG}} {{statistical.bill.DANG_CHUAN_BI_HANG}} {{else}} 0 {{/if}}</p>
+                                    <div class="card-footer d-flex align-items-center justify-content-between">
+                                      <a class="small text-white stretched-link" href="/delivering-order">Chi tiết</a>
+                                      <div class="small text-white"><svg class="svg-inline--fa fa-angle-right" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="angle-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512" data-fa-i2svg=""><path fill="currentColor" d="M64 448c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L178.8 256L41.38 118.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l160 160c12.5 12.5 12.5 32.75 0 45.25l-160 160C80.38 444.9 72.19 448 64 448z"></path></svg><!-- <i class="fas fa-angle-right"></i> Font Awesome fontawesome.com --></div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-xl-3 col-md-6">
                                   <div class="card bg-warning text-white mb-4">
                                     <div class="card-body">Đơn hàng đang được giao</div>
-                                    <p class="card-body ms-0 mt-0 fs-1">30</p>
+                                    <p class="card-body ms-0 mt-0 fs-1">{{#if statistical.bill.DANG_VAN_CHUYEN}} {{statistical.bill.DANG_VAN_CHUYEN}} {{else}} 0 {{/if}}</p>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
                                       <a class="small text-white stretched-link" href="/delivering-order">Chi tiết</a>
                                       <div class="small text-white"><svg class="svg-inline--fa fa-angle-right" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="angle-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512" data-fa-i2svg=""><path fill="currentColor" d="M64 448c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L178.8 256L41.38 118.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l160 160c12.5 12.5 12.5 32.75 0 45.25l-160 160C80.38 444.9 72.19 448 64 448z"></path></svg><!-- <i class="fas fa-angle-right"></i> Font Awesome fontawesome.com --></div>
@@ -159,8 +189,8 @@
                                 </div>
                                 <div class="col-xl-3 col-md-6">
                                   <div class="card bg-success text-white mb-4">
-                                    <div class="card-body">Đơn hàng thành công</div>
-                                    <p class="card-body ms-0 mt-0 fs-1">55</p>
+                                    <div class="card-body">Đơn hàng giao thành công</div>
+                                    <p class="card-body ms-0 mt-0 fs-1">{{#if statistical.bill.DA_GIAO_HANG}} {{statistical.bill.DA_GIAO_HANG}} {{else}} 0 {{/if}}</p>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
                                       <a class="small text-white stretched-link" href="/completed-orders">Chi tiết</a>
                                       <div class="small text-white"><svg class="svg-inline--fa fa-angle-right" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="angle-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512" data-fa-i2svg=""><path fill="currentColor" d="M64 448c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L178.8 256L41.38 118.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l160 160c12.5 12.5 12.5 32.75 0 45.25l-160 160C80.38 444.9 72.19 448 64 448z"></path></svg><!-- <i class="fas fa-angle-right"></i> Font Awesome fontawesome.com --></div>
@@ -168,11 +198,21 @@
                                   </div>
                                 </div>
                                 <div class="col-xl-3 col-md-6">
-                                  <div class="card bg-danger text-white mb-4">
-                                    <div class="card-body">Đơn hàng bị huỷ</div>
-                                    <p class="card-body ms-0 mt-0 fs-1">5</p>
+                                  <div class="card bg-warning text-white mb-4">
+                                    <div class="card-body">Đơn hàng bị trả lại</div>
+                                    <p class="card-body ms-0 mt-0 fs-1">{{#if statistical.bill.DA_TRA_HANG}} {{statistical.bill.DA_TRA_HANG}} {{else}} 0 {{/if}}</p>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                      <a class="small text-white stretched-link" href="/canceled-orders">Chi tiết</a>
+                                      <a class="small text-white stretched-link" href="/completed-orders">Chi tiết</a>
+                                      <div class="small text-white"><svg class="svg-inline--fa fa-angle-right" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="angle-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512" data-fa-i2svg=""><path fill="currentColor" d="M64 448c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L178.8 256L41.38 118.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l160 160c12.5 12.5 12.5 32.75 0 45.25l-160 160C80.38 444.9 72.19 448 64 448z"></path></svg><!-- <i class="fas fa-angle-right"></i> Font Awesome fontawesome.com --></div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-xl-3 col-md-6">
+                                  <div class="card bg-success text-white mb-4">
+                                    <div class="card-body">Đơn hàng đã đuợc nhận</div>
+                                    <p class="card-body ms-0 mt-0 fs-1">{{#if statistical.bill.DA_NHAN}} {{statistical.bill.DA_NHAN}} {{else}} 0 {{/if}}</p>
+                                    <div class="card-footer d-flex align-items-center justify-content-between">
+                                      <a class="small text-white stretched-link" href="/completed-orders">Chi tiết</a>
                                       <div class="small text-white"><svg class="svg-inline--fa fa-angle-right" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="angle-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512" data-fa-i2svg=""><path fill="currentColor" d="M64 448c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L178.8 256L41.38 118.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l160 160c12.5 12.5 12.5 32.75 0 45.25l-160 160C80.38 444.9 72.19 448 64 448z"></path></svg><!-- <i class="fas fa-angle-right"></i> Font Awesome fontawesome.com --></div>
                                     </div>
                                   </div>
@@ -194,7 +234,7 @@
                                 <div class="col-xl-3 col-md-6">
                                   <div class="card bg-primary text-white mb-4">
                                     <div class="card-body">Tổng số sản phẩm</div>
-                                    <p class="card-body ms-0 mt-0 fs-1">71</p>
+                                    <p class="card-body ms-0 mt-0 fs-1">{{#if statistical.product.all}} {{statistical.product.all}} {{else}} 0 {{/if}}</p>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
                                       <a class="small text-white stretched-link"></a>
                                       <div class="small text-white"><svg class="svg-inline--fa" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="null" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><undefined></undefined></svg><!-- <i class="fas"></i> Font Awesome fontawesome.com --></div>
@@ -204,7 +244,7 @@
                                 <div class="col-xl-3 col-md-6">
                                   <div class="card text-white mb-4" style="background-color: #7e7e80; color: #7e7e80; border-color: #7e7e80">
                                     <div class="card-body">Sản phẩm đang bán</div>
-                                    <p class="card-body ms-0 mt-0 fs-1">40</p>
+                                    <p class="card-body ms-0 mt-0 fs-1">{{#if statistical.product.CON_HANG}} {{statistical.product.CON_HANG}} {{else}} 0 {{/if}}</p>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
                                       <a class="small text-white stretched-link" href="/pending-orders">Chi tiết</a>
                                       <div class="small text-white"><svg class="svg-inline--fa fa-angle-right" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="angle-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512" data-fa-i2svg=""><path fill="currentColor" d="M64 448c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L178.8 256L41.38 118.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l160 160c12.5 12.5 12.5 32.75 0 45.25l-160 160C80.38 444.9 72.19 448 64 448z"></path></svg><!-- <i class="fas fa-angle-right"></i> Font Awesome fontawesome.com --></div>
@@ -214,7 +254,7 @@
                                 <div class="col-xl-3 col-md-6">
                                   <div class="card bg-warning text-white mb-4">
                                     <div class="card-body">Sản phẩm hết hàng</div>
-                                    <p class="card-body ms-0 mt-0 fs-1">7</p>
+                                    <p class="card-body ms-0 mt-0 fs-1">{{#if statistical.product.HET_HANG}} {{statistical.product.HET_HANG}} {{else}} 0 {{/if}}</p>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
                                       <a class="small text-white stretched-link" href="/delivering-order">Chi tiết</a>
                                       <div class="small text-white"><svg class="svg-inline--fa fa-angle-right" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="angle-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512" data-fa-i2svg=""><path fill="currentColor" d="M64 448c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L178.8 256L41.38 118.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l160 160c12.5 12.5 12.5 32.75 0 45.25l-160 160C80.38 444.9 72.19 448 64 448z"></path></svg><!-- <i class="fas fa-angle-right"></i> Font Awesome fontawesome.com --></div>
@@ -224,7 +264,7 @@
                                 <div class="col-xl-3 col-md-6">
                                   <div class="card bg-success text-white mb-4">
                                     <div class="card-body">Sắp ra mắt</div>
-                                    <p class="card-body ms-0 mt-0 fs-1">19</p>
+                                    <p class="card-body ms-0 mt-0 fs-1">{{#if statistical.product.SAP_RA_MAT}} {{statistical.product.SAP_RA_MAT}} {{else}} 0 {{/if}}</p>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
                                       <a class="small text-white stretched-link" href="/completed-orders">Chi tiết</a>
                                       <div class="small text-white"><svg class="svg-inline--fa fa-angle-right" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="angle-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512" data-fa-i2svg=""><path fill="currentColor" d="M64 448c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L178.8 256L41.38 118.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l160 160c12.5 12.5 12.5 32.75 0 45.25l-160 160C80.38 444.9 72.19 448 64 448z"></path></svg><!-- <i class="fas fa-angle-right"></i> Font Awesome fontawesome.com --></div>
@@ -234,7 +274,7 @@
                                 <div class="col-xl-3 col-md-6">
                                   <div class="card bg-danger text-white mb-4">
                                     <div class="card-body">Sản phẩm ngừng kinh doanh</div>
-                                    <p class="card-body ms-0 mt-0 fs-1">5</p>
+                                    <p class="card-body ms-0 mt-0 fs-1">{{#if statistical.product.NGUNG_KINH_DOANH}} {{statistical.product.NGUNG_KINH_DOANH}} {{else}} 0 {{/if}}</p>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
                                       <a class="small text-white stretched-link" href="/canceled-orders">Chi tiết</a>
                                       <div class="small text-white"><svg class="svg-inline--fa fa-angle-right" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="angle-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512" data-fa-i2svg=""><path fill="currentColor" d="M64 448c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L178.8 256L41.38 118.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l160 160c12.5 12.5 12.5 32.75 0 45.25l-160 160C80.38 444.9 72.19 448 64 448z"></path></svg><!-- <i class="fas fa-angle-right"></i> Font Awesome fontawesome.com --></div>

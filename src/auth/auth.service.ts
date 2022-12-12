@@ -84,7 +84,7 @@ export class AuthService {
       user: req.user
     }
   }
-  async statistical(req){
+  async statistical(){
     return await this.UserService.statistical();
   }
 }
