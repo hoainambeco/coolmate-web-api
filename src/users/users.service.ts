@@ -10,14 +10,18 @@ import { AuthService } from "../auth/auth.service";
 import { sendMail } from "../utils/sendMail.util";
 import { newUserMailTemplate2, resetPasswordSubject, resetPasswordTemplate } from "./mail.template";
 import * as OtpGenerator from "otp-generator";
-import { UserResetPasswordDto } from "../auth/dto/user-change-password.dto";
+import { UserChangePasswordDto, UserResetPasswordDto } from "../auth/dto/user-change-password.dto";
 import { IFile } from "./file.interface";
 import { StatusAccount } from "../enum/status-account";
 import { Product } from "../product/entities/product.entity";
 import { GoogleLoginDto } from "../auth/dto/google-login.dto";
 import { GenderEnum } from "../enum/gender";
-import { format } from "date-fns";
+import * as mongoose from "mongoose";
+import { StatusProductEnum } from "../enum/product";
+import { Oder } from "../oders/entities/oder.entity";
+import { ShippingStatus } from "../enum/bull";
 
+const userSchema = mongoose.model("users", new mongoose.Schema(User))
 @Injectable()
 export class UsersService {
   constructor(
@@ -26,7 +30,11 @@ export class UsersService {
     @InjectRepository(Favorite)
     private readonly favoriteRepository: MongoRepository<Favorite>,
     @InjectRepository(Product)
-    private productRepository: Repository<Product>
+    private productRepository: Repository<Product>,
+    @InjectRepository(User)
+    private readonly userRepo: MongoRepository<User>,
+    @InjectRepository(Oder)
+    private readonly billRepository: MongoRepository<Oder>
   ) {
   }
 
@@ -371,5 +379,87 @@ export class UsersService {
       user = await this.userRepository.save(newUser);
     }
     return JSON.parse(JSON.stringify(user));
+  }
+
+  async statistical() {
+    const statistical = {
+      user: [{_id: null,status:'', count: 0}],
+      turnOver: {},
+      product:{},
+      bill:{},
+    }
+    const user = await userSchema.aggregate([
+      {
+        $group: {
+          _id: "$status",
+          status: { $first: "$status" },
+          count: { $sum: 1 }
+        },
+      }]);
+    user.sort((a,b) => {
+      if(a.count > b.count) return -1;
+      if(a.count < b.count) return 1;
+      return 0;
+    })
+    statistical.user = user.map((item) => {
+      if (item.status === StatusAccount.ACTIVE) {
+        item.status = "Đã kích hoạt";
+      }
+      if (item.status === StatusAccount.INACTIVE) {
+        item.status = "Chưa kích hoạt";
+      }
+      if (item.status === StatusAccount.DELETED) {
+        item.status = "Bị xóa";
+      }
+      if (item.status === StatusAccount.BAN) {
+        item.status = "Bị chặn";
+      }
+      return item;
+    });
+    // const product = await productSchema.find({}).sort({createdAt: -1}).limit(5);
+    statistical.product = {
+      "all": await this.productRepository.count(),
+      "CON_HANG": await this.productRepository.countBy({ status: StatusProductEnum.CON_HANG }),
+      "HET_HANG": await this.productRepository.countBy({ status: StatusProductEnum.HET_HANG }),
+      "NGUNG_KINH_DOANH": await this.productRepository.countBy({ status: StatusProductEnum.NGUNG_KINH_DOANh }),
+      "SAP_RA_MAT": await this.productRepository.countBy({ status: StatusProductEnum.SAP_RA_MAT }),
+    };
+    statistical.bill = {
+      "all": await this.billRepository.count(),
+      "CHUA_THANH_TOAN": await this.billRepository.countBy({ status: ShippingStatus.CHUA_THANH_TOAN }),
+      "DA_THANH_TOAN": await this.billRepository.countBy({ status: ShippingStatus.DA_THANH_TOAN }),
+      "CHO_XAC_NHAN": await this.billRepository.countBy({ status: ShippingStatus.CHO_XAC_NHAN }),
+      "BI_HUY": await this.billRepository.countBy({ status: ShippingStatus.BI_HUY }),
+      "DANG_CHUAN_BI_HANG": await this.billRepository.countBy({ status: ShippingStatus.DANG_CHUAN_BI_HANG }),
+      "DANG_VAN_CHUYEN": await this.billRepository.countBy({ status: ShippingStatus.DANG_VAN_CHUYEN }),
+      "DA_GIAO_HANG": await this.billRepository.countBy({ status: ShippingStatus.DA_GIAO_HANG }),
+      "DA_TRA_HANG": await this.billRepository.countBy({ status: ShippingStatus.DA_TRA_HANG }),
+      "DA_NHAN": await this.billRepository.countBy({ status: ShippingStatus.DA_NHAN }),
+    };
+    return statistical
+  }
+
+  async changePassword(changePasswordDto: UserChangePasswordDto) {
+    const dataUser = AuthService.getAuthUser();
+    const user = await this.userRepository.findOneBy({ id: dataUser.id });
+    const isPasswordValid = await bcrypt.compare(changePasswordDto.currentPassword, user.password);
+    if (!isPasswordValid) {
+      throw new ErrorException(
+        HttpStatus.BAD_REQUEST,
+        "PASSWORD_INVALID"
+      );
+    }
+    if (changePasswordDto.newPassword !== changePasswordDto.confirmPassword) {
+      throw new ErrorException(
+        HttpStatus.BAD_REQUEST,
+        "NEW_PASSWORD_AND_CONFIRM_PASSWORD_NOT_MATCH"
+      );
+    }
+    user.password = await bcrypt.hashSync(changePasswordDto.newPassword, 10);
+    await this.userRepository.update(user.id, user);
+    return {
+      ...user,
+      id: user.id.toString()
+    };
   }
 }

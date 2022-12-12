@@ -98,6 +98,9 @@ export class AppController {
     )
     postAddProduct(@Req() req, @Res() res, @UploadedFiles() files
     ) {
+      if (!req.session.user) {
+        res.redirect('/login')
+      }
         return this.appService.postAddProduct(req, res, files);
     }
 
@@ -120,6 +123,9 @@ export class AppController {
     @Get("/update-product/:id")
     getUpdateStatusBill(@Req() req, @Res() res, @Param("id") param
     ) {
+      if (!req.session.user) {
+        res.redirect('/login')
+      }
         return this.appService.getUpdateProduct(req, res,param);
     }
 
@@ -136,6 +142,9 @@ export class AppController {
   )
   postUpdateProduct(@Req() req, @Res() res, @Param("id") param, @UploadedFiles() files
   ) {
+    if (!req.session.user) {
+      res.redirect('/login')
+    }
     return this.appService.postUpdate(req, res, param, files);
   }
 
@@ -169,12 +178,18 @@ export class AppController {
   @Post("userInfo/:id")
   postUpdateUser(@Req() req, @Res() res
   ) {
+    if (!req.session.user) {
+      res.redirect('/login')
+    }
     return this.appService.postUpdateUser(req, res);
   }
 
   @Post("/searchUser")
   postSearch(@Req() req, @Res() res
   ) {
+    if (!req.session.user) {
+      res.redirect('/login')
+    }
     return this.appService.postSearchUser(req, res);
   }
 
@@ -196,6 +211,9 @@ export class AppController {
     //dashboard
     @Get("dashboard")
     getDashboard(@Req() req, @Res() res) {
+      if (!req.session.user) {
+        res.redirect('/login')
+      }
         return this.appService.getDashboard(req, res);
     }
 
@@ -217,6 +235,9 @@ export class AppController {
     @Post("updateStatus/:id")
     postUpdateStatusBill(@Req() req, @Res() res, @Param("id") param
     ) {
+      if (!req.session.user) {
+        res.redirect('/login')
+      }
         return this.appService.postUpdateStatusBill(req, res,param);
     }
 //noti
@@ -230,6 +251,9 @@ export class AppController {
 
     @Get('getUser/:email')
     getUser(@Req() req, @Res() res, @Param("email") email) {
+      if (!req.session.user) {
+        res.redirect('/login')
+      }
         return this.appService.getUserNoti(req, res,email);
     }
     @Post("noti")

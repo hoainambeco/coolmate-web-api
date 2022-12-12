@@ -93,6 +93,12 @@ export class UserUpdateDto{
   @IsOptional()
   @ApiPropertyOptional()
   password: string;
+}export class UserUpdatePassDto{
+
+  @IsString()
+  @IsOptional()
+  @ApiPropertyOptional()
+  password: string;
 }
 export class OtpDto{
   @IsString()

@@ -30,7 +30,9 @@ export class AppService {
     @InjectRepository(Oder)
     private oderRepository: Repository<Oder>,
     @InjectRepository(Notification)
-    private notificationRepository: Repository<Notification>,) {
+    private notificationRepository: Repository<Notification>,
+private authService: AuthService
+    ) {
   }
 
   getLogin(req, res) {
@@ -590,8 +592,9 @@ export class AppService {
     }
     var idUser = req.session.user.id;
     var avatar = req.session.user.avatar;
+    const statistical = await this.authService.statistical();
 
-    res.render("./dashboard", { nameNav: nameNav, idUser: idUser, avatar: avatar });
+    res.render("./dashboard", { nameNav: nameNav, idUser: idUser, avatar: avatar ,statistical:statistical});
   }
 
   //noti
