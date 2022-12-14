@@ -42,14 +42,15 @@ export class CartService {
     if (productCount < createCartDto.products[0].quantity || !productCount) {
       throw new ErrorException(404, "Product count is not enough");
     }
-    // const products = {
-    //   productId: createCartDto.products[0].productId,
-    //   colorName: createCartDto.products[0].colorName,
-    //   sizeName: createCartDto.products[0].sizeName,
-    //   quantity: createCartDto.products[0].quantity,
-    //   product: listProducts
-    // };
-    await this.itemCartsRepository.save({ ...createCartDto, userId: user.id, cartId: 'null'});
+    const products = {
+      productId: createCartDto.products[0].productId,
+      colorName: createCartDto.products[0].colorName,
+      sizeName: createCartDto.products[0].sizeName,
+      quantity: createCartDto.products[0].quantity,
+      product: listProducts
+    };
+    // @ts-ignore
+    await this.itemCartsRepository.save({ ...createCartDto, userId: user.id, cartId: 'null', products: products});
     // @ts-ignore
     const listItemCarts = await this.itemCartsRepository.find({ where: { userId: user.id,cartId: 'null' } });
     let cart = await this.cartsRepository.findOne({ where: { userId: user.id , status: 'active'} });
