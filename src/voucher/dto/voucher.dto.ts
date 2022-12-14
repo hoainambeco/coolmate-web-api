@@ -45,6 +45,9 @@ export  class VoucherDto {
    value: number;
 
    @ApiProperty()
+   used: number;
+
+   @ApiProperty()
    userId: string;
 
    constructor(entity: Voucher) {
@@ -62,6 +65,7 @@ export  class VoucherDto {
       this.deletedAt = entity.deletedAt;
       this.isMonopoly = entity.isMonopoly;
       this.value = entity.value;
+      this.used = entity.used;
       this.userId = entity.userId;
 
    }

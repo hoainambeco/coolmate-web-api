@@ -21,7 +21,7 @@ import { StatusProductEnum } from "../enum/product";
 import { Oder } from "../oders/entities/oder.entity";
 import { ShippingStatus } from "../enum/bull";
 
-const userSchema = mongoose.model("users", new mongoose.Schema(User))
+export const userSchema = mongoose.model("users", new mongoose.Schema(User))
 @Injectable()
 export class UsersService {
   constructor(
@@ -381,13 +381,14 @@ export class UsersService {
     return JSON.parse(JSON.stringify(user));
   }
 
-  async statistical() {
+  async statistical(query?:any) {
     const statistical = {
       user: [{_id: null,status:'', count: 0}],
       turnOver: {},
       product:{},
       bill:{},
     }
+    console.log(query|| {});
     const user = await userSchema.aggregate([
       {
         $group: {

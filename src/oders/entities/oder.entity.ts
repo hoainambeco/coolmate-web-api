@@ -21,6 +21,8 @@ export class Oder {
   @Column() paymentMethod: string;
   @Column() placeStore: string;
   @Column() placeCustomer: string;
+
+  @Column() idPayment: string;
   @CreateDateColumn() createdAt: Date;
   @UpdateDateColumn() updatedAt: Date;
   @DeleteDateColumn() deletedAt: Date;
@@ -46,7 +48,7 @@ export class Oder {
   vouchers: [Voucher];
 
   @Column()
-  shippingStatus:string;
+  shippingStatus: [object];
 
   @Column()
   note: string;

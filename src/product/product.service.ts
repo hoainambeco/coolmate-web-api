@@ -101,8 +101,8 @@ export class ProductService {
         purpose: queryProductDto.purpose,
         features: queryProductDto.feature
       },
-      // skip: queryProductDto.skip,
-      // take: queryProductDto.take,
+      skip: queryProductDto.skip,
+      take: queryProductDto.take,
       order: {}
     };
     if (queryProductDto.orderBy) {
@@ -151,7 +151,7 @@ export class ProductService {
     console.log(options);
     // @ts-ignore
     const listProducts = await this.productRepository.find(options);
-    return JSON.parse(JSON.stringify(listProducts));
+    return listProducts[0] ? JSON.parse(JSON.stringify(listProducts)) : 'null';
   }
 
   async findOne(id: string): Promise<ProductDto> {

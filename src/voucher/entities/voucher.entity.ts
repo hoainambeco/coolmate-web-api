@@ -24,6 +24,7 @@ export class Voucher {
   @DeleteDateColumn() deletedAt: Date;
   @Column({default:false}) isMonopoly: boolean;
   @Column({default:0}) value: number;
+  @Column({default:0}) used: number;
   @Column({default:null}) userId: string;
 
   constructor(voucher?: Partial<Voucher>) {

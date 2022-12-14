@@ -25,6 +25,9 @@ export class OderDto {
   paymentMethod: string;
 
   @ApiProperty()
+  idPayment: string;
+
+  @ApiProperty()
   placeStore: string;
 
   @ApiProperty()

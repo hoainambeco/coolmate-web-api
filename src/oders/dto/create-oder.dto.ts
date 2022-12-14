@@ -1,5 +1,15 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { IsArray, IsEnum, IsNotEmpty, IsNumber, IsObject, IsOptional, IsString, ValidateNested } from "class-validator";
+import {
+  IsArray,
+  IsDate,
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsObject,
+  IsOptional,
+  IsString,
+  ValidateNested
+} from "class-validator";
 import { PaymentMethod, ShippingStatus } from "../../enum/bull";
 import { CreateCartProductDto } from "../../cart/dto/create-cart.dto";
 import { Type } from "class-transformer";
@@ -37,16 +47,15 @@ export class CreateOderDto {
   @IsNotEmpty()
   cartId: string;
 
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  idPayment: string;
+
   @ApiPropertyOptional()
   @IsArray()
   @IsOptional()
   voucherId: string[];
-
-  @ApiProperty({enum : ShippingStatus, default: ShippingStatus.CHO_XAC_NHAN})
-  @IsEnum(ShippingStatus)
-  @IsNotEmpty()
-  @IsString()
-  shippingStatus:string;
 
   @ApiPropertyOptional()
   @IsString()
@@ -109,12 +118,6 @@ export class CreateOderByProductDto {
   @IsOptional()
   voucherId: string[];
 
-  @ApiProperty({enum : ShippingStatus, default: ShippingStatus.CHO_XAC_NHAN})
-  @IsEnum(ShippingStatus)
-  @IsNotEmpty()
-  @IsString()
-  shippingStatus:string;
-
 }
 export class UpdateShippingStatusDto{
   @ApiProperty({enum : ShippingStatus, default: ShippingStatus.CHO_XAC_NHAN})
@@ -122,4 +125,9 @@ export class UpdateShippingStatusDto{
   @IsNotEmpty()
   @IsString()
   shippingStatus:string;
+
+  @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
+  note: string;
 }

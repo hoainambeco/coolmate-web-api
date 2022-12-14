@@ -14,13 +14,10 @@ export class OdersService {
   constructor(
     @InjectRepository(Oder)
     private oderRepository: Repository<Oder>,
-
     @InjectRepository(Voucher)
     private voucherRepository: Repository<Voucher>,
-
     @InjectRepository(Carts)
     private cartRepository: Repository<Carts>,
-
     @InjectRepository(ItemCarts)
     private itemCartRepository: Repository<ItemCarts>
   ) {
@@ -29,17 +26,23 @@ export class OdersService {
   async create(createOderDto: CreateOderDto) {
     let user = AuthService.getAuthUser();
     console.log(createOderDto);
-    const oder = await this.oderRepository.create({...createOderDto, cartProduct: null});
+    const oder = await this.oderRepository.create({ ...createOderDto, cartProduct: null });
     let vouchers = [];
     let discount = 0;
-    if(createOderDto.voucherId){
+    if (createOderDto.voucherId) {
       createOderDto.voucherId.map(async (voucherId) => {
         // @ts-ignore
         const voucher = await this.voucherRepository.findOneBy(voucherId);
         if (!voucher) {
           throw new ErrorException(HttpStatus.NOT_FOUND, "Voucher not found");
         }
-        // console.log(voucher);
+        if (voucher.value <= 0) {
+          throw new ErrorException(HttpStatus.NOT_FOUND, "Voucher is used");
+        } else {
+          voucher.value -= 1;
+          voucher.used += 1;
+        }
+        await this.voucherRepository.save(voucher);
         vouchers.push(voucher);
         discount += voucher.discount;
       });
@@ -51,23 +54,26 @@ export class OdersService {
     }
     console.log(cart);
     let oderTotal = 0;
-      cart.carts.map((item: ItemCarts) => {
-        // @ts-ignore
-        const sellingPrice = item.products.product.sellingPrice;
-        // @ts-ignore
-        const quantity = item.products.quantity;
+    cart.carts.map((item: ItemCarts) => {
+      // @ts-ignore
+      const sellingPrice = item.products.product.sellingPrice;
+      // @ts-ignore
+      const quantity = item.products.quantity;
       // @ts-ignore
       oderTotal = oderTotal + (sellingPrice * quantity);
-        return oderTotal
-      });
-    oder.total =  oderTotal - (oderTotal*discount/100);
+      return oderTotal;
+    });
+    oder.total = oderTotal - (oderTotal * discount / 100);
     oder.numberPro = cart.carts.length;
-      oder.userId = user.id;
-    return await this.oderRepository.save({ ...oder, carts: cart, vouchers: vouchers });
+    oder.userId = user.id;
+    await this.cartRepository.update(cart.id, { ...cart, status: "inactive" });
+    await this.oderRepository.save({ ...oder, carts: cart, vouchers: vouchers, shippingStatus:[{ shippingStatus: ShippingStatus.CHO_XAC_NHAN, note:'', createdAt: new Date()}]});
+    return JSON.parse(JSON.stringify(oder));
   }
+
   async createByProductId(createOderDto: CreateOderByProductDto) {
     let user = AuthService.getAuthUser();
-    const oder = await this.oderRepository.create({...createOderDto, cartProduct: createOderDto.cartProduct});
+    const oder = await this.oderRepository.create({ ...createOderDto, cartProduct: createOderDto.cartProduct, shippingStatus:[{ shippingStatus: ShippingStatus.CHO_XAC_NHAN, note:'', createdAt: new Date()}] });
     let vouchers = [];
     createOderDto.voucherId.map(async (voucherId) => {
       // @ts-ignore
@@ -102,7 +108,7 @@ export class OdersService {
     if (!oder) {
       throw new ErrorException(HttpStatus.NOT_FOUND, "Oder not found");
     }
-    return JSON.parse(JSON.stringify(oder))
+    return JSON.parse(JSON.stringify(oder));
   }
 
   async update(id: string, updateOderDto: CreateOderDto) {
@@ -116,7 +122,8 @@ export class OdersService {
   }
 
   async remove(id: string) {
-    return await this.oderRepository.delete(id);
+    // return await this.oderRepository.delete(id);
+    return await this.updateShippingStatus(id, { shippingStatus: ShippingStatus.BI_HUY,note:'Admin hủy đơn hàng' });
   }
 
   async updateShippingStatus(id: string, updateShippingStatusDto: UpdateShippingStatusDto) {
@@ -125,7 +132,24 @@ export class OdersService {
     if (!oder) {
       throw new ErrorException(HttpStatus.NOT_FOUND, "Oder not found");
     }
-    oder.shippingStatus = updateShippingStatusDto.shippingStatus;
+    if(updateShippingStatusDto.shippingStatus === ShippingStatus.BI_HUY || updateShippingStatusDto.shippingStatus === ShippingStatus.DA_TRA_HANG){
+      oder.voucherId.map(async (voucherId) => {
+        // @ts-ignore
+        const voucher = await this.voucherRepository.findOneBy(voucherId);
+        if (!voucher) {
+          throw new ErrorException(HttpStatus.NOT_FOUND, "Voucher not found");
+        }
+        voucher.used -= 1;
+        voucher.value += 1;
+        await this.voucherRepository.save(voucher);
+      });
+      }
+    // @ts-ignore
+    const check = oder.shippingStatus.find((item) => item.shippingStatus === updateShippingStatusDto.shippingStatus);
+    if(!check){
+      oder.shippingStatus.push({...updateShippingStatusDto , createdAt: new Date()});
+    }
+    oder.shippingStatus = [...oder.shippingStatus];
     await this.oderRepository.save(oder);
     return JSON.parse(JSON.stringify(oder));
   }

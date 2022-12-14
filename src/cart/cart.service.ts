@@ -42,41 +42,48 @@ export class CartService {
     if (productCount < createCartDto.products[0].quantity || !productCount) {
       throw new ErrorException(404, "Product count is not enough");
     }
-    const products = {
-      productId: createCartDto.products[0].productId,
-      colorName: createCartDto.products[0].colorName,
-      sizeName: createCartDto.products[0].sizeName,
-      quantity: createCartDto.products[0].quantity,
-      product: listProducts
-    };
+    // const products = {
+    //   productId: createCartDto.products[0].productId,
+    //   colorName: createCartDto.products[0].colorName,
+    //   sizeName: createCartDto.products[0].sizeName,
+    //   quantity: createCartDto.products[0].quantity,
+    //   product: listProducts
+    // };
+    await this.itemCartsRepository.save({ ...createCartDto, userId: user.id, cartId: 'null'});
     // @ts-ignore
-    const itemCart = await this.itemCartsRepository.save({ ...createCartDto, userId: user.id, products: products });
-    const listItemCarts = await this.itemCartsRepository.find({ where: { userId: user.id } });
-    if (await this.cartsRepository.findOne({ where: { userId: user.id } })) {
+    const listItemCarts = await this.itemCartsRepository.find({ where: { userId: user.id,cartId: 'null' } });
+    let cart = await this.cartsRepository.findOne({ where: { userId: user.id , status: 'active'} });
+    if (cart) {
       await this.cartsRepository.update({ userId: user.id }, { userId: user.id, carts: listItemCarts });
     } else {
-      await this.cartsRepository.save({ userId: user.id, carts: listItemCarts });
+      cart = await this.cartsRepository.save({ userId: user.id, carts: listItemCarts , status: "active"});
     }
+    for (const item of listItemCarts) {
+      // @ts-ignore
+      await this.itemCartsRepository.update({ id : item.id }, { cartId: cart.id.toString() });
+    }
+
     return await JSON.parse(JSON.stringify(createCartDto));
   }
 
   async findAll(): Promise<CartDto[]> {
-    const carts = await this.cartsRepository.find();
-    const listProducts = [];
+    const user = AuthService.getAuthUser();
+    const carts = await this.cartsRepository.findBy({ userId: user.id });
+    // const listProducts = [];
     console.log(carts);
-    for (const cart of carts) {
-      // @ts-ignore
-      for (const product of cart.carts) {
-        listProducts.push({
-          ...product,
-          // @ts-ignore
-          product: await this.productRepository.findOneBy(ObjectId(product.productId))
-        });
-      }
-      // @ts-ignore
-      cart.products = listProducts;
-    }
-    // @ts-ignore
+    // for (const cart of carts) {
+    //   // @ts-ignore
+    //   for (const product of cart.carts) {
+    //     listProducts.push({
+    //       ...product,
+    //       // @ts-ignore
+    //       product: await this.productRepository.findOneBy(ObjectId(product.productId))
+    //     });
+    //   }
+    //
+    //   // cart.products = listProducts;
+    // }
+
     return JSON.parse(JSON.stringify(carts));
   }
 
