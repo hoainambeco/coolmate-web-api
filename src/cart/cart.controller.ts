@@ -30,7 +30,6 @@ export class CartController {
   @HttpCode(HttpStatus.OK)
   @ApiResponse({ status: 200, description: "The found record", type: CreateCartDto })
   create(@Body() createCartDto: CreateCartDto) {
-    console.log(createCartDto);
     return this.cartService.create(createCartDto);
   }
 
