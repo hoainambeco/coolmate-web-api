@@ -10,6 +10,7 @@ import {
 import { GenderEnum } from "../../enum/gender";
 import { StatusAccount } from "../../enum/status-account";
 import { Product } from "../../product/entities/product.entity";
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 
 @Entity('users')
 export class User {

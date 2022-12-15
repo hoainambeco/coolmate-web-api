@@ -17,7 +17,21 @@ import { OderDto } from "./oders/dto/oder.dto";
 import { StatusProductEnum } from "./enum/product";
 import { Notification } from "./users/entities/user.entity";
 import { getMessaging } from "firebase-admin/messaging";
-
+import mongoose from "mongoose";
+export const imgBannerSchema = mongoose.model("imgBanners", new mongoose.Schema({
+  fieldname: String,
+  originalname: String,
+  encoding: String,
+  mimetype: String,
+  destination: String,
+  filename: String,
+  path: String,
+  size: Number,
+  delete: {
+    type: Boolean,
+    default: false
+  },
+}));
 @Injectable()
 export class AppService {
   constructor(
@@ -31,8 +45,8 @@ export class AppService {
     private oderRepository: Repository<Oder>,
     @InjectRepository(Notification)
     private notificationRepository: Repository<Notification>,
-private authService: AuthService
-    ) {
+    private authService: AuthService
+  ) {
   }
 
   getLogin(req, res) {
@@ -96,14 +110,14 @@ private authService: AuthService
 
     var nameNav = "";
     if (nameList.length >= 2) {
-      nameNav = nameList[0] + " " + nameList[nameList.length - 1]
+      nameNav = nameList[0] + " " + nameList[nameList.length - 1];
     } else {
       nameNav = nameList[0];
     }
 
     var idUser = req.session.user.id;
     var avatar = req.session.user.avatar;
-    res.render("./listProduct", { listProduct: products, nameNav: nameNav, idUser: idUser, avatar: avatar});
+    res.render("./listProduct", { listProduct: products, nameNav: nameNav, idUser: idUser, avatar: avatar });
 
   }
 
@@ -112,14 +126,14 @@ private authService: AuthService
 
     var nameNav = "";
     if (nameList.length >= 2) {
-      nameNav = nameList[0] + " " + nameList[nameList.length - 1]
+      nameNav = nameList[0] + " " + nameList[nameList.length - 1];
     } else {
       nameNav = nameList[0];
     }
 
     var idUser = req.session.user.id;
     var avatar = req.session.user.avatar;
-    res.render("./addProduct", { nameNav: nameNav, idUser: idUser, avatar: avatar});
+    res.render("./addProduct", { nameNav: nameNav, idUser: idUser, avatar: avatar });
 
   }
 
@@ -199,14 +213,14 @@ private authService: AuthService
     var nameList = req.session.user.fullName.split(" ");
     var nameNav = "";
     if (nameList.length >= 2) {
-      nameNav = nameList[0] + " " + nameList[nameList.length - 1]
+      nameNav = nameList[0] + " " + nameList[nameList.length - 1];
     } else {
       nameNav = nameList[0];
     }
 
     var idUser = req.session.user.id;
     var avatar = req.session.user.avatar;
-    return res.render("./detailProduct", { product: product, nameNav: nameNav, idUser: idUser, avatar: avatar});
+    return res.render("./detailProduct", { product: product, nameNav: nameNav, idUser: idUser, avatar: avatar });
   }
 
   async postSearchProduct(req, res) {
@@ -226,7 +240,7 @@ private authService: AuthService
     var nameList = req.session.user.fullName.split(" ");
     var nameNav = "";
     if (nameList.length >= 2) {
-      nameNav = nameList[0] + " " + nameList[nameList.length - 1]
+      nameNav = nameList[0] + " " + nameList[nameList.length - 1];
     } else {
       nameNav = nameList[0];
     }
@@ -258,7 +272,7 @@ private authService: AuthService
 
     var nameNav = "";
     if (nameList.length >= 2) {
-      nameNav = nameList[0] + " " + nameList[nameList.length - 1]
+      nameNav = nameList[0] + " " + nameList[nameList.length - 1];
     } else {
       nameNav = nameList[0];
     }
@@ -369,20 +383,21 @@ private authService: AuthService
     const user = await this.userRepository.findOneBy(id);
 
     // @ts-ignore
-    user.birthday = format(new Date(user.birthday), 'dd-MM-yyyy');
+    user.birthday = format(new Date(user.birthday), "dd-MM-yyyy");
     var nameList = req.session.user.fullName.split(" ");
 
     var nameNav = "";
     if (nameList.length >= 2) {
-      nameNav = nameList[0] + " " + nameList[nameList.length - 1]
+      nameNav = nameList[0] + " " + nameList[nameList.length - 1];
     } else {
       nameNav = nameList[0];
     }
 
     var idUser = req.session.user.id;
     var avatar = req.session.user.avatar;
-    return res.render('./adminInfo', {user: user, nameNav: nameNav, idUser: idUser, avatar: avatar})
+    return res.render("./adminInfo", { user: user, nameNav: nameNav, idUser: idUser, avatar: avatar });
   }
+
   async getListCustomer(req, res) {
     const listUser = await this.userRepository.find({});
     let users: UserDto[];
@@ -398,14 +413,14 @@ private authService: AuthService
 
     var nameNav = "";
     if (nameList.length >= 2) {
-      nameNav = nameList[0] + " " + nameList[nameList.length - 1]
+      nameNav = nameList[0] + " " + nameList[nameList.length - 1];
     } else {
       nameNav = nameList[0];
     }
 
     var idUser = req.session.user.id;
     var avatar = req.session.user.avatar;
-    res.render("./listUser", { listUser: users, nameNav: nameNav, idUser: idUser, avatar: avatar});
+    res.render("./listUser", { listUser: users, nameNav: nameNav, idUser: idUser, avatar: avatar });
 
   }
 
@@ -418,14 +433,14 @@ private authService: AuthService
 
     var nameNav = "";
     if (nameList.length >= 2) {
-      nameNav = nameList[0] + " " + nameList[nameList.length - 1]
+      nameNav = nameList[0] + " " + nameList[nameList.length - 1];
     } else {
       nameNav = nameList[0];
     }
 
     var idUser = req.session.user.id;
     var avatar = req.session.user.avatar;
-    return res.render("./profile", { user: user, nameNav: nameNav, idUser: idUser, avatar: avatar});
+    return res.render("./profile", { user: user, nameNav: nameNav, idUser: idUser, avatar: avatar });
   }
 
   async postUpdateUser(req, res): Promise<UserDto> {
@@ -483,7 +498,7 @@ private authService: AuthService
     var nameList = req.session.user.fullName.split(" ");
     var nameNav = "";
     if (nameList.length >= 2) {
-      nameNav = nameList[0] + " " + nameList[nameList.length - 1]
+      nameNav = nameList[0] + " " + nameList[nameList.length - 1];
     } else {
       nameNav = nameList[0];
     }
@@ -503,21 +518,6 @@ private authService: AuthService
     }
   }
 
-  async DeleteUserInActive() {
-    const authUser = AuthService.getAuthUser();
-    if (authUser.role !== "ADMIN") {
-      throw new ErrorException(HttpStatus.FORBIDDEN, "Permission denied");
-    }
-    let user = await this.userRepository.findBy({ status: "INACTIVE" });
-    if (!user) {
-      throw new ErrorException(HttpStatus.NOT_FOUND, "user not found");
-    }
-    user.map(async (user) => {
-      await this.userRepository.delete(user.id);
-    });
-    return true;
-  }
-
   /// bill
   async getListBill(req, res) {
     const listOders = await this.oderRepository.find({});
@@ -534,7 +534,7 @@ private authService: AuthService
 
     var nameNav = "";
     if (nameList.length >= 2) {
-      nameNav = nameList[0] + " " + nameList[nameList.length - 1]
+      nameNav = nameList[0] + " " + nameList[nameList.length - 1];
     } else {
       nameNav = nameList[0];
     }
@@ -555,14 +555,14 @@ private authService: AuthService
 
     var nameNav = "";
     if (nameList.length >= 2) {
-      nameNav = nameList[0] + " " + nameList[nameList.length - 1]
+      nameNav = nameList[0] + " " + nameList[nameList.length - 1];
     } else {
       nameNav = nameList[0];
     }
 
     var idUser = req.session.user.id;
     var avatar = req.session.user.avatar;
-    return res.render("./detailBill", { bill: bill,nameNav: nameNav, idUser: idUser, avatar: avatar});
+    return res.render("./detailBill", { bill: bill, nameNav: nameNav, idUser: idUser, avatar: avatar });
   }
 
   async postUpdateStatusBill(req, res, id): Promise<OderDto> {
@@ -580,6 +580,7 @@ private authService: AuthService
 
     return res.redirect("/detailBill/" + id);
   }
+
   //dashboard
   async getDashboard(req, res) {
 
@@ -587,7 +588,7 @@ private authService: AuthService
 
     var nameNav = "";
     if (nameList.length >= 2) {
-      nameNav = nameList[0] + " " + nameList[nameList.length - 1]
+      nameNav = nameList[0] + " " + nameList[nameList.length - 1];
     } else {
       nameNav = nameList[0];
     }
@@ -595,7 +596,7 @@ private authService: AuthService
     var avatar = req.session.user.avatar;
     const statistical = await this.authService.statistical();
 
-    res.render("./dashboard", { nameNav: nameNav, idUser: idUser, avatar: avatar ,statistical:statistical});
+    res.render("./dashboard", { nameNav: nameNav, idUser: idUser, avatar: avatar, statistical: statistical });
   }
 
   //noti
@@ -603,15 +604,16 @@ private authService: AuthService
     var nameList = req.session.user.fullName.split(" ");
     var nameNav = "";
     if (nameList.length >= 2) {
-      nameNav = nameList[0] + " " + nameList[nameList.length - 1]
+      nameNav = nameList[0] + " " + nameList[nameList.length - 1];
     } else {
       nameNav = nameList[0];
     }
 
     var idUser = req.session.user.id;
     var avatar = req.session.user.avatar;
-    return res.render("./noti", {nameNav: nameNav, idUser: idUser, avatar: avatar });
+    return res.render("./noti", { nameNav: nameNav, idUser: idUser, avatar: avatar });
   }
+
   async postNoti(req, res, file) {
     const notification = new Notification();
     notification.title = req.body.title || null;
@@ -684,34 +686,57 @@ private authService: AuthService
     }
     return res.json(user);
   }
+
   //masage
   async getMessage(req, res) {
     var nameList = req.session.user.fullName.split(" ");
 
     var nameNav = "";
     if (nameList.length >= 2) {
-      nameNav = nameList[0] + " " + nameList[nameList.length - 1]
+      nameNav = nameList[0] + " " + nameList[nameList.length - 1];
     } else {
       nameNav = nameList[0];
     }
 
     var idUser = req.session.user.id;
     var avatar = req.session.user.avatar;
-    res.render("./message", { nameNav: nameNav, idUser: idUser, avatar: avatar});
+    res.render("./message", { nameNav: nameNav, idUser: idUser, avatar: avatar });
   }
+
   //voucher
   async getVoucher(req, res) {
     var nameList = req.session.user.fullName.split(" ");
 
     var nameNav = "";
     if (nameList.length >= 2) {
-      nameNav = nameList[0] + " " + nameList[nameList.length - 1]
+      nameNav = nameList[0] + " " + nameList[nameList.length - 1];
     } else {
       nameNav = nameList[0];
     }
 
     var idUser = req.session.user.id;
     var avatar = req.session.user.avatar;
-    res.render("./voucher", { nameNav: nameNav, idUser: idUser, avatar: avatar});
+    res.render("./voucher", { nameNav: nameNav, idUser: idUser, avatar: avatar });
+  }
+  async postImgBaner(file) {
+
+    const img = await imgBannerSchema.find({delete: false});
+    console.log(img);
+    if (img.length > 0) {
+      img.map(async (item) => {
+        await imgBannerSchema.findByIdAndUpdate(item._id, {
+          delete: true
+        });
+      })
+    }
+    await imgBannerSchema.insertMany(file);
+    // mongoose.connection.close().then(() => {
+    //   console.log("close");
+    // });
+    return true;
+  }
+
+  async getImgBanner() {
+    return imgBannerSchema.find({ delete: false });
   }
 }
