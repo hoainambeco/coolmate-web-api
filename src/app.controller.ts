@@ -121,6 +121,12 @@ export class AppController {
         return this.appService.postSearchProduct(req, res);
     }
 
+    @Post("/update/product/status/:id")
+    postUpdateProductStatus(@Req() req, @Res() res, @Param("id") param
+    ) {
+        return this.appService.postUpdateStatusProduct(req, res, param);
+    }
+
     @Get("/update-product/:id")
     getUpdateStatusBill(@Req() req, @Res() res, @Param("id") param
     ) {
