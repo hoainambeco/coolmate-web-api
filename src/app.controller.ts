@@ -1,64 +1,64 @@
 import {
-  Controller,
-  Get, HttpCode,
-  HttpException,
-  HttpStatus,
-  Param,
-  Post, Render,
-  Req,
-  Res, UploadedFile,
-  UploadedFiles, UseGuards,
-  UseInterceptors
+    Controller,
+    Get, HttpCode,
+    HttpException,
+    HttpStatus,
+    Param,
+    Post, Render,
+    Req,
+    Res, UploadedFile,
+    UploadedFiles, UseGuards,
+    UseInterceptors
 } from "@nestjs/common";
-import { AppService } from "./app.service";
-import { ApiBearerAuth, ApiOkResponse, ApiTags } from "@nestjs/swagger";
+import {AppService} from "./app.service";
+import {ApiBearerAuth, ApiOkResponse, ApiTags} from "@nestjs/swagger";
 import * as multer from "multer";
-import { diskStorage } from "multer";
-import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
-import { extname } from "path";
-import { MongoClient } from "mongodb";
-import { JwtAuthGuard } from "./guards/jwt-auth.guard";
-import { AuthUserInterceptor } from "./interceptors/auth-user.interceptor";
-import { UserDto } from "./users/dto/user.dto";
+import {diskStorage} from "multer";
+import {FileInterceptor, FilesInterceptor} from "@nestjs/platform-express";
+import {extname} from "path";
+import {MongoClient} from "mongodb";
+import {JwtAuthGuard} from "./guards/jwt-auth.guard";
+import {AuthUserInterceptor} from "./interceptors/auth-user.interceptor";
+import {UserDto} from "./users/dto/user.dto";
 import fetch from "node-fetch";
 
 export const imageFileFilter = (req, file, callback) => {
-  console.log(file);
-  let permittedFileTypes = [
-    // images
-    ".jpg",
-    ".jpeg",
-    ".png",
-    ".gif",
-    ".ico"
-  ];
-  if (!permittedFileTypes.includes(extname(file.originalname.toLowerCase()))) {
-    return callback(
-      new HttpException(
-        "The file type are not allowed!",
-        HttpStatus.BAD_REQUEST
-      ),
-      false
-    );
-  }
+    console.log(file);
+    let permittedFileTypes = [
+        // images
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".gif",
+        ".ico"
+    ];
+    if (!permittedFileTypes.includes(extname(file.originalname.toLowerCase()))) {
+        return callback(
+            new HttpException(
+                "The file type are not allowed!",
+                HttpStatus.BAD_REQUEST
+            ),
+            false
+        );
+    }
 
-  callback(null, true);
+    callback(null, true);
 };
 export const editFileName = (req, file, callback) => {
-  const name = file.originalname.split(".")[0];
-  const fileExtName = extname(file.originalname);
-  const randomName = Array(4)
-    .fill(null)
-    .map(() => Math.round(Math.random() * 10).toString(10))
-    .join("");
-  callback(null, `${name}-${randomName}${fileExtName}`);
+    const name = file.originalname.split(".")[0];
+    const fileExtName = extname(file.originalname);
+    const randomName = Array(4)
+        .fill(null)
+        .map(() => Math.round(Math.random() * 10).toString(10))
+        .join("");
+    callback(null, `${name}-${randomName}${fileExtName}`);
 };
 
 @ApiTags("web")
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {
-  }
+    constructor(private readonly appService: AppService) {
+    }
 
     @Get()
     @Render("listProduct")
@@ -98,9 +98,9 @@ export class AppController {
     )
     postAddProduct(@Req() req, @Res() res, @UploadedFiles() files
     ) {
-      if (!req.session.user) {
-        res.redirect('/login')
-      }
+        if (!req.session.user) {
+            res.redirect('/login')
+        }
         return this.appService.postAddProduct(req, res, files);
     }
 
@@ -120,33 +120,40 @@ export class AppController {
         }
         return this.appService.postSearchProduct(req, res);
     }
+
+    @Post("/update/product/status/:id")
+    postUpdateProductStatus(@Req() req, @Res() res, @Param("id") param
+    ) {
+        return this.appService.postUpdateStatusProduct(req, res, param);
+    }
+
     @Get("/update-product/:id")
     getUpdateStatusBill(@Req() req, @Res() res, @Param("id") param
     ) {
-      if (!req.session.user) {
-        res.redirect('/login')
-      }
-        return this.appService.getUpdateProduct(req, res,param);
+        if (!req.session.user) {
+            res.redirect('/login')
+        }
+        return this.appService.getUpdateProduct(req, res, param);
     }
 
 
-  @Post("/update-product/:id")
-  @UseInterceptors(
-    FilesInterceptor("colorImage", 100, {
-      storage: diskStorage({
-        destination: "./uploads/imageProduct",
-        filename: editFileName
-      }),
-      fileFilter: imageFileFilter
-    })
-  )
-  postUpdateProduct(@Req() req, @Res() res, @Param("id") param, @UploadedFiles() files
-  ) {
-    if (!req.session.user) {
-      res.redirect('/login')
+    @Post("/update-product/:id")
+    @UseInterceptors(
+        FilesInterceptor("colorImage", 100, {
+            storage: diskStorage({
+                destination: "./uploads/imageProduct",
+                filename: editFileName
+            }),
+            fileFilter: imageFileFilter
+        })
+    )
+    postUpdateProduct(@Req() req, @Res() res, @Param("id") param, @UploadedFiles() files
+    ) {
+        if (!req.session.user) {
+            res.redirect('/login')
+        }
+        return this.appService.postUpdate(req, res, param, files);
     }
-    return this.appService.postUpdate(req, res, param, files);
-  }
 
 // admin
     @Get("adminInfo/:id")
@@ -175,27 +182,26 @@ export class AppController {
         return this.appService.getDetailUser(req, res, param);
     }
 
-  @Post("userInfo/:id")
-  postUpdateUser(@Req() req, @Res() res
-  ) {
-    if (!req.session.user) {
-      res.redirect('/login')
+    @Post("userInfo/:id")
+    postUpdateUser(@Req() req, @Res() res
+    ) {
+        if (!req.session.user) {
+            res.redirect('/login')
+        }
+        return this.appService.postUpdateUser(req, res);
     }
-    return this.appService.postUpdateUser(req, res);
-  }
 
-  @Post("/searchUser")
-  postSearch(@Req() req, @Res() res
-  ) {
-    if (!req.session.user) {
-      res.redirect('/login')
+    @Post("/searchUser")
+    postSearch(@Req() req, @Res() res
+    ) {
+        if (!req.session.user) {
+            res.redirect('/login')
+        }
+        return this.appService.postSearchUser(req, res);
     }
-    return this.appService.postSearchUser(req, res);
-  }
 
     //login
     @Get("login")
-    @Render("login")
     getlogin(@Req() req, @Res() res
     ) {
         return this.appService.getLogin(req, res);
@@ -211,9 +217,9 @@ export class AppController {
     //dashboard
     @Get("dashboard")
     getDashboard(@Req() req, @Res() res) {
-      if (!req.session.user) {
-        res.redirect('/login')
-      }
+        if (!req.session.user) {
+            res.redirect('/login')
+        }
         return this.appService.getDashboard(req, res);
     }
 
@@ -225,6 +231,7 @@ export class AppController {
         }
         return this.appService.getListBill(req, res);
     }
+
     @Get("detailBill/:id")
     getDetailBill(@Req() req, @Res() res, @Param("id") param) {
         if (!req.session.user) {
@@ -232,14 +239,16 @@ export class AppController {
         }
         return this.appService.getDetailBill(req, res, param);
     }
+
     @Post("updateStatus/:id")
     postUpdateStatusBill(@Req() req, @Res() res, @Param("id") param
     ) {
-      if (!req.session.user) {
-        res.redirect('/login')
-      }
-        return this.appService.postUpdateStatusBill(req, res,param);
+        if (!req.session.user) {
+            res.redirect('/login')
+        }
+        return this.appService.postUpdateStatusBill(req, res, param);
     }
+
 //noti
     @Get("noti")
     getNoti(@Req() req, @Res() res) {
@@ -251,50 +260,52 @@ export class AppController {
 
     @Get('getUser/:email')
     getUser(@Req() req, @Res() res, @Param("email") email) {
-      if (!req.session.user) {
-        res.redirect('/login')
-      }
-        return this.appService.getUserNoti(req, res,email);
+        if (!req.session.user) {
+            res.redirect('/login')
+        }
+        return this.appService.getUserNoti(req, res, email);
     }
+
     @Post("noti")
     @UseInterceptors(
-      FileInterceptor('imgNoti', {
-          storage: diskStorage({
-              destination: './uploads/noti',
-              filename: (req, file, callback) => {
-                  const name = file.originalname.split('.')[0];
-                  const fileExtName = extname(file.originalname);
-                  const randomName = Math.round(Date.now() / 1000);
-                  callback(null, `${name}-${randomName}${fileExtName}`);
-              },
-          }),
-          fileFilter: (req, file, callback) => {
-              const imageMimeType = [
-                  'image/jpeg',
-                  'image/png',
-                  'image/gif',
-                  'image/webp',
-                  'image/*',
-              ];
-              if (!imageMimeType.includes(file.mimetype)) {
-                  return callback(
-                    new HttpException(
-                      'Only image files are allowed!',
-                      HttpStatus.BAD_REQUEST,
-                    ),
-                    false,
-                  );
-              }
-              callback(null, true);
-          },
-      }),
+        FileInterceptor('imgNoti', {
+            storage: diskStorage({
+                destination: './uploads/noti',
+                filename: (req, file, callback) => {
+                    const name = file.originalname.split('.')[0];
+                    const fileExtName = extname(file.originalname);
+                    const randomName = Math.round(Date.now() / 1000);
+                    callback(null, `${name}-${randomName}${fileExtName}`);
+                },
+            }),
+            fileFilter: (req, file, callback) => {
+                const imageMimeType = [
+                    'image/jpeg',
+                    'image/png',
+                    'image/gif',
+                    'image/webp',
+                    'image/*',
+                ];
+                if (!imageMimeType.includes(file.mimetype)) {
+                    return callback(
+                        new HttpException(
+                            'Only image files are allowed!',
+                            HttpStatus.BAD_REQUEST,
+                        ),
+                        false,
+                    );
+                }
+                callback(null, true);
+            },
+        }),
     )
-    postNoti(@Req() req, @Res() res,@UploadedFile() file) {
+    postNoti(@Req() req, @Res() res, @UploadedFile() file) {
         if (!req.session.user) {
             res.redirect('/login')
         }
         return this.appService.postNoti(req, res, file);
     }
+
     //message
     @Get("message")
     getMessage(@Req() req, @Res() res) {
@@ -303,6 +314,7 @@ export class AppController {
         }
         return this.appService.getMessage(req, res);
     }
+
     //voucher
     @Get("voucher")
     getVoucher(@Req() req, @Res() res) {
@@ -316,8 +328,8 @@ export class AppController {
 @ApiTags("service")
 @Controller("rss")
 export class rss {
-  constructor(private readonly appService: AppService) {
-  }
+    constructor(private readonly appService: AppService) {
+    }
 
     @Get()
     async getRss() {
@@ -330,13 +342,13 @@ export class rss {
 
     @Post("postImgBanner")
     @UseInterceptors(
-      FilesInterceptor("file", 100, {
-        storage: diskStorage({
-          destination: "./uploads/imageBanner",
-          filename: editFileName,
-        }),
-        fileFilter: imageFileFilter
-      })
+        FilesInterceptor("file", 100, {
+            storage: diskStorage({
+                destination: "./uploads/imageBanner",
+                filename: editFileName,
+            }),
+            fileFilter: imageFileFilter
+        })
     )
     async postImg(@UploadedFiles() file) {
         return await this.appService.postImgBaner(file);

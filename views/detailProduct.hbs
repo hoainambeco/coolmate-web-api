@@ -137,6 +137,19 @@
             background-color: #2F5ACF;
             color: white;
         }
+
+        .fieldSelect {
+            background: #FFFFFF;
+            box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            width: 208px;
+            height: 44px;
+            font-size: 16px;
+            padding-left: 10px;
+            padding-right: 10px;
+            border: none;
+            margin-left: 20px;
+        }
     </style>
 </head>
 <body>
@@ -208,7 +221,7 @@
                         <span class="d-none d-sm-inline mx-1" style="color: black">{{nameNav}}</span>
                     </div>
                     <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-                        <li><a class="dropdown-item" href="/adminInfo/{{idUser}}">Profile</a></li>
+                        <li><a class="dropdown-item" href="/adminInfo/{{idUser}}">Thông tin cá nhân</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
@@ -304,6 +317,11 @@
                                 <label for="inputState" class="labelSelect">Tính năng</label>
                                 <input id="" class="fieldSelect" name="style" readonly value="{{product.feature}}">
                             </div>
+                            <div class="col-4" style="height: 60px;color: #2F5ACF">
+                                <label for="inputState" class="labelSelect">Trạng thái</label>
+                                <input style="color: #2F5ACF;font-weight: bold" class="fieldSelect" name="status"
+                                       readonly value="{{product.status}}">
+                            </div>
                         </div>
                     </div>
                     <!--size in color-->
@@ -321,7 +339,7 @@
                                                 Size
                                             </div>
                                             <div class="col-2"></div>
-                                            <div class="col-5" >
+                                            <div class="col-5">
                                                 Số lượng
                                             </div>
                                         </div>
@@ -339,11 +357,11 @@
                                         <th scope="row" style="margin-bottom: 4px">
                                             {{#each this.size}}
                                                 <div class="row">
-                                                    <div class="col-5" >
+                                                    <div class="col-5">
                                                         {{this.name}}
                                                     </div>
                                                     <div class="col-2">-</div>
-                                                    <div class="col-5" >
+                                                    <div class="col-5">
                                                         {{this.productCount}}
                                                     </div>
                                                 </div>
@@ -360,25 +378,74 @@
                     </div>
                     <div style="width: 100%;height: 60px; margin-top: 10px;text-align: right">
                         <div style=" width: 260px;height: 60px;position: relative;left: 550px;">
-                            <a href="/update-product/{{product.id}}"
+                            <!--<a href="/update-product/{{product.id}}"
                                style="text-decoration: none;">
                                 <div class=" btn-addProduct" id="add_product"
                                      style="border-radius: 56px;width: 258px;height: 54px; font-size: 20px">
                                     <p style="width: 100%; text-align: center;align-items: end;margin-bottom: 0; margin-top: 10px">
                                         Chỉnh sửa</p>
                                 </div>
-                            </a>
+                            </a>-->
+                            <button class=" btn-addProduct" id="add_product" data-bs-toggle="modal"
+                                    data-bs-target="#updateUser" onclick="editUser('{{product.status}}')"
+                                    style="border-radius: 56px;width: 258px;height: 54px; font-size: 20px">
+                                <p style="width: 100%; text-align: center;align-items: end;margin-bottom: 0; margin-top: 0px">
+                                    Chỉnh sửa</p>
+                            </button>
+
                         </div>
 
+                    </div>
+
+                    <div class="modal fade" id="updateUser" tabindex="-1" aria-labelledby="exampleModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <form action="/update/product/status/{{product.id}}" method="post" autocomplete="off"
+                                  accept-charset="UTF-8">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Chỉnh sửa trạng thái sản
+                                            phẩm</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="col-auto">
+                                            <div class="col-12" style="height: 65px">
+                                                <label for="inputStatus" class="labelSelect">Trangh thái:</label>
+                                                <select id="inputStatus" class="fieldSelect" name="status">
+                                                    <option value="Còn hàng">Còn hàng</option>
+                                                    <option value="Hết hàng">Hết hàng</option>
+                                                    <option value="Sắp ra mắt">Sắp ra mắt</option>
+                                                    <option value="Ngừng kinh doanh">Ngừng kinh doanh</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Đóng
+                                                </button>
+                                                <button type="submit" class="btn btn-primary">Sửa</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
 
 </div>
 </div>
+<script>
+    function editUser(status) {
+        document.getElementById("inputStatus").value = status;
+    }
+</script>
 </body>
 
 </html>
