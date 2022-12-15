@@ -84,7 +84,7 @@ export class AuthService {
       user: req.user
     }
   }
-  async statistical(){
-    return await this.UserService.statistical();
+  async statistical(query?:any){
+    return await this.UserService.statistical(query);
   }
 }

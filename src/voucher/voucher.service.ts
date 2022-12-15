@@ -18,6 +18,7 @@ export class VoucherService {
       throw  new ErrorException(HttpStatus.BAD_REQUEST, 'Voucher code already exists');
     }
     const voucher = await this.voucherRepository.create(createVoucherDto);
+    voucher.used = 0;
     return await this.voucherRepository.save(voucher);
   }
 

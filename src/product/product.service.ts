@@ -26,6 +26,7 @@ export class ProductService {
     const product = await this.productRepository.create(createProductDto);
     product.productCount = product.color.map((color) => color.size.map((size) => size.productCount)).map((item) => item.reduce((a, b) => a + b, 0)).reduce((a, b) => a + b, 0);
     product.image = product.color.map((color) => color.image.map((image) => image)).map((item) => item.reduce((a, b) => a.concat(b), [])).reduce((a, b) => a.concat(b), []);
+    product.quantitySold = 0;
     await this.productRepository.save(product);
     const user = await this.userRepository.find();
     // for (const item of user) {
@@ -84,6 +85,13 @@ export class ProductService {
   }
 
   async findAll(queryProductDto: QueryProductDto): Promise<ProductDto[]> {
+    const prosucts = await this.productRepository.find();
+    prosucts.map((product) => {
+      if(!product.quantitySold){
+        product.quantitySold = 0;
+      }
+      this.productRepository.save(product);
+    });
     let options = {
       where: {
         type: { $regex: queryProductDto.type, $options: "i" },
@@ -101,8 +109,8 @@ export class ProductService {
         purpose: queryProductDto.purpose,
         features: queryProductDto.feature
       },
-      // skip: queryProductDto.skip,
-      // take: queryProductDto.take,
+      skip: queryProductDto.skip,
+      take: queryProductDto.take,
       order: {}
     };
     if (queryProductDto.orderBy) {
@@ -151,7 +159,7 @@ export class ProductService {
     console.log(options);
     // @ts-ignore
     const listProducts = await this.productRepository.find(options);
-    return JSON.parse(JSON.stringify(listProducts));
+    return listProducts[0] ? JSON.parse(JSON.stringify(listProducts)) : 'null';
   }
 
   async findOne(id: string): Promise<ProductDto> {

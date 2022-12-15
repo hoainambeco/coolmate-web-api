@@ -328,13 +328,22 @@ export class rss {
             });
     }
 
-    @Get("deleteUser")
-    @HttpCode(HttpStatus.OK)
-    @UseGuards(JwtAuthGuard)
-    @UseInterceptors(AuthUserInterceptor)
-    @ApiBearerAuth()
-    @ApiOkResponse({type: UserDto, description: 'current user info'})
-    async getDeleteUser() {
-        return await this.appService.DeleteUserInActive();
+    @Post("postImgBanner")
+    @UseInterceptors(
+      FilesInterceptor("file", 100, {
+        storage: diskStorage({
+          destination: "./uploads/imageBanner",
+          filename: editFileName,
+        }),
+        fileFilter: imageFileFilter
+      })
+    )
+    async postImg(@UploadedFiles() file) {
+        return await this.appService.postImgBaner(file);
+    }
+
+    @Get('ImgBanner')
+    async getImgBanner() {
+        return JSON.parse(JSON.stringify(await this.appService.getImgBanner()));
     }
 }

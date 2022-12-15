@@ -30,6 +30,9 @@ export class ProductDto{
   productCount: number;
 
   @ApiProperty()
+  quantitySold: number;
+
+  @ApiProperty()
   createdAt: Date;
 
   @ApiProperty()
@@ -111,6 +114,7 @@ export class ProductDto{
     this.status = entity.status;
     this.cmtCount = entity.cmtCount;
     this.productCount = entity.productCount;
+    this.quantitySold = entity.quantitySold;
     this.specialSale = entity.specialSale;
     this.rebate = entity.rebate;
     this.likeCount = entity.likeCount;

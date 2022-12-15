@@ -36,6 +36,7 @@ export class Carts {
   @Column() userId: string;
   @Column() cartId: [string];
   @Column() carts: [object];
+  @Column() status: string;
   @CreateDateColumn() createdAt: Date;
   @UpdateDateColumn() updatedAt: Date;
   @DeleteDateColumn() deletedAt: Date;
