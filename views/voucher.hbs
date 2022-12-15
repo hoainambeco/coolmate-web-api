@@ -197,16 +197,21 @@
                             <div class="row-noti" style="">
                                 <p class="title-input-noti">Mã giảm giá </p>
                                 <input class="input-noti" type="text" placeholder="Mã"
-                                       name="title" required/>
+                                       name="code" required/>
                             </div>
                             <div class="row-noti" style="">
                                 <p class="title-input-noti">Điều kiện </p>
-                                <input name="content" class="input-noti" placeholder="Hóa đơn có giá trị từ ..."
+                                <input name="condition" class="input-noti" placeholder="Hóa đơn có giá trị từ ..."
                                        min="0" required type="number"/>
                             </div>
                             <div class="row-noti" style="">
-                                <p class="title-input-noti">Mô tả </p>
-                                <textarea name="content" class="input-noti" placeholder="Điền mô tả phiếu giảm giá"
+                                <p class="title-input-noti">Giảm</p>
+                                <input name="value" class="input-noti" placeholder="Hóa đơn có giá trị từ ..."
+                                       min="0" required type="number"/>
+                            </div>
+                            <div class="row-noti" style="">
+                                <p class="title-input-noti">Mô tả</p>
+                                <textarea name="description" class="input-noti" placeholder="Điền mô tả phiếu giảm giá"
                                           style="padding: 8px;height: 108px;" required></textarea>
                             </div>
                             <div class="row-noti" style="">
@@ -216,21 +221,21 @@
                             </div>
                             <div class="row-noti" style="height: 65px;margin-top: 14px;margin-bottom: 20px">
                                 <label for="inputState" class="labelSelect">Trạng thái</label>
-                                <select id="inputState" class="fieldSelect" name="Catalog">
-                                    <option value="Áo thun">Còn mã</option>
-                                    <option value="Áo sơ mi">Hết mã</option>
-                                    <option value="Áo khoác">Lưu trữ</option>
+                                <select id="inputState" class="fieldSelect" name="status">
+                                    <option value="Còn mã">Còn mã</option>
+                                    <option value="Hết mã">Hết mã</option>
+                                    <option value="Lưu trữ">Lưu trữ</option>
                                 </select>
                             </div>
                             <div class="row-noti" style="">
                                 <p class="title-input-noti">Ngày bắt đầu</p>
-                                <input name="content" class="input-noti" value="0"
-                                       min="0" required type="date">
+                                <input name="startDate" class="input-noti" value="0"
+                                       min="0" required type="datetime-local">
                             </div>
                             <div class="row-noti" style="">
                                 <p class="title-input-noti">Ngày hết hạn</p>
-                                <input name="content" class="input-noti" value="0"
-                                       min="0" required type="date">
+                                <input name="endDate" class="input-noti" value="0"
+                                       min="0" required type="datetime-local">
                             </div>
 
                             <button class="btn-push-noti" type="submit" id="submit"

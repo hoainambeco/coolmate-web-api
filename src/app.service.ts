@@ -50,9 +50,10 @@ export class AppService {
   }
 
   getLogin(req, res) {
-    return {
-      message: "Hello World!"
-    };
+    if (req.session.user) {
+     req.session.destroy();
+    }
+    return res.render('./login');
   }
 
   async postLogin(req, res) {
@@ -487,7 +488,7 @@ export class AppService {
         deletedAt: user.deletedAt,
         status: user.status,
         gender: user.gender,
-        birthday: user.birthday,
+        birthday: format(new Date(user.birthday), "dd-MM-yyyy"),
         address: user.address,
         phone: user.phone,
         avatar: user.avatar,
