@@ -12,6 +12,7 @@ export class Product {
   @Column() status: string;
   @Column() cmtCount: number;
   @Column() productCount: number;
+  @Column() quantitySold: number;
   @Column() createdAt: Date;
   @Column() specialSale: number;
   @Column() promotionalPrice: number;

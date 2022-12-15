@@ -27,6 +27,7 @@ export class CartService {
 
   async create(createCartDto: CreateCartDto) {
     let user = AuthService.getAuthUser();
+    let cart = await this.cartsRepository.findOne({ where: { userId: user.id, status: "active" } });
     const listProducts = await this.productRepository.findOneBy(ObjectId(createCartDto.products[0].productId));
     // console.log(listProducts);
     if (!listProducts) {
@@ -49,19 +50,30 @@ export class CartService {
       quantity: createCartDto.products[0].quantity,
       product: listProducts
     };
+    let find = false;
+    // cart.carts.map(async item => {
+    //   // @ts-ignore
+    //   if (item.products.productId === products.productId && item.colorName === products.colorName && item.sizeName === products.sizeName) {
+    //     // @ts-ignore
+    //     item.quantity += products.quantity;
+    //     await this.itemCartsRepository.save(item);
+    //     find= true;
+    //   }
+    // });
+    if(!find){
+      // @ts-ignore
+      await this.itemCartsRepository.save({ ...createCartDto, userId: user.id, cartId: "null", products: products });
+    }
     // @ts-ignore
-    await this.itemCartsRepository.save({ ...createCartDto, userId: user.id, cartId: 'null', products: products});
-    // @ts-ignore
-    const listItemCarts = await this.itemCartsRepository.find({ where: { userId: user.id,cartId: 'null' } });
-    let cart = await this.cartsRepository.findOne({ where: { userId: user.id , status: 'active'} });
+    const listItemCarts = await this.itemCartsRepository.find({ where: { userId: user.id, cartId: "null" } });
     if (cart) {
       await this.cartsRepository.update({ userId: user.id }, { userId: user.id, carts: listItemCarts });
     } else {
-      cart = await this.cartsRepository.save({ userId: user.id, carts: listItemCarts , status: "active"});
+      cart = await this.cartsRepository.save({ userId: user.id, carts: listItemCarts, status: "active" });
     }
     for (const item of listItemCarts) {
       // @ts-ignore
-      await this.itemCartsRepository.update({ id : item.id }, { cartId: cart.id.toString() });
+      await this.itemCartsRepository.update({ id: item.id }, { cartId: cart.id.toString() });
     }
 
     return await JSON.parse(JSON.stringify(createCartDto));

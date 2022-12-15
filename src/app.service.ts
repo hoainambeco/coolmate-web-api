@@ -189,6 +189,7 @@ private authService: AuthService
     product.status = StatusProductEnum.CON_HANG;
     product.productCount = product.color.map((color) => color.size.map((size) => size.productCount)).map((item) => item.reduce((a, b) => a + b, 0)).reduce((a, b) => a + b, 0);
     product.image = product.color.map((color) => color.image.map((image) => image)).map((item) => item.reduce((a, b) => a.concat(b), [])).reduce((a, b) => a.concat(b), []);
+    product.quantitySold = 0;
     await this.productRepository.save(product);
     res.redirect("/product");
   }

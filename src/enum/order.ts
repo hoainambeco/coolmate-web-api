@@ -8,6 +8,8 @@ export enum OrderBy {
   PROMOTIONAL_PRICE = 'promotionalPrice',
   REBATE = 'rebate',
   PRICE = 'price',
+
+  SOLUONGBAN = 'quantitySold',
 }
 
 export enum Order {
