@@ -574,7 +574,7 @@ export class AppService {
                 // @ts-ignore
                 note: status.note,
                 // @ts-ignore
-                createdAt: format(new Date(status.createdAt), "hh-mm dd-MM-yyyy"),
+                createdAt: format(new Date(status.createdAt), "HH:mm dd-MM-yyyy"),
 
 
             };
