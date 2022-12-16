@@ -180,7 +180,7 @@ export class CartService {
     const listItemCarts = [];
     cart.carts.map(itemCart => {
       const item = JSON.parse(JSON.stringify(itemCart));
-      if (item.id !== id)
+      if (item._id !== id)
         listItemCarts.push(item);
     });
     // @ts-ignore
