@@ -240,13 +240,22 @@ export class AppController {
         return this.appService.getDetailBill(req, res, param);
     }
 
-    @Post("updateStatus/:id")
+    @Post("updateStatus/payment/:id")
     postUpdateStatusBill(@Req() req, @Res() res, @Param("id") param
     ) {
         if (!req.session.user) {
             res.redirect('/login')
         }
         return this.appService.postUpdateStatusBill(req, res, param);
+    }
+
+    @Post("updateStatus/shipping/:id")
+    postUpdateStatusShippingBill(@Req() req, @Res() res, @Param("id") param
+    ) {
+        if (!req.session.user) {
+            res.redirect('/login')
+        }
+        return this.appService.postUpdateStatusShippingBill(req, res, param);
     }
 
 //noti

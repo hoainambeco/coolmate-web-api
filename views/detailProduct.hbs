@@ -169,7 +169,7 @@
                     <li class="nav-item ps-1">
                         <a href="/dashboard" class="nav-link align-middle px-0 align-self-center" id="nav-btn">
                             <img src="../image/icon/dashboard-icon.svg" width="30" height="30"> <span
-                                class="ms-1 d-none d-sm-inline " style="color: black">Thông báo</span>
+                                class="ms-1 d-none d-sm-inline " style="color: black">Thống kê</span>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -297,6 +297,11 @@
                     <!--right-->
                     <div style="height: 340px;width: 100%;padding-left: 80px;padding-top: 80px">
                         <div class="category" id="category">
+                            <div class="col-4" style="height: 60px;color: #2F5ACF">
+                                <label for="inputState" class="labelSelect">Trạng thái</label>
+                                <input style="color: #2F5ACF;font-weight: bold" class="fieldSelect" name="status"
+                                       readonly value="{{product.status}}">
+                            </div>
                             <div class="col-4" style="height: 60px">
                                 <label for="inputState" class="labelSelect">Kiểu dáng</label>
                                 <input id="" class="fieldSelect" name="style" readonly value="{{product.style}}">
@@ -317,17 +322,22 @@
                                 <label for="inputState" class="labelSelect">Tính năng</label>
                                 <input id="" class="fieldSelect" name="style" readonly value="{{product.feature}}">
                             </div>
-                            <div class="col-4" style="height: 60px;color: #2F5ACF">
-                                <label for="inputState" class="labelSelect">Trạng thái</label>
-                                <input style="color: #2F5ACF;font-weight: bold" class="fieldSelect" name="status"
-                                       readonly value="{{product.status}}">
+
+                            <div class="col-4" style="height: 60px;">
+                                <label for="inputState" class="labelTitleInput" style="width: 200px">Tổng số sản phẩm</label>
+                                <input id="" class="fieldSelect"  readonly value="{{product.productCount}}">
+                            </div>
+                            <div class="col-4" style="height: 60px;">
+                                <label for="inputState" class="labelTitleInput" style="width: 250px">Tổng số sản phẩm đã bán</label>
+                                <input id="" class="fieldSelect" readonly value="{{product.quantitySold}}">
                             </div>
                         </div>
                     </div>
                     <!--size in color-->
-                    <div style="padding-left: 20px">
-                        <div class="table-responsive " style="max-height: 300px">
-                            <table class="table table-bordered table-responsive" style="text-align: center;margin-top: 20px;margin-bottom: 0px
+                    <div style="padding-left: 20px;margin-top: 24px">
+                        <p style="margin: 0px;font-weight: bold">Danh sách màu</p>
+                        <div class="table-responsive " style="max-height: 250px;margin-top: 2px">
+                            <table class="table table-bordered table-responsive" style="text-align: center;margin-bottom: 0px
                                     ;min-height:280px;overflow: auto;width: 800px">
                                 <thead>
                                 <tr>
@@ -396,7 +406,6 @@
                         </div>
 
                     </div>
-
                     <div class="modal fade" id="updateUser" tabindex="-1" aria-labelledby="exampleModalLabel"
                          aria-hidden="true">
                         <div class="modal-dialog">
@@ -445,6 +454,7 @@
     function editUser(status) {
         document.getElementById("inputStatus").value = status;
     }
+
 </script>
 </body>
 

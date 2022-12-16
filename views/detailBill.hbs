@@ -22,7 +22,7 @@
             background: #FFFFFF;
             box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
-            width: 208px;
+            width: 260px;
             height: 44px;
             font-size: 16px;
             padding-left: 10px;
@@ -119,38 +119,41 @@
             <h1 style="color: #2F5ACF;margin-left: 20px">Chi tiết hóa đơn</h1>
             <div class="row" style="width: 100%; height: 90%;padding: 0;margin: 0">
 
-                <div style="width: 100%;padding: 0;height: 200px">
+                <div style="width: 95%;padding: 0;height: 200px;margin-left: 20px;border: 1px solid #d3d3d3;overflow: auto">
                     <div class="row" style="width: 100%;height: 100%;margin: 0;padding: 0">
                         <div class="col-3">
-                            <div><span> id:</span> <span style="color: black;font-weight: 700">{{bill.id}}</span></div>
-                            <div><span> Tên khách hàng: </span> <span
+                            <div style="margin-bottom: 10px"><span> id:</span> <span style="color: black;font-weight: 700">{{bill.id}}</span></div>
+                            <div style="margin-bottom: 10px"><span> Tên khách hàng: </span> <span
                                     style="color: black;font-weight: 700">{{bill.customerName}}</span></div>
-                            <div><span> Phương thức thanh toán:</span> <span
+                            <div style="margin-bottom: 10px"><span> Phương thức thanh toán:</span> <span
                                     style="color: black;font-weight: 700">{{bill.paymentMethod}}</span></div>
-                            <div><span> Trạng thái:</span> <span
+                            <div style="margin-bottom: 10px"><span> Trạng thái thanh toán:</span> <span
                                     style="color: black;font-weight: 700">{{bill.status}}</span></div>
-                            <div><span> Địa điểm:</span> <span
+
+                            <div style="margin-bottom: 10px"> <span> Trạng thái đơn hàng:</span> <span
+                                    style="color: black;font-weight: 700">
+                                {{#each bill.shippingStatus}}{{#if @last}}{{this.shippingStatus}}{{/if}}{{/each}}
+                            </span>
+                                <span> - Tính đến ngày:</span> <span
+                                    style="color: black;font-weight: 700">
+                                {{#each bill.shippingStatus}}{{#if @last}}{{this.createdAt}}{{/if}}{{/each}}
+                            </span></div>
+
+
+                            <div style="margin-bottom: 10px"><span> Địa điểm:</span> <span
                                     style="color: black;font-weight: 700">{{bill.placeCustomer}}</span></div>
 
                         </div>
                         <div class="col-3">
                             <div><span> Voucher:</span> <span style="color: black;font-weight: 700">001 </span></div>
-                            <div><span> Giảm:</span> <span style="color: black;font-weight: 700">-10000 vnđ</span></div>
-                            <div><span> Tổng thanh toán:</span> <span style="color: black;font-weight: 700">807000 vnđ</span>
+                            <div><span> Giảm :</span> <span style="color: black;font-weight: 700">...</span></div>
+                            <div><span> Tổng thanh toán:</span> <span
+                                    style="color: black;font-weight: 700" id="total_bill"> </span>
+
                             </div>
-                            <div><span> Ghi chú</span>
-                                <p style="font-weight: 400;font-size: 12px;height: 80px; margin-bottom: 0px; max-height: 80px;
-                        line-height: 19px;color: #000000;padding-left: 10px;overflow: auto">
-                                    aaaaaaaaâ fadssssssssssssssssssssssssssssssssss
-                                    sssssssssssssssssssssss
-                                    sssssssssssssssssssssss
-                                    sssssssssssssssssssssss
-                                    sssssssssssssssssssssss
-                                    sssssssssssssssssssssss
-                                    sssssssssssssssssssssss
-                                    sssssssssssssssssssssss
-                                    sssssssssssssssssssssss
-                                    sssssssssssssssssssssss
+                            <div><span> Ghi chú/ Lí do hủy:</span>
+                                <p style="border: 1px solid black;font-weight: 400;font-size: 12px;height: 80px; margin-bottom: 0px; max-height: 80px;
+                        line-height: 19px;color: #000000;padding-left: 10px;overflow: auto">{{bill.note}}
                                 </p>
 
                             </div>
@@ -161,15 +164,20 @@
                     </div>
                 </div>
                 <!-- Button trigger modal -->
-                <div style="width: 100%;padding: 0;height: 52px;padding-left: 20px">
+                <div style="width: 95%;padding: 0;height: 52px;margin-left: 20px">
                     <button class="btn btn-outline-primary btn-lg" data-bs-toggle="modal"
-                            style="width: 250px;height: 50px;font-size: 16px"
-                            data-bs-target="#updateUser" onclick="editUser('{{bill.status}}')">Chỉnh sửa trạng thái hóa
-                        đơn
+                            style="width: 280px;height: 50px;font-size: 16px"
+                            data-bs-target="#updateUser" onclick="editUser('{{bill.status}}')">Chỉnh sửa trạng thái
+                        thanh toán
+                    </button>
+                    <button class="btn btn-outline-primary btn-lg" data-bs-toggle="modal"
+                            style="width: 280px;height: 50px;font-size: 16px; margin-left: 20px"
+                            data-bs-target="#updateShip" onclick="selectElement('{{#each bill.shippingStatus}}{{#if @last}}{{this.shippingStatus}}{{/if}}{{/each}}')">Chỉnh sửa trạng thái vận
+                        chuyển
                     </button>
                 </div>
 
-                <div style="width: 100%;padding: 0;height: 330px;padding-left: 20px">
+                <div style="width: 95%;padding: 0;height: 330px;margin-left: 20px">
                     <div class="table-responsive mt-3" style="max-height: 327px">
                         <table class="table table-bordered table-responsive" style="text-align: center;margin-bottom: 0px
                     ;min-height:327px;overflow: auto">
@@ -183,62 +191,45 @@
                             </tr>
                             </thead>
                             <tbody id="product_list_color">
-                            <tr>
-                                <th>
-                                    <p>1</p>
-                                </th>
 
-                                <th>
-                                    <p>"Áo thun Cotton Compact in "Hôm nào cà phê nhé!" - Màu đen"</p>
-                                </th>
-                                <th>
-                                    <p>1</p>
-                                </th>
+                            {{#each bill.carts.carts}}
+                                <tr>
+                                    <th>
+                                        <p id="stt_{{@index}}"></p>
+                                    </th>
 
-                                <th>
-                                    <p>Đen - S</p>
-                                </th>
-                                <th>
-                                    <p>279000 vnđ</p>
-                                </th>
+                                    <th>
+                                        <p>{{this.products.product.productName}}</p>
 
-                            </tr>
+                                    </th>
+                                    <th>
+                                        <p>{{this.products.quantity}}</p>
+                                    </th>
 
-                            <tr>
-                                <th>
-                                    <p>2</p>
-                                </th>
+                                    <th>
+                                        <p>{{this.products.colorName}} - {{this.products.sizeName}}</p>
+                                    </th>
+                                    <th>
+                                        <p>{{this.products.product.promotionalPrice}}</p>
+                                    </th>
 
-                                <th>
-                                    <p>Áo thun Cotton Compact in Cột sống em ổn không V2 - Màu đen</p>
-                                </th>
-                                <th>
-                                    <p>2</p>
-                                </th>
-
-                                <th>
-                                    <p>Đen - XXL</p>
-                                </th>
-                                <th>
-                                    <p>269000 vnđ</p>
-                                </th>
-
-                            </tr>
+                                </tr>
+                            {{/each}}
                             </tbody>
                         </table>
                     </div>
                 </div>
 
                 </di>
-
+                <!--thanh toán-->
                 <div class="modal fade" id="updateUser" tabindex="-1" aria-labelledby="exampleModalLabel"
                      aria-hidden="true">
                     <div class="modal-dialog">
-                        <form action="/updateStatus/{{bill.id}}" method="post" autocomplete="off"
+                        <form action="/updateStatus/payment/{{bill.id}}" method="post" autocomplete="off"
                               accept-charset="UTF-8">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Update status bill!</h5>
+                                    <h5 class="modal-title" id="exampleModalLabel">Cập nhật trạng thái thanh toán!</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close"></button>
                                 </div>
@@ -246,10 +237,44 @@
                                     <div class="col-auto">
                                         <div class="col-12" style="height: 65px">
                                             <label for="inputStatus" class="labelSelect">Status:</label>
-                                            <select id="inputStatus" class="fieldSelect" name="status">
+                                            <select id="paySelect" class="fieldSelect" name="status">
                                                 <option value="Chưa thanh toán">Chưa thanh toán</option>
                                                 <option value="Đã thanh toán">Đã thanh toán</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Đóng
+                                            </button>
+                                            <button type="submit" class="btn btn-primary">Thay đổi</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!--thanh toán-->
+                <div class="modal fade" id="updateShip" tabindex="-1" aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog">
+                        <form action="/updateStatus/shipping/{{bill.id}}" method="post" autocomplete="off"
+                              accept-charset="UTF-8">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Cập nhật trạng thái đơn hàng!</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="col-auto">
+                                        <div class="col-12" style="height: 65px">
+                                            <label for="inputStatus" class="labelSelect">Trạng thái:</label>
+                                            <select id="shipingSelect" class="fieldSelect" name="status">
                                                 <option value="Chờ xác nhận">Chờ xác nhận</option>
+                                                <option value="Chờ xác nhận hủy đơn hàng">Chờ xác nhận hủy đơn hàng
+                                                </option>
                                                 <option value="Bị hủy">Bị hủy</option>
                                                 <option value="Đang chuẩn bị hàng">Đang chuẩn bị hàng</option>
                                                 <option value="Đang vận chuyển">Đang vận chuyển</option>
@@ -260,8 +285,7 @@
                                         </div>
 
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"
-                                                    data-bs-dismiss="modal">Close
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
                                             </button>
                                             <button type="submit" class="btn btn-primary">Update</button>
                                         </div>
@@ -282,9 +306,51 @@
 </div>
 </div>
 <script>
+        {{#each bill.carts.carts}}
+        document.getElementById("stt_{{@index}}").innerHTML = Number({{@index}}) + 1;
+        {{/each}}
     function editUser(status) {
         document.getElementById("inputStatus").value = status;
     }
+
+    function selectElement(status) {
+        document.getElementById("shipingSelect").value = status;
+    }
+    selectElement("paySelect",)
+
+
+    function number_format(number, decimals, dec_point, thousands_sep) {
+        // *     example: number_format(1234.56, 2, ',', ' ');
+        // *     return: '1 234,56'
+        number = (number + '').replace(',', '').replace(' ', '');
+        var n = !isFinite(+number) ? 0 : +number,
+                prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
+                sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
+                dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
+                s = '',
+                toFixedFix = function (n, prec) {
+                    var k = Math.pow(10, prec);
+                    return '' + Math.round(n * k) / k;
+                };
+        // Fix for IE parseFloat(0.55).toFixed(0) = 0;
+        s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
+        if (s[0].length > 3) {
+            s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
+        }
+        if ((s[1] || '').length < prec) {
+            s[1] = s[1] || '';
+            s[1] += new Array(prec - s[1].length + 1).join('0');
+        }
+        return s.join(dec);
+    }
+
+    function setPrice(id, price) {
+        let element = document.getElementById(id);
+        var value = number_format(price) + " VNĐ"
+        element.innerHTML = value;
+    }
+
+    setPrice("total_bill",{{bill.total}});
 </script>
 </body>
 </html>
