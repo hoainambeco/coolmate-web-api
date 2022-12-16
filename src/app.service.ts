@@ -18,6 +18,7 @@ import {StatusProductEnum} from "./enum/product";
 import {Notification} from "./users/entities/user.entity";
 import {getMessaging} from "firebase-admin/messaging";
 import mongoose from "mongoose";
+import {Voucher} from "./voucher/entities/voucher.entity";
 
 export const imgBannerSchema = mongoose.model("imgBanners", new mongoose.Schema({
     fieldname: String,
@@ -47,6 +48,8 @@ export class AppService {
         private oderRepository: Repository<Oder>,
         @InjectRepository(Notification)
         private notificationRepository: Repository<Notification>,
+        @InjectRepository(Voucher)
+        private voucherRepository: Repository<Voucher>,
         private authService: AuthService
     ) {
     }
@@ -561,6 +564,24 @@ export class AppService {
         // @ts-ignore
         bill.createdAt = format(new Date(bill.createdAt), "dd-MM-yyyy");
 
+        //format ngày của trạng thái đơn hàng
+
+       let list =  bill.shippingStatus.map((status) => {
+            return {
+                ...status,
+                // @ts-ignore
+                shippingStatus: status.shippingStatus,
+                // @ts-ignore
+                note: status.note,
+                // @ts-ignore
+                createdAt: format(new Date(status.createdAt), "hh-mm dd-MM-yyyy"),
+
+
+            };
+        });
+        // @ts-ignore
+        bill.shippingStatus = list;
+        console.log(bill.shippingStatus);
         var nameList = req.session.user.fullName.split(" ");
 
         var nameNav = "";
@@ -583,6 +604,27 @@ export class AppService {
         }
         try {
             bill.status = req.body.status;
+        } catch (e) {
+            console.log(e);
+        }
+        await this.oderRepository.update(bill.id, bill);
+        return res.redirect("/detailBill/" + id);
+    }
+
+    async postUpdateStatusShippingBill(req, res, id): Promise<OderDto> {
+        const bill = await this.oderRepository.findOneBy(id);
+
+        if (!bill) {
+            throw new ErrorException(HttpStatus.NOT_FOUND, "bill not found");
+        }
+        try {
+            bill.shippingStatus.push(
+                {
+                    shippingStatus: req.body.status,
+                    note: "",
+                    createdAt: new Date()
+                }
+            )
         } catch (e) {
             console.log(e);
         }
