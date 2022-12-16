@@ -64,17 +64,17 @@ export class CreateOderDto {
 
 }
 export class CreateOderByProductDto {
-  @ApiProperty({default: null})
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   customerName: string;
 
-  @ApiProperty({default: null})
+  @ApiProperty()
   @IsNumber()
   @IsNotEmpty()
   numberPro: number;
 
-  @ApiProperty({default: null})
+  @ApiProperty()
   @IsNumber()
   @IsNotEmpty()
   total: number;
@@ -91,17 +91,17 @@ export class CreateOderByProductDto {
   @IsNotEmpty()
   paymentMethod: string;
 
-  @ApiProperty({default: null})
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   placeStore: string;
 
-  @ApiProperty({default: null})
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   placeCustomer: string;
 
-  @ApiPropertyOptional({default: null})
+  @ApiPropertyOptional()
   @IsString()
   @IsOptional()
   cartId: string;
