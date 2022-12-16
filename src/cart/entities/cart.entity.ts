@@ -12,7 +12,7 @@ import { User } from "../../users/entities/user.entity";
 import { UserDto } from "../../users/dto/user.dto";
 import { CartDto } from "../dto/cart-dto";
 
-@Entity("itemCarts")
+@Entity("itemcarts")
 export class ItemCarts {
   @ObjectIdColumn() id: string;
   @Column() name: string;

@@ -10,7 +10,9 @@ import { AuthService } from "../auth/auth.service";
 import { ErrorException } from "../exceptions/error.exception";
 import { Product } from "../product/entities/product.entity";
 import { ObjectId } from "mongodb";
-
+import mongoose from "mongoose";
+import { StatusProductEnum } from "../enum/product";
+export const itemCartSchema = mongoose.model("itemcarts", new mongoose.Schema(ItemCarts))
 @Injectable()
 export class CartService {
   constructor(
@@ -28,10 +30,13 @@ export class CartService {
   async create(createCartDto: CreateCartDto) {
     let user = AuthService.getAuthUser();
     let cart = await this.cartsRepository.findOne({ where: { userId: user.id, status: "active" } });
+    let error='';
     const listProducts = await this.productRepository.findOneBy(ObjectId(createCartDto.products[0].productId));
-    // console.log(listProducts);
     if (!listProducts) {
       throw new ErrorException(404, "Product not found");
+    }
+    if(listProducts.status !== StatusProductEnum.CON_HANG ){
+      throw new ErrorException(404, "Product not available");
     }
     if (listProducts.color.find(color => color.name === createCartDto.products[0].colorName) === undefined) {
       throw new ErrorException(404, "Color not found");
@@ -50,24 +55,44 @@ export class CartService {
       quantity: createCartDto.products[0].quantity,
       product: listProducts
     };
-    let find = false;
-    // cart.carts.map(async item => {
-    //   // @ts-ignore
-    //   if (item.products.productId === products.productId && item.colorName === products.colorName && item.sizeName === products.sizeName) {
-    //     // @ts-ignore
-    //     item.quantity += products.quantity;
-    //     await this.itemCartsRepository.save(item);
-    //     find= true;
-    //   }
-    // });
-    if(!find){
+    const itemCarts = await itemCartSchema.find({userId:user.id.toString()}).exec();
+    // const itemCart = await itemCartSchema.findOne({productId: products.productId, colorName: products.colorName, sizeName: products.sizeName});
+    if (itemCarts.length > 0) {
+      itemCarts.map(async item => {
+        const itemCart = JSON.parse(JSON.stringify(item));
+        // @ts-ignore
+        if (itemCart.products.productId === products.productId && itemCart.products.colorName === products.colorName && itemCart.products.sizeName === products.sizeName) {
+          console.log(JSON.parse(JSON.stringify(itemCart)).products.quantity + createCartDto.products[0].quantity);
+          products.quantity = parseInt((JSON.parse(JSON.stringify(itemCart)).products.quantity + createCartDto.products[0].quantity).toString());
+          if (products.quantity > productCount) {
+            error = "Product count is not enough";
+          }
+          const update = {products: products}
+          // @ts-ignore
+          await this.itemCartsRepository.update(ObjectId(itemCart._id), update);
+        }
+        else {
+          // @ts-ignore
+          await this.itemCartsRepository.save({ ...createCartDto, userId: user.id, cartId: "null", products: products });
+        }
+      })
+      if(error){
+        throw new ErrorException(404, error);
+      }
+    }
+    else {
       // @ts-ignore
       await this.itemCartsRepository.save({ ...createCartDto, userId: user.id, cartId: "null", products: products });
     }
-    // @ts-ignore
+    //@ts-ignore
     const listItemCarts = await this.itemCartsRepository.find({ where: { userId: user.id, cartId: "null" } });
     if (cart) {
-      await this.cartsRepository.update({ userId: user.id }, { userId: user.id, carts: listItemCarts });
+      // @ts-ignore
+      const id = cart.carts.map(cart => cart.id);
+      id.push(...listItemCarts.map(item => item.id));
+      const list = await itemCartSchema.find({ where: { id: {$in: id} } });
+      // itemCarts.push(...listItemCarts);
+      await this.cartsRepository.update({ userId: user.id }, { userId: user.id, carts: list });
     } else {
       cart = await this.cartsRepository.save({ userId: user.id, carts: listItemCarts, status: "active" });
     }
@@ -155,7 +180,7 @@ export class CartService {
     const listItemCarts = [];
     cart.carts.map(itemCart => {
       const item = JSON.parse(JSON.stringify(itemCart));
-      if (item.id !== id)
+      if (item._id !== id)
         listItemCarts.push(item);
     });
     // @ts-ignore

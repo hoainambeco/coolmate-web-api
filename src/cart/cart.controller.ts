@@ -9,7 +9,7 @@ import {
   HttpStatus,
   HttpCode,
   UseGuards,
-  UseInterceptors
+  UseInterceptors, Put
 } from "@nestjs/common";
 import { CartService } from './cart.service';
 import { CreateCartDto } from './dto/create-cart.dto';
@@ -30,7 +30,6 @@ export class CartController {
   @HttpCode(HttpStatus.OK)
   @ApiResponse({ status: 200, description: "The found record", type: CreateCartDto })
   create(@Body() createCartDto: CreateCartDto) {
-    console.log(createCartDto);
     return this.cartService.create(createCartDto);
   }
 
@@ -49,7 +48,7 @@ export class CartController {
     return this.cartService.findByUserId();
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(@Param('id') id: string, @Body() updateCartDto: UpdateCartDto) {
     return this.cartService.update(id, updateCartDto);
   }
