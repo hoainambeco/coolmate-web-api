@@ -47,9 +47,9 @@ export class CreateOderDto {
   @IsNotEmpty()
   cartId: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   idPayment: string;
 
   @ApiPropertyOptional()
@@ -91,6 +91,11 @@ export class CreateOderByProductDto {
   @IsNotEmpty()
   paymentMethod: string;
 
+  @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
+  idPayment: string;
+
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
@@ -106,12 +111,17 @@ export class CreateOderByProductDto {
   @IsOptional()
   cartId: string;
 
-  @ApiPropertyOptional({type: () => [CreateCartProductDto], default: null})
+  @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
+  note: string;
+
+  @ApiPropertyOptional({type: () => [CreateCartProductDto]})
   @IsArray()
   @Type(() => CreateCartProductDto)
   @ValidateNested({ each: true })
   @IsOptional()
-  cartProduct: [CreateCartProductDto] | null;
+  cartProduct: [CreateCartProductDto];
 
   @ApiPropertyOptional()
   @IsArray()
