@@ -993,6 +993,45 @@ export class AppService {
 
     async postAddVoucher(req, res) {
         console.log(req.body);
+        // @ts-ignore
+        const oldVoucher = await this.voucherRepository.findOneBy( {where: {code: req.body.code}});
+        var nameList = req.session.user.fullName.split(" ");
+        var nameNav = "";
+        if (nameList.length >= 2) {
+            nameNav = nameList[0] + " " + nameList[nameList.length - 1];
+        } else {
+            nameNav = nameList[0];
+        }
+
+        var idUser = req.session.user.id;
+        var avatar = req.session.user.avatar;
+
+        if(oldVoucher){
+            const listVoucher = await this.voucherRepository.find();
+            listVoucher.map((voucher) => {
+                return {
+                    ...voucher,
+                    id: voucher.id.toString(),
+                    startDate: format(new Date(voucher.startDate), "HH:mm dd-MM-yyyy"),
+                    endDate: format(new Date(voucher.endDate), "HH:mm dd-MM-yyyy"),
+                };
+            });
+            res.render("./voucher", {
+                listVoucher,
+                nameNav: nameNav,
+                idUser: idUser,
+                avatar: avatar,
+                msg: "<div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">\n" +
+                    "  <p style=\"margin: 0\"> Thêm thất bại! Do mã giảm giá đã tồn tại</p>" +
+                    "  <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>\n" +
+                    "</div>"
+
+            });
+        }
+
+
+
+
         const user = await this.userRepository.findOneBy({where: {email: req.body.email}});
         const voucher = this.voucherRepository.create({
             code: req.body.code,
@@ -1008,20 +1047,10 @@ export class AppService {
             used: 0,
             userId: req.body.userId || user.id || null,
         });
-        console.log(voucher);
         await this.voucherRepository.save(voucher);
-        var nameList = req.session.user.fullName.split(" ");
 
-        var nameNav = "";
-        if (nameList.length >= 2) {
-            nameNav = nameList[0] + " " + nameList[nameList.length - 1];
-        } else {
-            nameNav = nameList[0];
-        }
 
-        var idUser = req.session.user.id;
-        var avatar = req.session.user.avatar;
-        res.render("./voucher", {nameNav: nameNav, idUser: idUser, avatar: avatar});
+       return res.render("./voucher", {nameNav: nameNav, idUser: idUser, avatar: avatar});
     }
 
     async postUpdateVoucherStatus(req, res): Promise<VoucherDto> {
