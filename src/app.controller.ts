@@ -62,19 +62,19 @@ export class AppController {
 
     @Get()
     @Render("listProduct")
-    root(@Req() req, @Res() res) {
+    root(@Req() req, @Res() res,@Query() query) {
         if (!req.session.user) {
             res.redirect("/login");
         }
-        return this.appService.getProduct(req, res);
+        return this.appService.getProduct(req, res,query);
     }
 
     @Get("product")
-    getListProduct(@Req() req, @Res() res) {
+    getListProduct(@Req() req, @Res() res,@Query() query) {
         if (!req.session.user) {
             res.redirect('/login')
         }
-        return this.appService.getProduct(req, res);
+        return this.appService.getProduct(req, res,query);
     }
 
     @Get("product-add")
@@ -225,11 +225,11 @@ export class AppController {
 
     //bill
     @Get("bills")
-    getListBill(@Req() req, @Res() res,@Query() query) {
+    getListBill(@Req() req, @Res() res, @Query() query) {
         if (!req.session.user) {
             res.redirect('/login')
         }
-        return this.appService.getListBill(req,res,query);
+        return this.appService.getListBill(req, res, query);
     }
 
     @Get("detailBill/:id")
@@ -256,6 +256,14 @@ export class AppController {
             res.redirect('/login')
         }
         return this.appService.postUpdateStatusShippingBill(req, res, param);
+    }
+
+    @Post("searchBill")
+    postSearchBill(@Req() req, @Res() res) {
+        if (!req.session.user) {
+            res.redirect('/login')
+        }
+        return this.appService.postSearchBill(req, res);
     }
 
 //noti
@@ -332,6 +340,7 @@ export class AppController {
         }
         return this.appService.getVoucher(req, res);
     }
+
     @Post("voucher")
     postVoucher(@Req() req, @Res() res) {
         if (!req.session.user) {
@@ -339,6 +348,7 @@ export class AppController {
         }
         return this.appService.postAddVoucher(req, res);
     }
+
     @Post("updateVoucher")
     postUpdateVoucher(@Req() req, @Res() res) {
         if (!req.session.user) {

@@ -168,20 +168,6 @@
             <div style="width: 100%">
 
                 <div class="row">
-                    <div class="col-2 row date-time " style="color: #707EAE ">
-                        <div class="col-12 p-0 " style="font-size: 20px; text-align: left;color: black">
-                            <p style="margin-bottom: 4px">Hello {{nameNav}}</p>
-                        </div>
-                        <div class="col-12 time p-0 " style="font-size: 14px; text-align: left;">
-                            <span class="col-4" id="hour">00</span>:
-                            <span class="col-4" id="minutes">00</span>
-                            <span class="col-4" id="period">AM </span>
-                            <span id="daynum">Day</span>
-                            <span id="month">Day</span>
-                            <span id="year">Day</span>
-                        </div>
-
-                    </div>
 
                     <form action="/searchProduct" class="col-9 d-flex" method="POST" style="width: 60%; "
                           autocomplete="off">
@@ -205,29 +191,6 @@
                     </form>
 
                 </div>
-                <form method="get" style="width: 100%;margin-top: 10px;padding-left: 40px" >
-                    <label for="inputStatus" class="labelSelect">Trạng thái sản phẩm:</label>
-                    <select id="paySelect" class="fieldSelect" name="status">
-                        <option value="">Tất cả</option>
-                        <option value="Còn hàng">Còn hàng</option>
-                        <option value="Hết hàng">Hết hàng</option>
-                        <option value="Sắp ra mắt">Sắp ra mắt</option>
-                        <option value="Ngừng kinh doanh">Ngừng kinh doanh</option>
-                    </select>
-                    <label for="inputStatus" class="labelSelect">Sắp xếp:</label>
-                    <select id="paySelect" class="fieldSelect" name="sort">
-                        <option value="">Không sắp xếp</option>
-                        <option value="0">Ngày tạo tăng dần</option>
-                        <option value="1">Ngày tạo  giảm dần</option>
-                        <option value="2">Số lượng bán  tăng dần</option>
-                        <option value="3">Số lượng bán giảm dần</option>
-                        <option value="4">Giá bán  tăng dần</option>
-                        <option value="5">Giá bán giảm dần</option>
-                        <option value="6">Điểm đánh giá  tăng dần</option>
-                        <option value="7">Điểm đánh giá giảm dần</option>
-                    </select>
-                    <input class="btn btn-outline-secondary" type="submit" value="Lọc" style="margin-left: 20px">
-                </form>
             </div>
 
             <div style="width: 100%;max-height: 100px;margin-top: 20px">
