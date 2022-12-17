@@ -257,12 +257,18 @@ export class AppService {
         if (products.length > 0) {
             return res.render("./listProduct", {
                 listProduct: products,
-                msg: `<h6 class="alert alert-success">Tìm được sản phẩm</h6>`,
+                msg: "<div class=\"alert alert-success alert-dismissible fade show\" role=\"alert\">\n" +
+                    "  <p style=\"margin: 0\">Tìm được sản phẩm!</p>" +
+                    "  <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>\n" +
+                    "</div>",
                 nameNav: nameNav, idUser: idUser, avatar: avatar
             });
         } else {
             return res.render("./listProduct", {
-                msg: `<h6 class="alert alert-danger">Không tìm thấy</h6>`,
+                msg: "<div class=\"alert alert alert-danger alert-dismissible fade show\" role=\"alert\">\n" +
+                    "  <p style=\"margin: 0\">Không tìm thấy sản phẩm!</p>" +
+                    "  <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>\n" +
+                    "</div>",
                 nameNav: nameNav, idUser: idUser, avatar: avatar
             });
         }
@@ -521,12 +527,18 @@ export class AppService {
         if (users.length > 0) {
             return res.render("./listUser", {
                 listUser: users,
-                msg: `<h6 class="alert alert-success">Tìm được sản phẩm</h6>`,
+                msg: "<div class=\"alert alert-success alert-dismissible fade show\" role=\"alert\">\n" +
+                    "  <p style=\"margin: 0\">Tìm được người dùng!</p>" +
+                    "  <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>\n" +
+                    "</div>",
                 nameNav: nameNav, idUser: idUser, avatar: avatar
             });
         } else {
             return res.render("./listUser", {
-                msg: `<h6 class="alert alert-danger">Không tìm thấy</h6>`,
+                msg: "<div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">\n" +
+                    "  <p style=\"margin: 0\">Không tìm thấy người dùng!</p>" +
+                    "  <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>\n" +
+                    "</div>",
                 nameNav: nameNav, idUser: idUser, avatar: avatar
             });
         }
