@@ -17,6 +17,30 @@
         .nav_app {
             font-size: 18px;
         }
+        ::placeholder {
+            color: #AEB6CF;
+            opacity: 1;
+        }
+        #search-input:focus{
+            outline:0;}
+        input[type="search"]::-webkit-search-cancel-button {
+            -webkit-appearance: none;
+            appearance: none;
+            height: 24px;
+            width: 24px;
+            background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PgogICAgICAgIDwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIKICAgICAgICAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj4KPHN2ZyBzdHlsZT0iY29sb3I6IHdoaXRlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgZmlsbD0iY3VycmVudENvbG9yIgogICAgIGNsYXNzPSJiaSBiaS14IiB2aWV3Qm94PSIwIDAgMTYgMTYiPgogICAgICAgIDxwYXRoIGQ9Ik00LjY0NiA0LjY0NmEuNS41IDAgMCAxIC43MDggMEw4IDcuMjkzbDIuNjQ2LTIuNjQ3YS41LjUgMCAwIDEgLjcwOC43MDhMOC43MDcgOGwyLjY0NyAyLjY0NmEuNS41IDAgMCAxLS43MDguNzA4TDggOC43MDdsLTIuNjQ2IDIuNjQ3YS41LjUgMCAwIDEtLjcwOC0uNzA4TDcuMjkzIDggNC42NDYgNS4zNTRhLjUuNSAwIDAgMSAwLS43MDh6IgogICAgICAgICAgICAgIGZpbGw9IndoaXRlIj48L3BhdGg+Cjwvc3ZnPgo=);
+            background-size: 24px 24px;
+        }
+        .search-field{
+             display: flex;
+             flex-direction: row;
+             align-items: center;
+             padding: 8px;
+             width: 426px;
+             height: 49px;
+             background: #2F5ACF;
+             border-radius: 8px;
+         }
     </style>
 </head>
 <body>
@@ -103,19 +127,56 @@
 
 
         <div class="col py-3">
-            <div style="width: 100%">
-                <form action="/#" class="d-flex" method="POST" style="width: 60%;margin: auto" autocomplete="off">
-                    <div class="me-2" style="margin: auto">
-                        <select style="margin: auto;height: 38px;border-radius: 5px">
-                            <option value="1">Tên khách hàng</option>
-                            <option value="2">Tên sản phẩm</option>
-                        </select>
+            <div style="width: 100%;margin-bottom: 20px">
+
+                <form action="/searchBill" class="col-9 d-flex" method="POST" style="margin: auto"
+                      autocomplete="off">
+                    <div class="me-2 " style="margin-left: 15%">
+                        <input style="margin: auto;height: 49px;border-radius: 5px;border: none;
+                            box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);border-radius: 8px;width: 264px;padding: 0px 20px;"
+                        value="Tìm kiếm theo tên khách hàng" readonly disabled
+                        >
                     </div>
-                    <input class="form-control me-2" type="search" placeholder="Search here" aria-label="Search"
-                           name="searchUser">
-                    <button class="btn btn-outline-secondary" type="submit" style="width: 150px">Tìm kiếm</button>
+                    <div class="search-field" style="padding-top: 0;padding-bottom: 0;padding-right: 0">
+                        <button type="submit" style="background-color: #2F5ACF; border: none">
+                            <img src="../image/icon/search-icon.svg" ></button>
+
+                        <input  type="search" placeholder="Tìm kiếm tại đây" id="search-input"
+                                name="SearchValue" style="background-color: #2F5ACF;border: none;
+                                   border-radius: 8px; padding: 10px;
+                                   margin-left: 4px;width: 100%;height: 100% ;color: white">
+                    </div>
                 </form>
+
             </div>
+            <form method="get" style="width: 100%;margin-bottom: 20px">
+                    <label for="inputStatus" class="labelSelect">Trạng thái:</label>
+                    <select id="shipingSelect" class="fieldSelect" name="ship">
+                        <option value="Chờ xác nhận">Chờ xác nhận</option>
+                        <option value="Chờ xác nhận hủy đơn hàng">Chờ xác nhận hủy đơn hàng
+                        </option>
+                        <option value="Bị hủy">Bị hủy</option>
+                        <option value="Đang chuẩn bị hàng">Đang chuẩn bị hàng</option>
+                        <option value="Đang vận chuyển">Đang vận chuyển</option>
+                        <option value="Đã giao hàng">Đã giao hàng</option>
+                        <option value="Đã trả hàng">Đã trả hàng</option>
+                        <option value="Đã nhận">Đã nhận</option>
+                    </select>
+                    <label for="inputStatus" class="labelSelect">Status:</label>
+                    <select id="paySelect" class="fieldSelect" name="pay">
+                        <option value="Chưa thanh toán">Chưa thanh toán</option>
+                        <option value="Đã thanh toán">Đã thanh toán</option>
+                    </select>
+                <label for="inputStatus" class="labelSelect">Sắp xếp:</label>
+                    <select id="paySelect" class="fieldSelect" name="sort">
+                        <option value="0">Ngày cập nhật tăng dần</option>
+                        <option value="1">Ngày cập nhật giảm dần</option>
+                        <option value="2">Ngày cập tạo tăng dần</option>
+                        <option value="3">Ngày cập tạo giảm dần</option>
+                    </select>
+
+                <input type="submit">
+            </form>
             <div class="panel panel-default mt-2" style="width: 100%">
                 <div class="panel-body table-responsive" style="max-height: 600px; min-height: 480px">
                     <table class="table table-bordered">

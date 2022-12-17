@@ -4,7 +4,7 @@ import {
     HttpException,
     HttpStatus,
     Param,
-    Post, Render,
+    Post, Query, Render,
     Req,
     Res, UploadedFile,
     UploadedFiles, UseGuards,
@@ -225,11 +225,11 @@ export class AppController {
 
     //bill
     @Get("bills")
-    getListBill(@Req() req, @Res() res) {
+    getListBill(@Req() req, @Res() res,@Query() query) {
         if (!req.session.user) {
             res.redirect('/login')
         }
-        return this.appService.getListBill(req, res);
+        return this.appService.getListBill(req,res,query);
     }
 
     @Get("detailBill/:id")
