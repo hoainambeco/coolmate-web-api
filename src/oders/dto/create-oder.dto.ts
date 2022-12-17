@@ -107,10 +107,9 @@ export class CreateOderByProductDto {
   placeCustomer: string;
 
   @ApiProperty()
-  @IsArray()
+  @IsString()
   @IsNotEmpty()
-  @IsOptional()
-  itemCartId: string[];
+  cartId: string;
 
   @ApiPropertyOptional()
   @IsString()

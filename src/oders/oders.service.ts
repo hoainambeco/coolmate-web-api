@@ -150,6 +150,9 @@ export class OdersService {
       // console.log(voucher);
       vouchers.push(voucher);
     });
+    if(createOderDto.cartId){
+      throw new ErrorException(HttpStatus.NOT_FOUND, "Cart not found");
+    }
     // @ts-ignore
     const cart = await this.cartRepository.findOneBy(createOderDto.cartId);
     if (!cart) {
