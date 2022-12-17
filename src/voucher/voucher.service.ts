@@ -1,10 +1,12 @@
 import { HttpStatus, Injectable } from "@nestjs/common";
-import { CreateVoucherDto } from './dto/create-voucher.dto';
+import { CreateVoucherDto, queryVoucher } from "./dto/create-voucher.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Voucher } from "./entities/voucher.entity";
 import { Repository } from "typeorm";
 import { ErrorException } from "../exceptions/error.exception";
 import { ProductDto } from "../product/dto/product.dto";
+import { Types } from "mongoose";
+import { ObjectId } from "mongodb";
 
 @Injectable()
 export class VoucherService {
@@ -19,17 +21,53 @@ export class VoucherService {
     }
     const voucher = await this.voucherRepository.create(createVoucherDto);
     voucher.used = 0;
+    voucher.userId = ObjectId(createVoucherDto.userId) || '';
     return await this.voucherRepository.save(voucher);
   }
 
-  async findAll() {
-    const listVoucher = await this.voucherRepository.find();
-    return listVoucher.map((voucher) => {
-      return{
-        ...voucher,
-        id: voucher.id.toString(),
-      }
-    })
+  async findAll(query: queryVoucher):Promise<ProductDto[]> {
+    let options = {
+      where: {},
+      order: {}
+    };
+    if (query.orderBy) {
+      options = Object.assign(options, {
+        order: {
+          [query.orderBy]: query.order
+        }
+      });
+    }
+    if (query.status) {
+      options = Object.assign(options, {
+        where: {
+          status: query.status
+        }
+      });
+    }
+    if (query.code) {
+      options = Object.assign(options, {
+        where: {
+          code: query.code
+        }
+      });
+    }
+    if (query.type) {
+      options = Object.assign(options, {
+        where: {
+          type: query.type
+        }
+      });
+    }
+    if (query.userId) {
+      options = Object.assign(options, {
+        where: {
+          userId: ObjectId(query.userId)
+        }
+      });
+    }
+    console.log(options);
+    const listVoucher = await this.voucherRepository.find(options);
+    return JSON.parse(JSON.stringify(listVoucher));
   }
 
   async findOne(id: string):Promise<ProductDto> {
@@ -78,7 +116,7 @@ export class VoucherService {
     if (!voucher) {
       throw new ErrorException(HttpStatus.NOT_FOUND, 'Voucher not found');
     }
-return this.voucherRepository.remove(voucher);
+return this.voucherRepository.update(id, {status: 'Lưu trữ'});
 
   }
 }

@@ -125,7 +125,9 @@ export class OdersService {
     await this.oderRepository.save({
       ...oder,
       carts: cart,
-      vouchers: vouchers,
+      voucherId: createOderDto.voucherId || [],
+      idPayment: createOderDto.idPayment || '',
+      vouchers: vouchers  || [],
       shippingStatus: [{ shippingStatus: ShippingStatus.CHO_XAC_NHAN, note: "", createdAt: new Date() }]
     });
     return createOderDto;
