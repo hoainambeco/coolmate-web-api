@@ -17,8 +17,9 @@ import {OderDto} from "./oders/dto/oder.dto";
 import {StatusProductEnum} from "./enum/product";
 import {Notification} from "./users/entities/user.entity";
 import {getMessaging} from "firebase-admin/messaging";
-import mongoose from "mongoose";
+import mongoose, {Schema} from "mongoose";
 import {Voucher} from "./voucher/entities/voucher.entity";
+
 
 export const imgBannerSchema = mongoose.model("imgBanners", new mongoose.Schema({
     fieldname: String,
@@ -757,6 +758,33 @@ export class AppService {
 
     //voucher
     async getVoucher(req, res) {
+        var nameList = req.session.user.fullName.split(" ");
+
+        var nameNav = "";
+        if (nameList.length >= 2) {
+            nameNav = nameList[0] + " " + nameList[nameList.length - 1];
+        } else {
+            nameNav = nameList[0];
+        }
+
+        var idUser = req.session.user.id;
+        var avatar = req.session.user.avatar;
+        res.render("./voucher", {nameNav: nameNav, idUser: idUser, avatar: avatar});
+    }
+    async postAddVoucher(req, res) {
+        console.log(req.body);
+        const voucher = this.voucherRepository.create({
+            code :req.body.code,
+            condition : req.body.condition,
+            discount : parseInt(req.body.value) ,
+            description : req.body.description,
+            value : req.body.soluong,
+            status: req.body.status,
+            startDate: req.body.startDate,
+            endDate: req.body.endDate,
+        });
+        console.log(voucher);
+        await this.voucherRepository.save(voucher);
         var nameList = req.session.user.fullName.split(" ");
 
         var nameNav = "";
