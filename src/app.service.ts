@@ -19,6 +19,7 @@ import {Notification} from "./users/entities/user.entity";
 import {getMessaging} from "firebase-admin/messaging";
 import mongoose, {Schema} from "mongoose";
 import {Voucher} from "./voucher/entities/voucher.entity";
+import {VoucherDto} from "./voucher/dto/voucher.dto";
 
 
 export const imgBannerSchema = mongoose.model("imgBanners", new mongoose.Schema({
@@ -551,11 +552,35 @@ export class AppService {
             order: {}
         }
         if (query.pay) {
-            option = Object.assign(option, {where: {status: query.pay}})
+            option = Object.assign(option, {where: {... option.where, status: query.pay}})
+            console.log(option);
         }
         if (query.ship) {
-            option = Object.assign(option, {where: {shippingStatus: {$elemMatch:{shippingStatus: query.ship}}}})
+            option = Object.assign(option, {where: {... option.where,shippingStatus: {$elemMatch:{shippingStatus: query.ship}}}});
+            console.log(option)
         }
+        switch (query.sort) {
+            /*<option value="0">Ngày cập nhật tăng dần</option>
+            <option value="1">Ngày cập nhật giảm dần</option>
+            <option value="2">Ngày cập tạo tăng dần</option>
+            <option value="3">Ngày cập tạo giảm dần</option>*/
+            case 0:
+                option = Object.assign(option, {oder: {updatedAt:"DASC"}});
+                console.log(option)
+                break;
+            case 1:
+                option = Object.assign(option, {oder: {updatedAt:"ASC"}});
+                break;
+            case 2:
+                option = Object.assign(option, {oder: {createdAt:"DASC"}});
+                break;
+            case 3:
+                option = Object.assign(option, {oder: {createdAt:"ASC"}});
+                break;
+            default: break;
+        }
+        console.log(query);
+        console.log(option);
         const listOders = await this.oderRepository.find(option);
         console.log(listOders);
         let ListBill: OderDto[];
@@ -775,6 +800,17 @@ export class AppService {
 
     //voucher
     async getVoucher(req, res) {
+        const listVoucher = await  this.voucherRepository.find();
+        listVoucher.map((voucher) => {
+            return {
+                ...voucher,
+                id : voucher.id.toString(),
+                startDate: format(new Date(voucher.startDate), "HH:mm dd-MM-yyyy"),
+                endDate: format(new Date(voucher.endDate), "HH:mm dd-MM-yyyy"),
+
+
+            };
+        });
         var nameList = req.session.user.fullName.split(" ");
 
         var nameNav = "";
@@ -786,7 +822,7 @@ export class AppService {
 
         var idUser = req.session.user.id;
         var avatar = req.session.user.avatar;
-        res.render("./voucher", {nameNav: nameNav, idUser: idUser, avatar: avatar});
+        res.render("./voucher", {listVoucher,nameNav: nameNav, idUser: idUser, avatar: avatar});
     }
 
     async postAddVoucher(req, res) {
@@ -822,6 +858,25 @@ export class AppService {
         res.render("./voucher", {nameNav: nameNav, idUser: idUser, avatar: avatar});
     }
 
+    async postUpdateVoucherStatus(req, res): Promise<VoucherDto> {
+        // @ts-ignore
+        let voucher = await this.voucherRepository.findOneBy(req.body.id);
+
+        if (!voucher) {
+            throw new ErrorException(HttpStatus.NOT_FOUND, "voucher is not found!");
+        }
+        try {
+            // @ts-ignore
+            voucher.status = req.body.status;
+        } catch (e) {
+            console.log(e);
+        }
+        await this.voucherRepository.update(voucher.id, voucher);
+       return  res.redirect("/voucher");
+    }
+
+
+///
     async postImgBaner(file) {
 
         const img = await imgBannerSchema.find({delete: false});
