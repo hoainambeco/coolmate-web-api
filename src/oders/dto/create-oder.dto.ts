@@ -68,16 +68,16 @@ export class CreateOderByProductDto {
   @IsString()
   @IsNotEmpty()
   customerName: string;
-
-  @ApiProperty()
-  @IsNumber()
-  @IsNotEmpty()
-  numberPro: number;
-
-  @ApiProperty()
-  @IsNumber()
-  @IsNotEmpty()
-  total: number;
+  //
+  // @ApiProperty()
+  // @IsNumber()
+  // @IsNotEmpty()
+  // numberPro: number;
+  //
+  // @ApiProperty()
+  // @IsNumber()
+  // @IsNotEmpty()
+  // total: number;
 
   @ApiProperty({enum : ShippingStatus, default: ShippingStatus.CHUA_THANH_TOAN})
   @IsEnum(ShippingStatus)
@@ -106,10 +106,11 @@ export class CreateOderByProductDto {
   @IsNotEmpty()
   placeCustomer: string;
 
-  @ApiPropertyOptional()
-  @IsString()
+  @ApiProperty()
+  @IsArray()
+  @IsNotEmpty()
   @IsOptional()
-  cartId: string;
+  itemCartId: string[];
 
   @ApiPropertyOptional()
   @IsString()

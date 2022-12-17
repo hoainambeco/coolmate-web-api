@@ -1,6 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, UseInterceptors, Put } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  UseInterceptors,
+  Put,
+  Query
+} from "@nestjs/common";
 import { VoucherService } from './voucher.service';
-import { CreateVoucherDto } from './dto/create-voucher.dto';
+import { CreateVoucherDto, queryVoucher } from "./dto/create-voucher.dto";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../guards/jwt-auth.guard";
 import { AuthUserInterceptor } from "../interceptors/auth-user.interceptor";
@@ -20,8 +32,8 @@ export class VoucherController {
   }
 
   @Get()
-  findAll() {
-    return this.voucherService.findAll();
+  findAll(@Query() query: queryVoucher) {
+    return this.voucherService.findAll(query);
   }
 
   @Get(':id')

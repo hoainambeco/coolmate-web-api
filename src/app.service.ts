@@ -773,6 +773,7 @@ export class AppService {
     }
     async postAddVoucher(req, res) {
         console.log(req.body);
+        const user = await this.userRepository.findOneBy({where: {email: req.body.email}});
         const voucher = this.voucherRepository.create({
             code :req.body.code,
             condition : req.body.condition,
@@ -782,6 +783,10 @@ export class AppService {
             status: req.body.status,
             startDate: req.body.startDate,
             endDate: req.body.endDate,
+            type:req.body.type || "",
+            isMonopoly: !!req.body.email || !!req.body.userId || !!user.id || false,
+            used: 0,
+            userId: req.body.userId || user.id || null,
         });
         console.log(voucher);
         await this.voucherRepository.save(voucher);
