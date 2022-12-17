@@ -339,6 +339,13 @@ export class AppController {
         }
         return this.appService.postAddVoucher(req, res);
     }
+    @Post("updateVoucher")
+    postUpdateVoucher(@Req() req, @Res() res) {
+        if (!req.session.user) {
+            res.redirect('/login')
+        }
+        return this.appService.postUpdateVoucherStatus(req, res);
+    }
 }
 
 @ApiTags("service")
