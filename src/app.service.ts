@@ -545,17 +545,22 @@ export class AppService {
     }
 
     /// bill
-    async getListBill(req, res) {
-        const listOders = await this.oderRepository.find({});
+    async getListBill(req, res, query) {
+        let option = {
+            where: {},
+            order: {}
+        }
+        if (query.pay) {
+            option = Object.assign(option, {where: {status: query.pay}})
+        }
+        if (query.ship) {
+            option = Object.assign(option, {where: {shippingStatus: {$elemMatch:{shippingStatus: query.ship}}}})
+        }
+        const listOders = await this.oderRepository.find(option);
+        console.log(listOders);
         let ListBill: OderDto[];
         // @ts-ignore
-        ListBill = listOders.map((oder) => {
-            return {
-                ...oder,
-                id: oder.id.toString(),
-                createdAt: format(new Date(oder.createdAt), "dd-MM-yyyy")
-            };
-        });
+        ListBill = JSON.parse(JSON.stringify(listOders))
         var nameList = req.session.user.fullName.split(" ");
 
         var nameNav = "";
@@ -579,7 +584,7 @@ export class AppService {
 
         //format ngày của trạng thái đơn hàng
 
-       let list =  bill.shippingStatus.map((status) => {
+        let list = bill.shippingStatus.map((status) => {
             return {
                 ...status,
                 // @ts-ignore
@@ -783,15 +788,16 @@ export class AppService {
         var avatar = req.session.user.avatar;
         res.render("./voucher", {nameNav: nameNav, idUser: idUser, avatar: avatar});
     }
+
     async postAddVoucher(req, res) {
         console.log(req.body);
         const user = await this.userRepository.findOneBy({where: {email: req.body.email}});
         const voucher = this.voucherRepository.create({
-            code :req.body.code,
-            condition : req.body.condition,
-            discount : parseInt(req.body.value) ,
-            description : req.body.description,
-            value : req.body.soluong,
+            code: req.body.code,
+            condition: req.body.condition,
+            discount: parseInt(req.body.value),
+            description: req.body.description,
+            value: req.body.soluong,
             status: req.body.status,
             startDate: req.body.startDate,
             endDate: req.body.endDate,
