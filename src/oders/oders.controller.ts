@@ -27,7 +27,7 @@ export class OdersController {
   create(@Body() createOderDto: CreateOderDto) {
     return this.odersService.create(createOderDto);
   }
-  @Post('create-by-product-id')
+  @Post('create-by-item-carts')
   createByProductId(@Body() createOderDto: CreateOderByProductDto) {
     return this.odersService.createByProductId(createOderDto);
   }

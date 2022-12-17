@@ -106,7 +106,7 @@ export class CartService {
 
   async findAll(): Promise<CartDto[]> {
     const user = AuthService.getAuthUser();
-    const carts = await this.cartsRepository.findBy({ userId: user.id });
+    const carts = await this.cartsRepository.findBy({ userId: user.id , status : "active"});
     // const listProducts = [];
     console.log(carts);
     // for (const cart of carts) {
@@ -146,7 +146,7 @@ export class CartService {
 
   async findByUserId() {
     let user = AuthService.getAuthUser();
-    const carts = await this.cartsRepository.find({ where: { userId: user.id } });
+    const carts = await this.cartsRepository.find({ where: { userId: user.id , status: "active"} });
     if (carts.length <= 0) {
       throw new ErrorException(404, "Cart not found");
     }
