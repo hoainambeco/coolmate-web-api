@@ -114,28 +114,28 @@ export class AppService {
 
         switch (query.sort) {
             case 0:
-                option = Object.assign(option, {oder: {createdAt: "DASC"}});
+                option = Object.assign(option, {order: {createdAt: "DESC"}});
                 break;
             case 1:
-                option = Object.assign(option, {oder: {createdAt: "ASC"}});
+                option = Object.assign(option, {order: {createdAt: "ASC"}});
                 break;
             case 2:
-                option = Object.assign(option, {oder: {quantitySold: "DASC"}});
+                option = Object.assign(option, {order: {quantitySold: "DESC"}});
                 break;
             case 3:
-                option = Object.assign(option, {oder: {quantitySold: "ASC"}});
+                option = Object.assign(option, {order: {quantitySold: "ASC"}});
                 break;
             case 4:
-                option = Object.assign(option, {oder: {promotionalPrice: "DASC"}});
+                option = Object.assign(option, {order: {promotionalPrice: "DESC"}});
                 break;
             case 5:
-                option = Object.assign(option, {oder: {promotionalPrice: "ASC"}});
+                option = Object.assign(option, {order: {promotionalPrice: "ASC"}});
                 break;
             case 7:
-                option = Object.assign(option, {oder: {ratingAvg: "DASC"}});
+                option = Object.assign(option, {order: {ratingAvg: "DESC"}});
                 break;
             case 7:
-                option = Object.assign(option, {oder: {ratingAvg: "ASC"}});
+                option = Object.assign(option, {order: {ratingAvg: "ASC"}});
                 break;
             default:
                 break;
@@ -586,6 +586,64 @@ export class AppService {
         }
     }
 
+    async postChangePass(req, res, id) {
+        console.log(req.body);
+        const user = await this.userRepository.findOneBy(id);
+        // @ts-ignore
+        user.birthday = format(new Date(user.birthday), "dd-MM-yyyy");
+        var nameList = req.session.user.fullName.split(" ");
+
+        var nameNav = "";
+        if (nameList.length >= 2) {
+            nameNav = nameList[0] + " " + nameList[nameList.length - 1];
+        } else {
+            nameNav = nameList[0];
+        }
+
+        var idUser = req.session.user.id;
+        var avatar = req.session.user.avatar;
+
+        const isPasswordValid = await bcrypt.compare(req.body.pass, user.password);
+        if (!isPasswordValid) {
+            return res.render("./adminInfo", {
+                user: user,
+                nameNav: nameNav,
+                idUser: idUser,
+                avatar: avatar,
+                msg: "<div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">\n" +
+                    "  <p style=\"margin: 0\">Đổi mật khẩu thất bại! Do mật khẩu cũ không trùng khớp</p>" +
+                    "  <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>\n" +
+                    "</div>",
+
+            });
+        }
+        if (req.body.newPass !== req.body.ConfirmPass) {
+            return res.render("./adminInfo", {
+                user: user,
+                nameNav: nameNav,
+                idUser: idUser,
+                avatar: avatar,
+                msg: "<div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">\n" +
+                    "  <p style=\"margin: 0\">Đổi mật khẩu thất bại! Do mật khẩu mới và nhập lại không trùng khớp</p>" +
+                    "  <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>\n" +
+                    "</div>",
+
+            });
+        }
+        user.password = await bcrypt.hashSync(req.body.newPass, 6);
+        await this.userRepository.update(user.id, user);
+        return res.render("./adminInfo", {
+            user: user,
+            nameNav: nameNav,
+            idUser: idUser,
+            avatar: avatar,
+            msg: "<div class=\"alert alert-success alert-dismissible fade show\" role=\"alert\">\n" +
+                "  <p style=\"margin: 0\">Đổi mật khẩu thành công</p>" +
+                "  <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>\n" +
+                "</div>",
+        });
+    }
+
     /// bill
     async getListBill(req, res, query) {
         let option = {
@@ -604,19 +662,19 @@ export class AppService {
             });
         }
 
-        switch  (parseInt(query.sort) ) {
+        switch (parseInt(query.sort)) {
             case 0:
-                option = Object.assign(option, {oder: {updatedAt: "DASC"}});
+                option = Object.assign(option, {order: {updatedAt: "DESC"}});
                 console.log(option)
                 break;
             case 1:
-                option = Object.assign(option, {oder: {updatedAt: "ASC"}});
+                option = Object.assign(option, {order: {updatedAt: "ASC"}});
                 break;
             case 2:
-                option = Object.assign(option, {oder: {createdAt: "DASC"}});
+                option = Object.assign(option, {order: {createdAt: "DESC"}});
                 break;
             case 3:
-                option = Object.assign(option, {oder: {createdAt: "ASC"}});
+                option = Object.assign(option, {order: {createdAt: "ASC"}});
                 break;
             default:
                 break;
@@ -713,6 +771,37 @@ export class AppService {
             console.log(e);
         }
         await this.oderRepository.update(bill.id, bill);
+
+        const notification = new Notification();
+        notification.title = "Cập nhật trạg thái đơn hàng";
+        notification.content = "Đơn hàng:" + id+". Của bạn: "+ bill.status+" lúc" + format(new Date(bill.updatedAt), "dd-MM-yyyy");
+        notification.userId = null;
+        notification.file = null;
+        notification.createdAt = new Date() || null;
+        notification.updatedAt = new Date() || null;
+        notification.deletedAt = null;
+        notification.status = "ACTIVE" || null;
+
+        const user = await this.userRepository.findOneBy(bill.userId);
+        notification.userId = user.id.toString() || null;
+        getMessaging().send({
+            android: {
+                notification: {
+                    title: notification.title,
+                    body: notification.content,
+                    imageUrl: notification.file.split("\\").join("/")
+                }
+            },
+            token: user.registrationToken
+        })
+            .then(async (response) => {
+                    console.log("Successfully sent message:", response);
+                    await this.notificationRepository.save(notification);
+                }
+            )
+            .catch((error) => {
+                console.log("Error sending message:", error);
+            });
         return res.redirect("/detailBill/" + id);
     }
 

@@ -200,6 +200,15 @@ export class AppController {
         return this.appService.postSearchUser(req, res);
     }
 
+    @Post("adminInfo/:id")
+    postChangePass(@Req() req, @Res() res, @Param("id") param
+    ) {
+        if (!req.session.user) {
+            res.redirect('/login')
+        }
+        return this.appService.postChangePass(req, res,param);
+    }
+
     //login
     @Get("login")
     getlogin(@Req() req, @Res() res
