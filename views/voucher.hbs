@@ -180,7 +180,7 @@
                 <div class="col-3 row align-items-center "
                      style="height: 40px; text-align:left; font-size: 20px ;margin-left: 20px">
                     <div class="col-1" style="margin: 0;padding: 0">
-                        <div style="text-align: right ;">
+                        <div style="text-align: right;">
                             <img src="../image/icon/Info.svg" width="20px" height="20px" style="margin-bottom: 6px">
                         </div>
 
@@ -193,31 +193,31 @@
                 </div>
                 <div class="col-12">
                     <div style="width: 100%;height: 100%;border-left:1px solid #000000;padding-left: 42px;padding-top: 20px">
-                        <form method="post" action="" class="content-noti" enctype="multipart/form-data">
+                        <form method="post" action="" class="content-noti">
                             <div class="row-noti" style="">
                                 <p class="title-input-noti">Mã giảm giá </p>
                                 <input class="input-noti" type="text" placeholder="Mã"
-                                       name="code" required/>
+                                       name="code" required pattern="\S+.*"/>
                             </div>
                             <div class="row-noti" style="">
                                 <p class="title-input-noti">Điều kiện </p>
                                 <input name="condition" class="input-noti" placeholder="Hóa đơn có giá trị từ ..."
-                                       min="0" required type="number"/>
+                                       min="0" required type="number" pattern="\S+.*"/>
                             </div>
                             <div class="row-noti" style="">
                                 <p class="title-input-noti">Giảm</p>
-                                <input name="value" class="input-noti" placeholder="Hóa đơn có giá trị từ ..."
-                                       min="0" required type="number"/>
+                                <input name="value" class="input-noti" placeholder="Giảm giá ..."
+                                       min="0" required type="number" pattern="\S+.*"/>
                             </div>
                             <div class="row-noti" style="">
                                 <p class="title-input-noti">Mô tả</p>
                                 <textarea name="description" class="input-noti" placeholder="Điền mô tả phiếu giảm giá"
-                                          style="padding: 8px;height: 108px;" required></textarea>
+                                          style="padding: 8px;height: 108px;" required pattern="\S+.*"></textarea>
                             </div>
                             <div class="row-noti" style="">
                                 <p class="title-input-noti">Số lượng</p>
-                                <input name="content" class="input-noti" value="0"
-                                       min="0" required type="number">
+                                <input name="soluong" class="input-noti" value="0"
+                                       min="0" required type="number" pattern="\S+.*">
                             </div>
                             <div class="row-noti" style="height: 65px;margin-top: 14px;margin-bottom: 20px">
                                 <label for="inputState" class="labelSelect">Trạng thái</label>
@@ -230,14 +230,49 @@
                             <div class="row-noti" style="">
                                 <p class="title-input-noti">Ngày bắt đầu</p>
                                 <input name="startDate" class="input-noti" value="0"
-                                       min="0" required type="datetime-local">
+                                       min="0" required type="datetime-local" pattern="\S+.*">
                             </div>
                             <div class="row-noti" style="">
                                 <p class="title-input-noti">Ngày hết hạn</p>
                                 <input name="endDate" class="input-noti" value="0"
-                                       min="0" required type="datetime-local">
+                                       min="0" required type="datetime-local" pattern="\S+.*">
                             </div>
-
+                            <div class="row align-items-center"
+                                 style="margin-top: 15px;margin-left: 16px;align-items: center">
+                                <input type="radio" id="all" name="fav_language" checked onclick="showInputChecked()"
+                                       style="width: auto;">
+                                <label for="all" style="width: auto;">Gửi cho toàn bộ khách hàng</label><br>
+                                <input type="radio" id="checkRebate" name="fav_language" onclick="showInputChecked()"
+                                       style="width: auto;">
+                                <label for="checkRebate" style="width: auto;">Gửi riêng cho khách hàng</label><br>
+                            </div>
+                            <!--              <from method="get" action="/getUser" id="user" style="display: none">-->
+                            <div class="row-noti" id="user"style="display: none">
+                                <p class="title-input-noti">Người nhận</p>
+                                <label for="email" id="error"></label><br>
+                                <input class="input-noti" type="email" id="email" placeholder="Điền email người nhận thông báo"
+                                       name="email">
+                                <input class="input-noti" type="text" id="userId"
+                                       name="userId" hidden="true">
+                                <div class=" col-6">
+                                    <table class="table table">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">Email</th>
+                                            <th scope="col">Tên</th>
+                                            <th scope="col">Số điện thoại</th>
+                                            <th scope="col">Địa chỉ</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="table">
+                                        <th id="emailUser"></th>
+                                        <th id="nameUser"></th>
+                                        <th id="phoneUser"></th>
+                                        <th id="addressUser"></th>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                             <button class="btn-push-noti" type="submit" id="submit"
                                     style="border-radius: 56px;width: 258px;height: 54px; font-size: 20px">
                                 Tạo mã giảm giá
@@ -301,8 +336,54 @@
 
 </div>
 <script>
+    $(document).ready(function() {
+        $("#email").focusout(function() {
+            var email = $("#email").val();
+            $.ajax({
+                url: `/getUser/${email}`,
+                type: "GET",
+                success: function(data) {
+                    if (data == "false") {
+                        alert("Email không tồn tại");
+                    }
+                    else {
+                        $("#userId").val(data.id.toString());
+                        $("#emailUser").text(data.email);
+                        $("#nameUser").text(data.fullName);
+                        $("#phoneUser").text(data.phone == null ? "Trống" : data.phone);
+                        $("#addressUser").text(data.address);
+                    }
+                    $('#userId').text(data.id.toString());
+                },
+                statusCode: {
+                    404: function() {
+                        $("#error").text("Email không tồn tại").css("color", "red");
+                        $('#submit').attr('disabled', true);
+                    },
+                    200: function() {
+                        $("#error").text("").style = "display: none";
+                        $('#submit').attr('disabled', false);
+                    }
+                },
+                emit: function() {
+                    $("#error").text("").style = "display: none";
+                    $('#submit').attr('disabled', false);
+                }
+            });
+        });
+    })
+    function showInputChecked() {
+        const checkBox = document.getElementById("checkRebate");
+        const text = document.getElementById("user");
 
-
+        // If the checkbox is checked, display the output text
+        if (checkBox.checked == true) {
+            text.style.display = "block";
+        } else {
+            text.style.display = "none";
+            $('#submit').attr('disabled', false);
+        }
+    }
 </script>
 </body>
 
