@@ -103,8 +103,44 @@ export class AppService {
     }
 
 //product
-    async getProduct(req, res) {
-        const listProducts = await this.productRepository.find();
+    async getProduct(req, res, query) {
+        let option = {
+            where: {},
+            order: {}
+        }
+        if (query.status) {
+            option = Object.assign(option, {where: {...option.where, status: query.status}})
+        }
+
+        switch (query.sort) {
+            case 0:
+                option = Object.assign(option, {oder: {createdAt: "DASC"}});
+                break;
+            case 1:
+                option = Object.assign(option, {oder: {createdAt: "ASC"}});
+                break;
+            case 2:
+                option = Object.assign(option, {oder: {quantitySold: "DASC"}});
+                break;
+            case 3:
+                option = Object.assign(option, {oder: {quantitySold: "ASC"}});
+                break;
+            case 4:
+                option = Object.assign(option, {oder: {promotionalPrice: "DASC"}});
+                break;
+            case 5:
+                option = Object.assign(option, {oder: {promotionalPrice: "ASC"}});
+                break;
+            case 7:
+                option = Object.assign(option, {oder: {ratingAvg: "DASC"}});
+                break;
+            case 7:
+                option = Object.assign(option, {oder: {ratingAvg: "ASC"}});
+                break;
+            default:
+                break;
+        }
+        const listProducts = await this.productRepository.find(option);
         listProducts.map(async products => {
             const product = {...products};
             product.productCount = product.color.map((color) => color.size.map((size) => size.productCount)).map((item) => item.reduce((a, b) => a + b, 0)).reduce((a, b) => a + b, 0);
@@ -147,7 +183,12 @@ export class AppService {
 
     async postAddProduct(req, res, files: IFile[]) {
         if (!files || !files.length) {
-            return res.redirect("/product-add", {msgFile: `<h6 class="alert alert-danger">Add failed due to no files!</h6>`});
+            return res.redirect("/product-add", {
+                msg: "<div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">\n" +
+                    "  <p style=\"margin: 0\">Thêm thất bại do không có file!</p>" +
+                    "  <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>\n" +
+                    "</div>",
+            });
         }
         // @ts-ignore
         let listColor: [{ name: string, colorCode: string, image: string[], size: [{ name: string, productCount: number }] }] = [];
@@ -256,7 +297,7 @@ export class AppService {
         var avatar = req.session.user.avatar;
 
         if (products.length > 0) {
-            return res.render("./listProduct", {
+            return res.render("./searchProduct", {
                 listProduct: products,
                 msg: "<div class=\"alert alert-success alert-dismissible fade show\" role=\"alert\">\n" +
                     "  <p style=\"margin: 0\">Tìm được sản phẩm!</p>" +
@@ -265,7 +306,7 @@ export class AppService {
                 nameNav: nameNav, idUser: idUser, avatar: avatar
             });
         } else {
-            return res.render("./listProduct", {
+            return res.render("./searchProduct", {
                 msg: "<div class=\"alert alert alert-danger alert-dismissible fade show\" role=\"alert\">\n" +
                     "  <p style=\"margin: 0\">Không tìm thấy sản phẩm!</p>" +
                     "  <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>\n" +
@@ -399,7 +440,7 @@ export class AppService {
         return res.redirect("/productDetail/" + id);
     }
 
-//user
+    //user
     async getProfileAdmin(req, res, id) {
         const user = await this.userRepository.findOneBy(id);
 
@@ -552,37 +593,36 @@ export class AppService {
             order: {}
         }
         if (query.pay) {
-            option = Object.assign(option, {where: {... option.where, status: query.pay}})
-            console.log(option);
+            option = Object.assign(option, {where: {...option.where, status: query.pay}})
         }
         if (query.ship) {
-            option = Object.assign(option, {where: {... option.where,shippingStatus: {$elemMatch:{shippingStatus: query.ship}}}});
-            console.log(option)
+            option = Object.assign(option, {
+                where: {
+                    ...option.where,
+                    shippingStatus: {$elemMatch: {shippingStatus: query.ship}}
+                }
+            });
         }
-        switch (query.sort) {
-            /*<option value="0">Ngày cập nhật tăng dần</option>
-            <option value="1">Ngày cập nhật giảm dần</option>
-            <option value="2">Ngày cập tạo tăng dần</option>
-            <option value="3">Ngày cập tạo giảm dần</option>*/
+
+        switch  (parseInt(query.sort) ) {
             case 0:
-                option = Object.assign(option, {oder: {updatedAt:"DASC"}});
+                option = Object.assign(option, {oder: {updatedAt: "DASC"}});
                 console.log(option)
                 break;
             case 1:
-                option = Object.assign(option, {oder: {updatedAt:"ASC"}});
+                option = Object.assign(option, {oder: {updatedAt: "ASC"}});
                 break;
             case 2:
-                option = Object.assign(option, {oder: {createdAt:"DASC"}});
+                option = Object.assign(option, {oder: {createdAt: "DASC"}});
                 break;
             case 3:
-                option = Object.assign(option, {oder: {createdAt:"ASC"}});
+                option = Object.assign(option, {oder: {createdAt: "ASC"}});
                 break;
-            default: break;
+            default:
+                break;
         }
-        console.log(query);
         console.log(option);
         const listOders = await this.oderRepository.find(option);
-        console.log(listOders);
         let ListBill: OderDto[];
         // @ts-ignore
         ListBill = JSON.parse(JSON.stringify(listOders))
@@ -598,6 +638,7 @@ export class AppService {
         var idUser = req.session.user.id;
         var avatar = req.session.user.avatar;
         res.render("./listBill", {listBill: ListBill, nameNav: nameNav, idUser: idUser, avatar: avatar});
+
     }
 
     async getDetailBill(req, res, id) {
@@ -675,6 +716,42 @@ export class AppService {
         return res.redirect("/detailBill/" + id);
     }
 
+    async postSearchBill(req, res) {
+        if (req.body.SearchValue === "") {
+            return res.redirect("/bills");
+        }
+        let ListBill: OderDto[];
+        // @ts-ignore
+        ListBill = await this.oderRepository.find({where: {customerName: new RegExp(`${req.body.SearchValue}`)}});
+
+        var nameList = req.session.user.fullName.split(" ");
+        var nameNav = "";
+        if (nameList.length >= 2) {
+            nameNav = nameList[0] + " " + nameList[nameList.length - 1];
+        } else {
+            nameNav = nameList[0];
+        }
+        var idUser = req.session.user.id;
+        var avatar = req.session.user.avatar;
+        if (ListBill.length > 0) {
+            return res.render("./searchBill", {
+                listBill: ListBill,
+                msg: "<div class=\"alert alert-success alert-dismissible fade show\" role=\"alert\">\n" +
+                    "  <p style=\"margin: 0\">Tìm được hóa đơn!</p>" +
+                    "  <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>\n" +
+                    "</div>",
+                nameNav: nameNav, idUser: idUser, avatar: avatar
+            });
+        } else {
+            return res.render("./searchBill", {
+                msg: "<div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">\n" +
+                    "  <p style=\"margin: 0\">Không tìm thấy hóa đơn!</p>" +
+                    "  <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>\n" +
+                    "</div>",
+                nameNav: nameNav, idUser: idUser, avatar: avatar
+            });
+        }
+    }
 
     //dashboard
     async getDashboard(req, res) {
@@ -800,11 +877,11 @@ export class AppService {
 
     //voucher
     async getVoucher(req, res) {
-        const listVoucher = await  this.voucherRepository.find();
+        const listVoucher = await this.voucherRepository.find();
         listVoucher.map((voucher) => {
             return {
                 ...voucher,
-                id : voucher.id.toString(),
+                id: voucher.id.toString(),
                 startDate: format(new Date(voucher.startDate), "HH:mm dd-MM-yyyy"),
                 endDate: format(new Date(voucher.endDate), "HH:mm dd-MM-yyyy"),
 
@@ -822,7 +899,7 @@ export class AppService {
 
         var idUser = req.session.user.id;
         var avatar = req.session.user.avatar;
-        res.render("./voucher", {listVoucher,nameNav: nameNav, idUser: idUser, avatar: avatar});
+        res.render("./voucher", {listVoucher, nameNav: nameNav, idUser: idUser, avatar: avatar});
     }
 
     async postAddVoucher(req, res) {
@@ -837,7 +914,7 @@ export class AppService {
             status: req.body.status,
             startDate: req.body.startDate,
             endDate: req.body.endDate,
-            type:req.body.type || "",
+            type: req.body.type || "",
             isMonopoly: !!req.body.email || !!req.body.userId || !!user.id || false,
             used: 0,
             userId: req.body.userId || user.id || null,
@@ -872,7 +949,7 @@ export class AppService {
             console.log(e);
         }
         await this.voucherRepository.update(voucher.id, voucher);
-       return  res.redirect("/voucher");
+        return res.redirect("/voucher");
     }
 
 
