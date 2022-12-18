@@ -150,7 +150,8 @@ export class OdersService {
       // console.log(voucher);
       vouchers.push(voucher);
     });
-    if(createOderDto.cartId){
+    console.log(createOderDto);
+    if(!createOderDto.cartId){
       throw new ErrorException(HttpStatus.NOT_FOUND, "CartID not found");
     }
     // @ts-ignore
