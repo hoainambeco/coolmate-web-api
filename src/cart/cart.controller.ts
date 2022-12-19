@@ -57,4 +57,8 @@ export class CartController {
   remove(@Param('id') id: string) {
     return this.cartService.remove(id);
   }
+  @Post('delete')
+  async postRemove(@Body() id: [string]) {
+    return id.map(async (item) => {await this.cartService.remove(item)});
+  }
 }
