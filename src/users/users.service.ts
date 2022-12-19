@@ -1,6 +1,6 @@
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Favorite, User } from "./entities/user.entity";
+import { Favorite, FavoriteVoucher, User } from "./entities/user.entity";
 import { MongoRepository, Repository } from "typeorm";
 import { FavoriteDto, UserDto } from "./dto/user.dto";
 import { ErrorException } from "../exceptions/error.exception";
@@ -20,6 +20,9 @@ import * as mongoose from "mongoose";
 import { StatusProductEnum } from "../enum/product";
 import { Oder } from "../oders/entities/oder.entity";
 import { ShippingStatus } from "../enum/bull";
+import { Voucher } from "../voucher/entities/voucher.entity";
+import { Schema } from "mongoose";
+import { ObjectId } from "mongodb";
 
 export const userSchema = mongoose.model("users", new mongoose.Schema(User))
 @Injectable()
@@ -29,6 +32,10 @@ export class UsersService {
     private readonly userRepository: MongoRepository<User>,
     @InjectRepository(Favorite)
     private readonly favoriteRepository: MongoRepository<Favorite>,
+    @InjectRepository(Voucher)
+    private readonly voucherRepository: MongoRepository<Voucher>,
+    @InjectRepository(FavoriteVoucher)
+    private readonly favoriteVoucherRepository: MongoRepository<FavoriteVoucher>,
     @InjectRepository(Product)
     private productRepository: Repository<Product>,
     @InjectRepository(User)
@@ -462,5 +469,58 @@ export class UsersService {
       ...user,
       id: user.id.toString()
     };
+  }
+  async FavoriteVoucherCreate(voucherId: string) {
+    const dataUser = AuthService.getAuthUser();
+    const user = await this.userRepository.findOneBy({ id: dataUser.id });
+    const favorite = await this.favoriteVoucherRepository.findOneBy({
+      userId: user.id,
+      voucherId: voucherId
+    });
+    if (favorite) {
+      throw new ErrorException(
+        HttpStatus.BAD_REQUEST,
+        "FAVORITE_VOUCHER_EXISTED"
+      );
+    }
+    const newFavorite = await this.favoriteVoucherRepository.create({
+      userId: user.id,
+      voucherId: voucherId,
+      voucher: await this.voucherRepository.findOneBy({ id: ObjectId(voucherId) }),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      deletedAt: null
+    });
+    await this.favoriteVoucherRepository.save(newFavorite);
+    return JSON.parse(JSON.stringify(newFavorite));
+  }
+  async FavoriteVoucherDelete(voucherId: string) {
+    const dataUser = AuthService.getAuthUser();
+    const user = await this.userRepository.findOneBy({ id: dataUser.id });
+    const favorite = await this.favoriteVoucherRepository.findOneBy({
+      userId: user.id,
+      voucherId: voucherId
+    }) || await this.favoriteVoucherRepository.findOneBy({
+      userId: user.id,
+      voucherId: ObjectId(voucherId)
+    }) || await this.favoriteVoucherRepository.findOneBy({
+      userId: user.id,
+      _id: ObjectId(voucherId)
+    });
+    if (!favorite) {
+      throw new ErrorException(
+        HttpStatus.BAD_REQUEST,
+        "FAVORITE_VOUCHER_NOT_EXISTED"
+      );
+    }
+    await this.favoriteVoucherRepository.delete(favorite.id);
+    return JSON.parse(JSON.stringify(favorite));
+  }
+  async FavoriteVoucherList() {
+    const dataUser = AuthService.getAuthUser();
+    console.log(dataUser);
+    const user = await this.userRepository.findOneBy({ id: dataUser.id.toString() });
+    const favorite = await this.favoriteVoucherRepository.findBy({ userId: user.id });
+    return JSON.parse(JSON.stringify(favorite));
   }
 }

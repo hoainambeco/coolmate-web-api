@@ -115,3 +115,35 @@ export class FavoriteDto {
     this.deletedAt = entity.deletedAt;
   }
 }
+export class FavoriteVoucher {
+  @ApiProperty()
+  id: string;
+
+  @ApiProperty()
+  userId: string;
+
+  @ApiProperty()
+  voucherId: string;
+
+  @ApiProperty()
+  voucher: object;
+
+  @ApiProperty()
+  createdAt: Date;
+
+  @ApiProperty()
+  updatedAt: Date;
+
+  @ApiProperty()
+  deletedAt: Date;
+
+  constructor(entity : FavoriteVoucher) {
+    this.id = entity.id.toString();
+    this.userId = entity.userId;
+    this.voucherId = entity.voucherId;
+    this.voucher = entity.voucher;
+    this.createdAt = entity.createdAt;
+    this.updatedAt = entity.updatedAt;
+    this.deletedAt = entity.deletedAt;
+  }
+}

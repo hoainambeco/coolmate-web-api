@@ -13,7 +13,7 @@ import {
 import { UsersService } from "./users.service";
 import { ApiBearerAuth, ApiProperty, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { FavoriteDto, UserDto } from "./dto/user.dto";
-import { OtpDto, UserCreatDto, UserUpdateDto, UserUpdatePassDto } from "./dto/user-data.dto";
+import { FavoriteVoucherCreate, OtpDto, UserCreatDto, UserUpdateDto, UserUpdatePassDto } from "./dto/user-data.dto";
 import { AuthUserInterceptor } from "../interceptors/auth-user.interceptor";
 import { JwtAuthGuard } from "../guards/jwt-auth.guard";
 import { AuthGuard } from "@nestjs/passport";
@@ -150,5 +150,32 @@ export class UsersController {
   @ApiResponse({ status: 200, description: "The found record", type: FavoriteDto })
   async unlike(@Param("productId") productId: string) {
     return await this.usersService.deleteFavorite(productId);
+  }
+}
+@Controller("favoriteVoucher")
+@ApiTags("FavoriteVoucher")
+@UseInterceptors(AuthUserInterceptor)
+@ApiBearerAuth()
+export class FavoriteVoucherController {
+  constructor(private readonly usersService: UsersService) {
+  }
+  @Post()
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({ status: 200, description: "The found record", type: FavoriteVoucherCreate })
+  async FavoriteVoucherCreate(@Body() favoriteDto: FavoriteVoucherCreate){
+    return await this.usersService.FavoriteVoucherCreate(favoriteDto.voucherId);
+  }
+  @Get()
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({ status: 200, description: "The found record", type: [FavoriteVoucherCreate] })
+  async FavoriteVoucherGet(){
+    return await this.usersService.FavoriteVoucherList();
+  }
+
+  @Delete(':voucherId')
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({ status: 200, description: "The found record", type: FavoriteVoucherCreate })
+  async FavoriteVoucherCreateDelete(@Param('voucherId') voucherId: string){
+    return await this.usersService.FavoriteVoucherDelete(voucherId);
   }
 }

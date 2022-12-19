@@ -106,3 +106,10 @@ export class OtpDto{
   @ApiPropertyOptional()
   otp: string;
 }
+
+export class FavoriteVoucherCreate{
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty()
+  voucherId: string;
+}

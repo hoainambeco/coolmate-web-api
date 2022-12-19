@@ -11,6 +11,7 @@ import { GenderEnum } from "../../enum/gender";
 import { StatusAccount } from "../../enum/status-account";
 import { Product } from "../../product/entities/product.entity";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { Voucher } from "../../voucher/entities/voucher.entity";
 
 @Entity('users')
 export class User {
@@ -70,4 +71,14 @@ export class Notification {
   @UpdateDateColumn() updatedAt: Date;
   @DeleteDateColumn({default: null}) deletedAt: Date;
 
+}
+@Entity('favoritesVoucher')
+export class FavoriteVoucher {
+  @ObjectIdColumn() id: string;
+  @Column() userId: string;
+  @Column() voucherId: string;
+  @CreateDateColumn() createdAt: Date;
+  @UpdateDateColumn() updatedAt: Date;
+  @DeleteDateColumn() deletedAt: Date;
+  @Column() voucher: Voucher;
 }
