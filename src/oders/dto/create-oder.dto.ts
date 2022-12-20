@@ -42,9 +42,9 @@ export class CreateOderDto {
   @IsNotEmpty()
   placeCustomer: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   cartId: string;
 
   @ApiPropertyOptional()
@@ -106,9 +106,9 @@ export class CreateOderByProductDto {
   @IsNotEmpty()
   placeCustomer: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   cartId: string;
 
   @ApiPropertyOptional()

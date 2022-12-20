@@ -10,6 +10,7 @@ import { ShippingStatus } from "../enum/bull";
 import { Product } from "../product/entities/product.entity";
 import { ObjectId } from "mongodb";
 import { Repository } from "typeorm";
+import { response } from "express";
 const REGEX = {
   NOT_DIGIT: /\D+/,
   BUSINESS_CODE: /^[a-zA-Z0-9]{10}$/,
@@ -141,27 +142,45 @@ export class OdersService {
       shippingStatus: [{ shippingStatus: ShippingStatus.CHO_XAC_NHAN, note: "", createdAt: new Date() }]
     });
     let vouchers = [];
-    createOderDto.voucherId.map(async (voucherId) => {
+    let discount = 0;
+    if (createOderDto.voucherId) {
+      createOderDto.voucherId.map(async (voucherId) => {
+        if (!RegExp(REGEX.OBJECT_ID).test(voucherId)) {
+          throw new ErrorException(HttpStatus.FORBIDDEN, "Voucher id not match");
+        }
+        // @ts-ignore
+        const voucher = await this.voucherRepository.findOneBy(voucherId);
+        if (!voucher) {
+          throw new ErrorException(HttpStatus.NOT_FOUND, "Voucher not found");
+        }
+        if (voucher.value <= 0) {
+          throw new ErrorException(HttpStatus.NOT_FOUND, "Voucher is used");
+        } else {
+          voucher.value -= 1;
+          voucher.used += 1;
+        }
+        await this.voucherRepository.save(voucher);
+        vouchers.push(voucher);
+        discount += voucher.discount;
+      });
+
       // @ts-ignore
-      const voucher = await this.voucherRepository.findOneBy(voucherId);
-      if (!voucher) {
-        throw new ErrorException(HttpStatus.NOT_FOUND, "Voucher not found");
-      }
-      // console.log(voucher);
-      vouchers.push(voucher);
-    });
-    console.log(createOderDto);
-    if(!createOderDto.cartId){
-      throw new ErrorException(HttpStatus.NOT_FOUND, "CartID not found");
+      oder.vouchers = vouchers;
     }
-    // @ts-ignore
-    const cart = await this.cartRepository.findOneBy(createOderDto.cartId);
-    if (!cart) {
-      throw new ErrorException(HttpStatus.NOT_FOUND, "Cart not found");
-    }
-    console.log(cart);
+    // if(!createOderDto.cartId){
+    //   throw new ErrorException(HttpStatus.NOT_FOUND, "CartID not found");
+    // }
+    // // @ts-ignore
+    // const cart = await this.cartRepository.findOneBy(createOderDto.cartId);
+    // if (!cart) {
+    //   throw new ErrorException(HttpStatus.NOT_FOUND, "Cart not found");
+    // }
+    // console.log(cart);
     oder.userId = user.id;
-    return await this.oderRepository.save({ ...oder, carts: cart, vouchers: vouchers });
+      oder.idPayment=createOderDto.idPayment || '';
+      oder.shippingStatus= [{ shippingStatus: ShippingStatus.CHO_XAC_NHAN, note: "", createdAt: new Date() }]
+    await this.oderRepository.save(oder)
+    return JSON.parse(JSON.stringify(oder));
   }
 
   async findAll() {

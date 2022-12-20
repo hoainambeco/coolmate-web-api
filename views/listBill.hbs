@@ -227,23 +227,25 @@
                         </thead>
                         <tbody>
                         {{#each listBill}}
-                            <tr>
-                                <td>{{this.status}}</td>
-                                <td>{{#each this.shippingStatus}}
-                                    {{#if @last}}{{this.shippingStatus}}{{/if}}
-                                {{/each}}
-                                </td>
-                                <td>{{this.customerName}}</td>
-                                <td>{{this.paymentMethod}}</td>
-                                <td>{{this.total}}</td>
-                                <td>{{this.placeCustomer}}</td>
-                                <td>
-                                    <div>
-                                        <a class="btn btn-outline-primary" href="detailBill/{{this.id}}">Chi
-                                            tiết</a></li>
-                                    </div>
-                                </td>
-                            </tr>
+                        {{#if this}}
+                          <tr>
+                            <td>{{this.status}}</td>
+                            <td>{{#each this.shippingStatus}}
+                              {{#if @last}}{{this.shippingStatus}}{{/if}}
+                            {{/each}}
+                            </td>
+                            <td>{{this.customerName}}</td>
+                            <td>{{this.paymentMethod}}</td>
+                            <td>{{this.total}}</td>
+                            <td>{{this.placeCustomer}}</td>
+                            <td>
+                              <div>
+                                <a class="btn btn-outline-primary" href="detailBill/{{this.id}}">Chi
+                                  tiết</a></li>
+                              </div>
+                            </td>
+                          </tr>
+                        {{/if}}
                         {{/each}}
                         </tbody>
                     </table>

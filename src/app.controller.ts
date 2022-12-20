@@ -377,7 +377,12 @@ export class rss {
     async getRss() {
         return fetch("https://www.toptal.com/developers/feed2json/convert?url=https%3A%2F%2Fmenback.com%2Fchu-de%2Fphong-cach%2Ffeed&minify=on").then((response) => response.json())
             .then(data => {
-                data.items.map((value) => delete value.content_html);
+                data.items.map((value) => {
+                    const a = value.content_html
+                    // var currentPath = a.substring(a.indexOf(" src=")+6, a.indexOf("class"));
+                    var currentPath = a.toString().match(/\bhttps?:\/\/\S+/);
+                    console.log(currentPath);
+                    delete value.content_html});
                 return data
             });
     }

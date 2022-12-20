@@ -20,7 +20,7 @@ import {getMessaging} from "firebase-admin/messaging";
 import mongoose, {Schema} from "mongoose";
 import {Voucher} from "./voucher/entities/voucher.entity";
 import {VoucherDto} from "./voucher/dto/voucher.dto";
-
+import { ObjectId } from "mongodb";
 
 export const imgBannerSchema = mongoose.model("imgBanners", new mongoose.Schema({
     fieldname: String,
@@ -658,7 +658,8 @@ export class AppService {
                 where: {
                     ...option.where,
                     shippingStatus: {$elemMatch: {shippingStatus: query.ship}}
-                }
+                },
+                project:{shippingStatus:{$slice: -1}}
             });
         }
 
@@ -679,11 +680,22 @@ export class AppService {
             default:
                 break;
         }
-        console.log(option);
+        // console.log(option);
         const listOders = await this.oderRepository.find(option);
+        // console.log(listOders);
         let ListBill: OderDto[];
-        // @ts-ignore
-        ListBill = JSON.parse(JSON.stringify(listOders))
+        ListBill = JSON.parse(JSON.stringify(listOders));
+        if(query.ship){
+            //@ts-ignore
+            ListBill = JSON.parse(JSON.stringify(listOders.map(option => {
+                //@ts-ignore
+                // console.log(option.shippingStatus[option.shippingStatus.length-1].shippingStatus);
+                //@ts-ignore
+                if (option.shippingStatus[option.shippingStatus.length-1].shippingStatus == query.ship) {
+                return option
+            }})));
+            // console.log(ListBill);
+        }
         var nameList = req.session.user.fullName.split(" ");
 
         var nameNav = "";
@@ -759,6 +771,9 @@ export class AppService {
         if (!bill) {
             throw new ErrorException(HttpStatus.NOT_FOUND, "bill not found");
         }
+        if (bill.shippingStatus.find((shippingStatus) => shippingStatus == req.body.status)){
+            throw new ErrorException(HttpStatus.BAD_REQUEST, "bill not found");
+        }
         try {
             bill.shippingStatus.push(
                 {
@@ -776,13 +791,14 @@ export class AppService {
         notification.title = "Cập nhật trạg thái đơn hàng";
         notification.content = "Đơn hàng:" + id+". Của bạn: "+ bill.status+" lúc" + format(new Date(bill.updatedAt), "dd-MM-yyyy");
         notification.userId = null;
-        notification.file = null;
+        notification.file = 'https://www.google.com/url?sa=i&url=https%3A%2F%2Ftiki.vn%2Fcua-hang%2Fbasic-wear-4men&psig=AOvVaw2UbkNT0wgGKxXmj3oJDhdY&ust=1671632690571000&source=images&cd=vfe&ved=0CBAQjRxqFwoTCJjX75eziPwCFQAAAAAdAAAAABAS';
         notification.createdAt = new Date() || null;
         notification.updatedAt = new Date() || null;
         notification.deletedAt = null;
         notification.status = "ACTIVE" || null;
 
-        const user = await this.userRepository.findOneBy(bill.userId);
+        const user = await this.userRepository.findOneBy(ObjectId(bill.userId));
+        console.log(user);
         notification.userId = user.id.toString() || null;
         getMessaging().send({
             android: {
