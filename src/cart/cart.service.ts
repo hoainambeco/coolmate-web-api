@@ -274,7 +274,7 @@ export class CartService {
     const user = AuthService.getAuthUser();
     console.log(user);
     // @ts-ignore
-    const carts = await this.itemCartRepository.findBy({userId: user.id});
+    const carts = await this.itemCartsRepository.findBy({userId: user.id});
     if (!carts) {
       throw new ErrorException(HttpStatus.NOT_FOUND, "Cart not found");
     }
