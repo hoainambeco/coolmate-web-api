@@ -1,6 +1,6 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { ProductDto } from "../../product/dto/product.dto";
-import { IsArray, IsNotEmpty, IsNumber, IsObject, IsString, IsUUID, ValidateNested } from "class-validator";
+import { IsArray, IsNotEmpty, IsNumber, IsObject, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
 
 export class CreateCartDto {
@@ -35,5 +35,23 @@ export class CreateCartProductDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
+  sizeName: string;
+}
+
+export class UpdateItemCartsDto{
+
+  @ApiPropertyOptional()
+  @IsNumber()
+  @IsOptional()
+  quantity: number;
+
+  @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
+  colorName: string;
+
+  @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
   sizeName: string;
 }

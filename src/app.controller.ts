@@ -21,6 +21,8 @@ import {JwtAuthGuard} from "./guards/jwt-auth.guard";
 import {AuthUserInterceptor} from "./interceptors/auth-user.interceptor";
 import {UserDto} from "./users/dto/user.dto";
 import fetch from "node-fetch";
+import { AuthUser } from "./decorators/auth-user.decorator";
+import { User } from "./users/entities/user.entity";
 
 export const imageFileFilter = (req, file, callback) => {
     console.log(file);
@@ -404,5 +406,13 @@ export class rss {
     @Get('ImgBanner')
     async getImgBanner() {
         return JSON.parse(JSON.stringify(await this.appService.getImgBanner()));
+    }
+    @Get('get-noti-by-user')
+    @UseGuards(JwtAuthGuard)
+    @UseInterceptors(AuthUserInterceptor)
+    @ApiBearerAuth()
+    @HttpCode(HttpStatus.OK)
+    async getNotiByUser(@AuthUser() user: User): Promise<any> {
+        return await this.appService.getNotiByUser(user);
     }
 }

@@ -1109,4 +1109,8 @@ export class AppService {
     async getImgBanner() {
         return imgBannerSchema.find({delete: false});
     }
+    async getNotiByUser (user: UserDto) {
+        const noti = await this.notificationRepository.find({where: {userId: user.id}});
+        return JSON.parse(JSON.stringify(noti));
+    }
 }

@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   HttpStatus,
@@ -12,9 +11,8 @@ import {
   UseInterceptors, Put
 } from "@nestjs/common";
 import { CartService } from './cart.service';
-import { CreateCartDto } from './dto/create-cart.dto';
+import { CreateCartDto, UpdateItemCartsDto } from "./dto/create-cart.dto";
 import { UpdateCartDto } from './dto/update-cart.dto';
-import * as Http from "http";
 import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../guards/jwt-auth.guard";
 import { AuthUserInterceptor } from "../interceptors/auth-user.interceptor";
@@ -60,5 +58,24 @@ export class CartController {
   @Post('delete')
   async postRemove(@Body() id: [string]) {
     return id.map(async (item) => {await this.cartService.remove(item)});
+  }
+}
+@ApiTags('ItemCarts')
+@UseGuards(JwtAuthGuard)
+@UseInterceptors(AuthUserInterceptor)
+@ApiBearerAuth()
+@Controller('api/item-carts')
+export class ItemCartsController {
+  constructor(private readonly cartService: CartService) {}
+
+
+  @Get()
+  findAllItemCarts() {
+    return this.cartService.findAllItemCarts();
+  }
+
+  @Put('/:idItemCart')
+  updateItemCarts(@Body() updateItemCartsDto: UpdateItemCartsDto, @Param('idItemCart') idItemCart: string){
+    return this.cartService.updateItemCarts(updateItemCartsDto, idItemCart);
   }
 }

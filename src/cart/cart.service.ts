@@ -1,5 +1,5 @@
-import { Injectable } from "@nestjs/common";
-import { CreateCartDto } from "./dto/create-cart.dto";
+import { HttpStatus, Injectable } from "@nestjs/common";
+import { CreateCartDto, UpdateItemCartsDto } from "./dto/create-cart.dto";
 import { UpdateCartDto } from "./dto/update-cart.dto";
 import { MongoRepository, Repository } from "typeorm";
 import { Carts, ItemCarts } from "./entities/cart.entity";
@@ -11,7 +11,6 @@ import { ErrorException } from "../exceptions/error.exception";
 import { Product } from "../product/entities/product.entity";
 import { ObjectId } from "mongodb";
 import mongoose from "mongoose";
-import { StatusProductEnum } from "../enum/product";
 
 export const itemCartSchema = mongoose.model("itemcarts", new mongoose.Schema(ItemCarts));
 export const cartSchema = mongoose.model("carts", new mongoose.Schema(Carts));
@@ -269,5 +268,52 @@ export class CartService {
     });
 
     return cart;
+  }
+
+  async findAllItemCarts() {
+    const user = AuthService.getAuthUser();
+    console.log(user);
+    // @ts-ignore
+    const carts = await this.itemCartRepository.findBy({userId: user.id});
+    if (!carts) {
+      throw new ErrorException(HttpStatus.NOT_FOUND, "Cart not found");
+    }
+    return JSON.parse(JSON.stringify(carts));
+  }
+
+  async updateItemCarts(updateItemCartsDto: UpdateItemCartsDto, idItemCart: string) {
+    // @ts-ignore
+    const itemCart = await this.itemCartsRepository.findOneBy(idItemCart );
+    if (!itemCart) {
+      throw new ErrorException(HttpStatus.NOT_FOUND, "ItemCart not found");
+    }
+    // @ts-ignore
+    const listProducts = await this.productRepository.findOneBy(ObjectId(itemCart.products.productId));
+    // console.log(listProducts);
+    if (!listProducts) {
+      throw new ErrorException(404, "Product not found");
+    }
+    if (listProducts.color.find(color => color.name === updateItemCartsDto.colorName) === undefined) {
+      throw new ErrorException(404, "Color not found");
+    }
+    if (listProducts.color.find(color => color.name === updateItemCartsDto.colorName).size.find(size => size.name === updateItemCartsDto.sizeName) === undefined) {
+      throw new ErrorException(404, "Size not found");
+    }
+    const productCount = listProducts.color.find(color => color.name === updateItemCartsDto.colorName).size.find(size => size.name === updateItemCartsDto.sizeName).productCount;
+    if (productCount < updateItemCartsDto.quantity || !productCount) {
+      throw new ErrorException(404, "Product count is not enough");
+    }
+    const products = {
+      // @ts-ignore
+      productId: itemCart.products.productId,
+      colorName: updateItemCartsDto.colorName,
+      sizeName: updateItemCartsDto.sizeName,
+      quantity: updateItemCartsDto.quantity,
+      product: listProducts
+    };
+    // @ts-ignore
+    itemCart.products= products;
+    await this.itemCartsRepository.save(itemCart);
+    return JSON.parse(JSON.stringify(itemCart));
   }
 }
