@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <link rel="shortcut icon" href="https://www.coolmate.me/images/favicon.png"/>
+    <title>Áo Thun, Áo Phông Nam - Cool Mate</title>
+    <link href="../css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="../css/hover.css" rel="stylesheet"/>
+    <script src="../js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: Helvetica;
+            font-size: 16px;
+        }
+
+        .nav_app {
+            font-size: 18px;
+        }
+
+        .btn-addProduct {
+            width: 300px;
+            height: 48px;
+            background: #2F5ACF;
+            font-size: 20px;
+            border-radius: 56px;
+        }
+
+        .box-show {
+            width: 1229px;
+            height: 494px;
+            background: #FFFFFF;
+            border: 1px solid #000000;
+            box-shadow: -16px 15px 4px rgba(0, 0, 0, 0.25);
+            border-radius: 20px;
+            font-size: 20px;
+            margin: 0px;
+            padding: 10px;
+
+        }
+
+        .content-main {
+            width: 680px;
+        }
+
+        .inputID {
+            width: 128px;
+            height: 38px;
+            background: #FFFFFF;
+            border: 1px solid rgba(97, 117, 134, 0.2);
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+            border-radius: 20px;
+            padding-left: 10px;
+            font-size: 14px;
+        }
+
+        .inputName {
+            width: 263px;
+            height: 38px;
+            background: #FFFFFF;
+            border: 1px solid rgba(97, 117, 134, 0.2);
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+            border-radius: 20px;
+            padding-left: 10px;
+            font-size: 14px;
+            margin-top: 2px;
+        }
+
+        .inputPrice {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+            width: 161px;
+            height: 32px;
+            font-size: 14px;
+            background: #FFFFFF;
+            padding-left: 10px;
+            padding-right: 10px;
+            border: 1px solid rgba(97, 117, 134, 0.2);
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+            border-radius: 20px;
+            margin-top: 7px;
+        }
+
+        .input-des {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 0px;
+            gap: 10px;
+            width: 401px;
+            height: 126px;
+            background: #FFFFFF;
+            border: 1px solid rgba(97, 117, 134, 0.2);
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+            border-radius: 20px;
+        }
+
+        .labelInput {
+            font-style: normal;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 20px;
+            display: flex;
+            align-items: center;
+            margin-left: 6px;
+            color: #000000;
+        }
+
+        .fieldSelect {
+            background: #FFFFFF;
+            box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            width: 208px;
+            height: 44px;
+            font-size: 16px;
+            padding-left: 10px;
+            padding-right: 10px;
+            border: none;
+        }
+
+        .labelSelect {
+            font-size: 16px;
+            width: 100%;
+            line-height: 20px;
+            margin: 0px;
+            color: black;
+        }
+
+        .preview_color {
+            display: grid;
+            grid-template-columns: auto auto auto;
+            row-gap: 10px;
+            padding: 0px;
+            width: 415px;
+            height: 420px;
+            max-height: 420px;
+            overflow: auto;
+            box-sizing: border-box;
+        }
+
+        .row_preview_color {
+            width: 125px;
+            height: 154px;
+            background: #F1F4FB;
+            border-radius: 30px;
+            display: block;
+        }
+
+        .img-row-preview {
+            width: 97px;
+            height: 137px;
+            border-radius: 20px;
+            margin-left: 14px;
+            margin-top: 8px;
+            background-color: #E4E7ED;
+        }
+
+        .color-preview {
+            width: 24px;
+            height: 24px;
+            border: 1px solid black;
+            background-color: white;
+            border-radius: 6px;
+        }
+
+        .img-preview {
+            height: 100px;
+            padding: 0;
+            margin-left: 14px;
+            margin-top: 20px;
+            max-width: 70px;
+            min-width: 70px;
+        }
+
+        .color-preview {
+            position: relative;
+            padding: 0;
+            left: 70px;
+            bottom: 10px;
+        }
+
+        .btn-addProduct {
+            border: 2px solid #2F5ACF;
+            background-color: white;
+        }
+
+        .btn-addProduct:hover {
+            background-color: #2F5ACF;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        <!-- Navbar -->
+        <div class="nav_app col-auto col-md-3 col-xl-2 px-sm-2 px-0"
+             style="box-shadow: 4px 4px 40px rgba(0, 0, 0, 0.06);">
+            <div class="d-flex flex-column align-items-center  px-3 pt-2 text-black min-vh-100">
+                <a href="/" class="d-flex align-items-center  mb-md-3 mt-md-3 text-black text-decoration-none">
+                    <img src="../image/logo-app.svg" width="126" height="45">
+                </a>
+                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start w-100"
+                    id="menu"
+                    style="width: 126px">
+                    <li class="nav-item ps-1">
+                        <a href="/dashboard" class="nav-link align-middle px-0 align-self-center" id="nav-btn">
+                            <img src="../image/icon/dashboard-icon.svg" width="30" height="30"> <span
+                                class="ms-1 d-none d-sm-inline " style="color: black">Thông báo</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/message" class="nav-link align-middle px-0 align-self-center" id="nav-btn">
+                            <img src="../image/icon/Chat-icon.svg" width="30" height="30"> <span
+                                class="ms-1 d-none d-sm-inline" style="color: black">Tin nhắn</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/product" id="nav-btn" class="nav-link align-middle px-0 align-self-center"
+                           style="background-color: #b6b6b6">
+                            <img src="../image/icon/product-icon.svg" width="30" height="30"> <span
+                                class="ms-1 d-none d-sm-inline" style="color: black">Sản phẩm</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/customers" id="nav-btn" class="nav-link align-middle px-0 align-self-center">
+                            <img src="../image/icon/customer-icon.svg" width="30" height="30"> <span
+                                class="ms-1 d-none d-sm-inline" style="color: black">Người dùng</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/bills" id="nav-btn" class="nav-link align-middle px-0 align-self-center">
+                            <img src="../image/icon/bill-icon.svg" width="30" height="30"> <span
+                                class="ms-1 d-none d-sm-inline" style="color: black">Hóa đơn</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/voucher" id="nav-btn" class="nav-link align-middle px-0 align-self-center">
+                            <img src="../image/icon/voucher-icon.svg" width="30" height="30"> <span
+                                class="ms-1 d-none d-sm-inline" style="color: black">Phiếu giảm giá</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/noti" id="nav-btn" class="nav-link align-middle px-0 align-self-center">
+                            <img src="../image/icon/notifi-icon.svg" width="30" height="30"> <span
+                                class="ms-1 d-none d-sm-inline" style="color: black">Thông báo</span>
+                        </a>
+                    </li>
+                </ul>
+                <hr style="width: 100%; color: black;margin-bottom: 12px">
+                <div class="dropdown align-items-center" style="width: 100% ;height: 60px;padding-bottom: 10px">
+                    <div
+                            class=" rounded d-flex align-items-center text-black text-decoration-none dropdown-toggle"
+                            id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false"
+                            style="width: 100%; height: 100%;margin-bottom: 20px">
+                        <img src="../{{avatar}}" width="30" height="30"
+                             class="rounded-circle" style="margin-left: 10px;margin-right: 10px">
+                        <span class="d-none d-sm-inline mx-1" style="color: black">{{nameNav}}</span>
+                    </div>
+                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+                        <li><a class="dropdown-item" href="/adminInfo/{{idUser}}">Thông tin cá nhân</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="/login">Đăng xuất
+                            <img src="../image/icon/logout-icon.svg" width="30" height="30"
+                                 style="margin-left: 40px"></a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+        <!-- end Navbar -->
+        <!-- Content -->
+        <div class="col">
+            <div class="alert alert-danger show" role="alert">
+                <div class="alert alert-danger" role="alert">
+                    {{#if msg}}
+                        {{{msg}}}
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>
