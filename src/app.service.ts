@@ -103,6 +103,19 @@ export class AppService {
     }
 
 //product
+    async getError(req, res) {
+        var nameList = req.session.user.fullName.split(" ");
+        var nameNav = "";
+        if (nameList.length >= 2) {
+            nameNav = nameList[0] + " " + nameList[nameList.length - 1];
+        } else {
+            nameNav = nameList[0];
+        }
+        var idUser = req.session.user.id;
+        var avatar = req.session.user.avatar;
+        res.render("./error", {msg:"Lỗi", nameNav: nameNav, idUser: idUser, avatar: avatar});
+
+    }
     async getProduct(req, res, query) {
         let option = {
             where: {},

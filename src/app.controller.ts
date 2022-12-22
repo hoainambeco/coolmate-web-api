@@ -70,6 +70,13 @@ export class AppController {
         }
         return this.appService.getProduct(req, res,query);
     }
+    @Get("error")
+    getError(@Req() req, @Res() res) {
+        if (!req.session.user) {
+            res.redirect("/login");
+        }
+        return this.appService.getError(req, res);
+    }
 
     @Get("product")
     getListProduct(@Req() req, @Res() res,@Query() query) {
