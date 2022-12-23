@@ -183,6 +183,55 @@ export class OdersService {
     return JSON.parse(JSON.stringify(oder));
   }
 
+  async createByProductIdV2(createOderDto: CreateOderByProductDto) {
+    let user = AuthService.getAuthUser();
+    const oder = await this.oderRepository.create({
+      ...createOderDto,
+      cartProduct: createOderDto.cartProduct,
+      shippingStatus: [{ shippingStatus: ShippingStatus.CHO_XAC_NHAN, note: "", createdAt: new Date() }]
+    });
+    let vouchers = [];
+    let discount = 0;
+    if (createOderDto.voucherId) {
+      createOderDto.voucherId.map(async (voucherId) => {
+        if (!RegExp(REGEX.OBJECT_ID).test(voucherId)) {
+          throw new ErrorException(HttpStatus.FORBIDDEN, "Voucher id not match");
+        }
+        // @ts-ignore
+        const voucher = await this.voucherRepository.findOneBy(voucherId);
+        if (!voucher) {
+          throw new ErrorException(HttpStatus.NOT_FOUND, "Voucher not found");
+        }
+        if (voucher.value <= 0) {
+          throw new ErrorException(HttpStatus.NOT_FOUND, "Voucher is used");
+        } else {
+          voucher.value -= 1;
+          voucher.used += 1;
+        }
+        await this.voucherRepository.save(voucher);
+        vouchers.push(voucher);
+        discount += voucher.discount;
+      });
+
+      // @ts-ignore
+      oder.vouchers = vouchers;
+    }
+    // if(!createOderDto.cartId){
+    //   throw new ErrorException(HttpStatus.NOT_FOUND, "CartID not found");
+    // }
+    // // @ts-ignore
+    // const cart = await this.cartRepository.findOneBy(createOderDto.cartId);
+    // if (!cart) {
+    //   throw new ErrorException(HttpStatus.NOT_FOUND, "Cart not found");
+    // }
+    // console.log(cart);
+    oder.userId = user.id;
+      oder.idPayment=createOderDto.idPayment || '';
+      oder.shippingStatus= [{ shippingStatus: ShippingStatus.CHO_XAC_NHAN, note: "", createdAt: new Date() }]
+    await this.oderRepository.save(oder)
+    return JSON.parse(JSON.stringify(oder));
+  }
+
   async findAll() {
     const listOders = await this.oderRepository.find({
       order: { updatedAt: "ASC" }

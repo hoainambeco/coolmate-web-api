@@ -111,4 +111,10 @@ export class AuthController {
   async thongKeNguoiDung(): Promise<any> {
     return await this.userService.statistical();
   }
+  @Get('turn-over')
+  @HttpCode(HttpStatus.OK)
+  async doanhThu(): Promise<any> {
+    return await this.userService.getBillInMonth(12);
+  }
+
 }

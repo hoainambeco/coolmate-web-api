@@ -21,12 +21,11 @@ import { StatusProductEnum } from "../enum/product";
 import { Oder } from "../oders/entities/oder.entity";
 import { ShippingStatus } from "../enum/bull";
 import { Voucher } from "../voucher/entities/voucher.entity";
-import { Schema } from "mongoose";
 import { ObjectId } from "mongodb";
-import { response } from "express";
+import { format } from "date-fns";
 
 export const userSchema = mongoose.model("users", new mongoose.Schema(User));
-export const billSchema = mongoose.model("bills", new mongoose.Schema(Oder));
+// export const billSchema = mongoose.model("bills", new mongoose.Schema(Oder));
 
 @Injectable()
 export class UsersService {
@@ -528,5 +527,24 @@ export class UsersService {
     const user = await this.userRepository.findOneBy({ id: dataUser.id.toString() });
     const favorite = await this.favoriteVoucherRepository.findBy({ userId: user.id });
     return JSON.parse(JSON.stringify(favorite));
+  }
+  async turnOver() {
+    const dataUser = AuthService.getAuthUser();
+    const user = await this.userRepository.findOneBy({ id: dataUser.id });
+    const bill = await this.billRepository.findBy({ userId: user.id });
+    const turnOver = bill.reduce((total, item) => {
+      return total + item.total;
+    }, 0);
+    return turnOver;
+  }
+  async getBillInMonth(month){
+    const year = new Date().getFullYear();
+    console.log(year);
+    const from = format(new Date(year, month, 1), 'yyy/MM/dd')
+    const to = new Date().setUTCFullYear(month ===12 ? year +1 : year,month===12 ? 1 : month,1);
+    console.log(from);
+    console.log(to);
+    const bill = await this.billRepository.findBy({createdAt:{$gte:new Date(from.toString()),$lte:new Date(to.toString())}});
+    console.log(bill);
   }
 }

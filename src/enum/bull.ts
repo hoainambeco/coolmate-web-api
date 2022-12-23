@@ -9,6 +9,9 @@ export enum ShippingStatus {
   DA_GIAO_HANG = 'Đã giao hàng',
   DA_TRA_HANG = 'Đã trả hàng',
   DA_NHAN = 'Đã nhận',
+  YEU_CAU_TRA_HANG='Yêu cầu trả hàng',
+  DA_HOAN_TIEN = 'Đã hoàn tiền',
+  XAC_NHAN_HOAN_TRA='Xác nhận hoàn trả'
 }
 export enum PaymentMethod {
   COD = 'COD',
