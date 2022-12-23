@@ -616,11 +616,12 @@ export class AppService {
         } else {
             nameNav = nameList[0];
         }
-
         var idUser = req.session.user.id;
         var avatar = req.session.user.avatar;
 
         const isPasswordValid = await bcrypt.compare(req.body.pass, user.password);
+        // @ts-ignore
+        user.birthday = format(new Date(user.birthday), "dd-MM-yyyy");
         if (!isPasswordValid) {
             return res.render("./adminInfo", {
                 user: user,
