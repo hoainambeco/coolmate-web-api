@@ -89,8 +89,9 @@ export class AppService {
             res.writeHead();
         } else {
             return res.render("./login", {
-                msg: "<div class=\"alert alert-danger\" role=\"alert\">\n" +
-                    "Sai mat khau" +
+                msg: "<div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">\n" +
+                    "  <p style=\"margin: 0\"> Sai Mật khẩu!</p>" +
+                    "  <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>\n" +
                     "</div>"
             });
         }
@@ -144,7 +145,7 @@ export class AppService {
             case 5:
                 option = Object.assign(option, {order: {promotionalPrice: "ASC"}});
                 break;
-            case 7:
+            case 6:
                 option = Object.assign(option, {order: {ratingAvg: "DESC"}});
                 break;
             case 7:
@@ -174,6 +175,12 @@ export class AppService {
 
         var idUser = req.session.user.id;
         var avatar = req.session.user.avatar;
+        if(products.length <=0){
+            res.render("./listBill", {listProduct: products,msg: "<div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">\n" +
+                    "  <p style=\"margin: 0\">Trống!</p>" +
+                    "  <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>\n" +
+                    "</div>", nameNav: nameNav, idUser: idUser, avatar: avatar});
+        }
         res.render("./listProduct", {listProduct: products, nameNav: nameNav, idUser: idUser, avatar: avatar});
 
     }
@@ -474,7 +481,7 @@ export class AppService {
     }
 
     async getListCustomer(req, res) {
-        const listUser = await this.userRepository.find({});
+        const listUser = await this.userRepository.findBy({role: "user"});
         let users: UserDto[];
         // @ts-ignore
         users = listUser.map((user) => {
@@ -717,9 +724,15 @@ export class AppService {
         } else {
             nameNav = nameList[0];
         }
-
         var idUser = req.session.user.id;
         var avatar = req.session.user.avatar;
+
+        if(ListBill.length <=0){
+            res.render("./listBill", {listBill: ListBill,msg: "<div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">\n" +
+                    "  <p style=\"margin: 0\">Trống!</p>" +
+                    "  <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>\n" +
+                    "</div>", nameNav: nameNav, idUser: idUser, avatar: avatar});
+        }
         res.render("./listBill", {listBill: ListBill, nameNav: nameNav, idUser: idUser, avatar: avatar});
 
     }
@@ -742,10 +755,15 @@ export class AppService {
                 note: status.note,
                 // @ts-ignore
                 createdAt: format(new Date(status.createdAt), "HH:mm dd-MM-yyyy"),
-
+            };
+        });
+        let ListProduct = bill.cartProduct.map((item) => {
+            return {
 
             };
         });
+
+
         // @ts-ignore
         bill.shippingStatus = list;
         console.log(bill.shippingStatus);
@@ -1072,14 +1090,14 @@ export class AppService {
             startDate: req.body.startDate,
             endDate: req.body.endDate,
             type: req.body.type || "",
-            isMonopoly: !!req.body.email || !!req.body.userId || !!user.id || false,
+            isMonopoly: !!req.body.email || !!req.body.userId || false,
             used: 0,
-            userId: req.body.userId || user.id || null,
+            userId: req.body.userId || null,
         });
         await this.voucherRepository.save(voucher);
 
 
-       return res.render("./voucher", {nameNav: nameNav, idUser: idUser, avatar: avatar});
+        res.redirect("/voucher");
     }
 
     async postUpdateVoucherStatus(req, res): Promise<VoucherDto> {

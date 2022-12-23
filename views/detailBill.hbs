@@ -129,22 +129,12 @@
                                     style="color: black;font-weight: 700">{{bill.paymentMethod}}</span></div>
                             <div style="margin-bottom: 10px"><span> Trạng thái thanh toán:</span> <span
                                     style="color: black;font-weight: 700">{{bill.status}}</span></div>
-
-                            <div style="margin-bottom: 10px"> <span> Trạng thái đơn hàng:</span> <span
-                                    style="color: black;font-weight: 700">
-                                {{#each bill.shippingStatus}}{{#if @last}}{{this.shippingStatus}}{{/if}}{{/each}}
-                            </span>
-                                <span> - Tính đến ngày:</span> <span
-                                    style="color: black;font-weight: 700">
-                                {{#each bill.shippingStatus}}{{#if @last}}{{this.createdAt}}{{/if}}{{/each}}
-                            </span></div>
-
-
                             <div style="margin-bottom: 10px"><span> Địa điểm:</span> <span
                                     style="color: black;font-weight: 700">{{bill.placeCustomer}}</span></div>
 
                         </div>
                         <div class="col-3">
+
                             <div><span> Voucher:</span> <span style="color: black;font-weight: 700">001 </span></div>
                             <div><span> Giảm :</span> <span style="color: black;font-weight: 700">...</span></div>
                             <div><span> Tổng thanh toán:</span> <span
@@ -153,10 +143,17 @@
                             </div>
                             <div><span> Ghi chú/ Lí do hủy:</span>
                                 <p style="border: 1px solid black;font-weight: 400;font-size: 12px;height: 80px; margin-bottom: 0px; max-height: 80px;
-                        line-height: 19px;color: #000000;padding-left: 10px;overflow: auto">{{bill.note}}
+                        line-height: 19px;color: #000000;padding-left: 10px;overflow: auto;margin-bottom: 10px">{{bill.note}}
                                 </p>
 
                             </div>
+
+                        </div>
+                        <div class="col-4">
+                            <div style="margin-bottom: 10px"> <span> Trạng thái đơn hàng:</span> <span
+                                    style="color: black;font-weight: 700"><br>
+                                {{#each bill.shippingStatus}} {{this.createdAt}} - {{this.shippingStatus}}<br>{{/each}}
+                            </span></div>
 
                         </div>
 
@@ -279,15 +276,18 @@
                                                 <option value="Đang chuẩn bị hàng">Đang chuẩn bị hàng</option>
                                                 <option value="Đang vận chuyển">Đang vận chuyển</option>
                                                 <option value="Đã giao hàng">Đã giao hàng</option>
-                                                <option value="Đã trả hàng">Đã trả hàng</option>
                                                 <option value="Đã nhận">Đã nhận</option>
+                                                <option value="Yêu cầu trả hàng">Yêu cầu trả hàng</option>
+                                                <option value="Xác nhận hoàn trả">Xác nhận hoàn trả</option>
+                                                <option value="Đã trả hàng">Đã trả hàng</option>
+                                                <option value="Đã hoàn tiền">Đã hoàn tiền</option>
                                             </select>
                                         </div>
 
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng
                                             </button>
-                                            <button type="submit" class="btn btn-primary">Update</button>
+                                            <button type="submit" class="btn btn-primary">Thay đổi</button>
                                         </div>
                                     </div>
                                 </div>
