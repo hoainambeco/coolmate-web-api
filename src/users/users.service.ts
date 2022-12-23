@@ -23,8 +23,11 @@ import { ShippingStatus } from "../enum/bull";
 import { Voucher } from "../voucher/entities/voucher.entity";
 import { Schema } from "mongoose";
 import { ObjectId } from "mongodb";
+import { response } from "express";
 
-export const userSchema = mongoose.model("users", new mongoose.Schema(User))
+export const userSchema = mongoose.model("users", new mongoose.Schema(User));
+export const billSchema = mongoose.model("bills", new mongoose.Schema(Oder));
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -119,11 +122,11 @@ export class UsersService {
     if (user.phoneActive !== StatusAccount.INACTIVE) {
       users.phoneActive = StatusAccount.ACTIVE;
     }
+    if(user.birthday){
+      users.birthday = new Date(user.birthday);
+    }
     await this.userRepository.update(users.id.toString(), users);
-    return {
-      ...users,
-      id: users.id.toString()
-    };
+    return JSON.parse(JSON.stringify(new UserDto(users)));
   }
 
   async verifyOtp(otp: { otp: string }): Promise<UserDto> {
@@ -388,7 +391,7 @@ export class UsersService {
     return JSON.parse(JSON.stringify(user));
   }
 
-  async statistical(query?:any) {
+  async statistical(query?: any) {
     const statistical = {
       user: [{_id: null,status:'', count: 0}],
       turnOver: {},
@@ -470,6 +473,7 @@ export class UsersService {
       id: user.id.toString()
     };
   }
+
   async FavoriteVoucherCreate(voucherId: string) {
     const dataUser = AuthService.getAuthUser();
     const user = await this.userRepository.findOneBy({ id: dataUser.id });
@@ -494,6 +498,7 @@ export class UsersService {
     await this.favoriteVoucherRepository.save(newFavorite);
     return JSON.parse(JSON.stringify(newFavorite));
   }
+
   async FavoriteVoucherDelete(voucherId: string) {
     const dataUser = AuthService.getAuthUser();
     const user = await this.userRepository.findOneBy({ id: dataUser.id });
@@ -516,6 +521,7 @@ export class UsersService {
     await this.favoriteVoucherRepository.delete(favorite.id);
     return JSON.parse(JSON.stringify(favorite));
   }
+
   async FavoriteVoucherList() {
     const dataUser = AuthService.getAuthUser();
     console.log(dataUser);
