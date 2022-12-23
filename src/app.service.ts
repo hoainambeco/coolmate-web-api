@@ -607,10 +607,7 @@ export class AppService {
     }
 
     async postChangePass(req, res, id) {
-        console.log(req.body);
         const user = await this.userRepository.findOneBy(id);
-        // @ts-ignore
-        user.birthday = format(new Date(user.birthday), "dd-MM-yyyy");
         var nameList = req.session.user.fullName.split(" ");
 
         var nameNav = "";
