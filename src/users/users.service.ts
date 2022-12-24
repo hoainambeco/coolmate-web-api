@@ -507,7 +507,7 @@ export class UsersService {
   }
   async FavoriteVoucherCreateByCode(code: string) {
     const dataUser = AuthService.getAuthUser();
-    const user = await this.userRepository.findOneBy(dataUser.id.toString());
+    const user = await this.userRepository.findOneBy(dataUser.id);
     console.log(user);
     const favorite = await this.favoriteVoucherRepository.findOneBy({
       userId: ObjectId(dataUser.id),
@@ -519,7 +519,7 @@ export class UsersService {
         "FAVORITE_VOUCHER_EXISTED"
       );
     }
-    const voucher = await this.voucherRepository.findOneBy(code);
+    const voucher = await this.voucherRepository.findOneBy({code: code});
     if (!voucher) {
       throw new ErrorException(
         HttpStatus.BAD_REQUEST,
