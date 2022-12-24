@@ -237,7 +237,7 @@ export class OdersService {
     await this.updateOrder(oder.id.toString(), discount);
     const mailContent = templateNoticationCreateBill(user.fullName, oder.id.toString(),oder.customerName, oder.numberPro,oder.total.toString());
     try {
-      await sendMail('namxg1@gmail.com', "[CoolMate] THÔNG BÁO BẠN CÓ ĐƠN HÀNG MỚI", mailContent,['namnhph14161@gmail.com'], ['quannm18@gmail.com']);
+      await sendMail('namxg1@gmail.com', "[CoolMate] THÔNG BÁO BẠN CÓ ĐƠN HÀNG MỚI", mailContent,['admin@coolmate.com'], ['quannmph14304@fpt.edu.vn','hoainambeco@pimob.onmicrosoft.com']);
       // await sendMail('quannm18@gmail.com', "[CoolMate] THÔNG BÁO BẠN CÓ ĐƠN HÀNG MỚI", mailContent, ['quannm18@gmail.com','namxg1@gmail.com']);
     } catch (error) {
       console.log(error);
