@@ -126,30 +126,30 @@ export class AppService {
             option = Object.assign(option, {where: {...option.where, status: query.status}})
         }
 
-        switch (query.sort) {
+        switch ( parseInt(query.sort) ) {
             case 0:
-                option = Object.assign(option, {order: {createdAt: "DESC"}});
-                break;
-            case 1:
                 option = Object.assign(option, {order: {createdAt: "ASC"}});
                 break;
-            case 2:
-                option = Object.assign(option, {order: {quantitySold: "DESC"}});
+            case 1:
+                option = Object.assign(option, {order: {createdAt: "DESC"}});
                 break;
-            case 3:
+            case 2:
                 option = Object.assign(option, {order: {quantitySold: "ASC"}});
                 break;
-            case 4:
-                option = Object.assign(option, {order: {promotionalPrice: "DESC"}});
+            case 3:
+                option = Object.assign(option, {order: {quantitySold: "DESC"}});
                 break;
-            case 5:
+            case 4:
                 option = Object.assign(option, {order: {promotionalPrice: "ASC"}});
                 break;
+            case 5:
+                option = Object.assign(option, {order: {promotionalPrice: "DESC"}});
+                break;
             case 6:
-                option = Object.assign(option, {order: {ratingAvg: "DESC"}});
+                option = Object.assign(option, {order: {ratingAvg: "ASC"}});
                 break;
             case 7:
-                option = Object.assign(option, {order: {ratingAvg: "ASC"}});
+                option = Object.assign(option, {order: {ratingAvg: "DESC"}});
                 break;
             default:
                 break;
@@ -175,6 +175,9 @@ export class AppService {
 
         var idUser = req.session.user.id;
         var avatar = req.session.user.avatar;
+        console.log(query)
+        console.log(option);
+        console.log(products);
         if(products.length <=0){
             res.render("./listBill", {listProduct: products,msg: "<div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">\n" +
                     "  <p style=\"margin: 0\">Trống!</p>" +
@@ -525,9 +528,10 @@ export class AppService {
         return res.render("./profile", {user: user, nameNav: nameNav, idUser: idUser, avatar: avatar});
     }
 
-    async postUpdateUser(req, res): Promise<UserDto> {
+    async postUpdateUser(req, res , id): Promise<UserDto> {
+        console.log(req.body)
         // @ts-ignore
-        let user = await this.userRepository.findOneBy(req.body.id);
+        let user = await this.userRepository.findOneBy(req.body.updateUserID);
 
         if (!user) {
             throw new ErrorException(HttpStatus.NOT_FOUND, "user not found");
@@ -538,8 +542,9 @@ export class AppService {
         } catch (e) {
             console.log(e);
         }
-        await this.userRepository.save(user);
-        return res.render("./profile", {user: user});
+        console.log(user)
+        await this.userRepository.update(user.id,user);
+        return res.redirect("/userInfo/"+id)
     }
 
     async postSearchUser(req, res) {
