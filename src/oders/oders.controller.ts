@@ -6,13 +6,14 @@ import {
   Patch,
   Param,
   Delete,
-  Put, UseGuards, UseInterceptors
+  Put, UseGuards, UseInterceptors, Query
 } from "@nestjs/common";
 import { OdersService } from './oders.service';
 import { CreateOderByProductDto, CreateOderDto, UpdateShippingStatusDto } from "./dto/create-oder.dto";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../guards/jwt-auth.guard";
 import { AuthUserInterceptor } from "../interceptors/auth-user.interceptor";
+import { QueryOderDto } from "./dto/query-oder.dto";
 
 @ApiTags('Oders')
 @UseGuards(JwtAuthGuard)
@@ -37,8 +38,8 @@ export class OdersController {
   }
 
   @Get()
-  findAll() {
-    return this.odersService.findAll();
+  findAll(@Query() productQuery: QueryOderDto) {
+    return this.odersService.findAll(productQuery);
   }
 
   @Get(':id')

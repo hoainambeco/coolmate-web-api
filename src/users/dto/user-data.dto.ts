@@ -109,12 +109,12 @@ export class OtpDto{
 
 export class FavoriteVoucherCreate{
   @IsString()
-  @IsNotEmpty()
-  @ApiProperty()
+  @IsOptional()
+  @ApiPropertyOptional()
   voucherId: string;
 
   @IsString()
-  @IsNotEmpty()
-  @ApiProperty()
+  @IsOptional()
+  @ApiPropertyOptional()
   code : string;
 }

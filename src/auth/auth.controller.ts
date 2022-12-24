@@ -114,7 +114,20 @@ export class AuthController {
   @Get('turn-over')
   @HttpCode(HttpStatus.OK)
   async doanhThu(): Promise<any> {
-    return await this.userService.getBillInMonth(12);
+    return {
+      "Jan":await this.userService.getBillInMonth(1),
+      "Feb":await this.userService.getBillInMonth(2),
+      "Mar":await this.userService.getBillInMonth(3),
+      "Apr":await this.userService.getBillInMonth(4),
+      "May":await this.userService.getBillInMonth(5),
+      "Jun":await this.userService.getBillInMonth(6),
+      "Jul":await this.userService.getBillInMonth(7),
+      "Aug":await this.userService.getBillInMonth(8),
+      "Sep":await this.userService.getBillInMonth(9),
+      "Oct":await this.userService.getBillInMonth(10),
+      "Nov":await this.userService.getBillInMonth(11),
+      "Dec":await this.userService.getBillInMonth(12),
+    };
   }
 
 }

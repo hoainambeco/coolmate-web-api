@@ -393,7 +393,7 @@ export class UsersService {
   async statistical(query?: any) {
     const statistical = {
       user: [{_id: null,status:'', count: 0}],
-      turnOver: {},
+      turnOver: [],
       product:{},
       bill:{},
     }
@@ -446,6 +446,20 @@ export class UsersService {
       "DA_TRA_HANG": await this.billRepository.countBy({ status: ShippingStatus.DA_TRA_HANG }),
       "DA_NHAN": await this.billRepository.countBy({ status: ShippingStatus.DA_NHAN }),
     };
+    statistical.turnOver= [
+      {"Jan":await this.getBillInMonth(1),},
+      {"Feb":await this.getBillInMonth(2),},
+      {"Mar":await this.getBillInMonth(3),},
+      {"Apr":await this.getBillInMonth(4),},
+      {"May":await this.getBillInMonth(5),},
+      {"Jun":await this.getBillInMonth(6),},
+      {"Jul":await this.getBillInMonth(7),},
+      {"Aug":await this.getBillInMonth(8),},
+      {"Sep":await this.getBillInMonth(9),},
+      {"Oct":await this.getBillInMonth(10),},
+      {"Nov":await this.getBillInMonth(11),},
+      {"Dec":await this.getBillInMonth(12),},
+    ]
     return statistical
   }
 
@@ -509,9 +523,16 @@ export class UsersService {
     const dataUser = AuthService.getAuthUser();
     const user = await this.userRepository.findOneBy(dataUser.id);
     console.log(user);
+    const voucher = await this.voucherRepository.findOneBy({code: code});
+    if (!voucher) {
+      throw new ErrorException(
+        HttpStatus.BAD_REQUEST,
+        "VOUCHER_NOT_FOUND"
+      );
+    }
     const favorite = await this.favoriteVoucherRepository.findOneBy({
       userId: ObjectId(dataUser.id),
-      code: code
+      voucherId: voucher.id.toString(),
     });
     if (favorite) {
       throw new ErrorException(
@@ -519,13 +540,7 @@ export class UsersService {
         "FAVORITE_VOUCHER_EXISTED"
       );
     }
-    const voucher = await this.voucherRepository.findOneBy(code);
-    if (!voucher) {
-      throw new ErrorException(
-        HttpStatus.BAD_REQUEST,
-        "VOUCHER_NOT_FOUND"
-      );
-    }
+
     const newFavorite = await this.favoriteVoucherRepository.create({
       userId: user.id,
       voucherId: voucher.id.toString(),
@@ -579,12 +594,17 @@ export class UsersService {
   }
   async getBillInMonth(month){
     const year = new Date().getFullYear();
-    console.log(year);
-    const from = format(new Date(year, month, 1), 'yyy/MM/dd')
-    const to = new Date().setUTCFullYear(month ===12 ? year +1 : year,month===12 ? 1 : month,1);
-    console.log(from);
-    console.log(to);
+    // console.log(year);
+    const from = format(new Date(year-1, month, 1), 'yyy-MM-dd')
+    const to =format(new Date(month ===12 ? year +1 : year, month===12 ? 1 : month, 1), 'yyy-MM-dd');
+    // console.log(new Date(from.toString()));
+    // console.log(new Date(to.toString()));
     const bill = await this.billRepository.findBy({createdAt:{$gte:new Date(from.toString()),$lte:new Date(to.toString())}});
-    console.log(bill);
+    if(bill.length > 0) {
+      return bill.map(bill => bill.total).reduce((total, item) => {
+        return total + item;
+      })
+    }
+    return 0;
   }
 }
