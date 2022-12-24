@@ -284,29 +284,29 @@ export class OdersService {
         await this.voucherRepository.save(voucher);
       });
       // @ts-ignore
-      oder.carts.carts.map(async (item: ItemCarts) => {
-        // @ts-ignore
-        const product = await this.productRepository.findOneBy(item.products.productId);
-        if (!product) {
-          throw new ErrorException(HttpStatus.NOT_FOUND, "Product not found");
-        }
-        // @ts-ignore
-        const quantity = item.products.quantity;
-        product.productCount = product.productCount + quantity;
-        product.quantitySold = product.quantitySold - quantity;
-        product.color.map((color) => {
-          // @ts-ignore
-          if (color.name === item.products.colorName) {
-            color.size.map((size) => {
-              // @ts-ignore
-              if (size.name === item.products.sizeName) {
-                size.productCount += quantity;
-              }
-            });
-          }
-        });
-        await this.productRepository.save({ ...product });
-      })
+      // oder.carts.carts.map(async (item: ItemCarts) => {
+      //   // @ts-ignore
+      //   const product = await this.productRepository.findOneBy(item.products.productId);
+      //   if (!product) {
+      //     throw new ErrorException(HttpStatus.NOT_FOUND, "Product not found");
+      //   }
+      //   // @ts-ignore
+      //   const quantity = item.products.quantity;
+      //   product.productCount = product.productCount + quantity;
+      //   product.quantitySold = product.quantitySold - quantity;
+      //   product.color.map((color) => {
+      //     // @ts-ignore
+      //     if (color.name === item.products.colorName) {
+      //       color.size.map((size) => {
+      //         // @ts-ignore
+      //         if (size.name === item.products.sizeName) {
+      //           size.productCount += quantity;
+      //         }
+      //       });
+      //     }
+      //   });
+      //   await this.productRepository.save({ ...product });
+      // })
     }
     // @ts-ignore
     const check = oder.shippingStatus.find((item) => item.shippingStatus === updateShippingStatusDto.shippingStatus);
