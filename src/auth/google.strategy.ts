@@ -20,7 +20,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     profile: any,
     done: VerifyCallback,
   ): Promise<any> {
-    console.log(profile);
+    // console.log(profile);
     const user = {
       id: profile.id,
       name: profile.displayName,
@@ -30,7 +30,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
       picture: profile.photos[0].value,
       accessToken,
     };
-    console.log(user);
+    // console.log(user);
     return done(null, this.jwrService.sign(user));
   }
 }

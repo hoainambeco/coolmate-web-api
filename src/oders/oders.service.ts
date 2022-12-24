@@ -45,7 +45,7 @@ export class OdersService {
 
   async create(createOderDto: CreateOderDto) {
     let user = AuthService.getAuthUser();
-    console.log(createOderDto);
+    // console.log(createOderDto);
     const oder = await this.oderRepository.create({ ...createOderDto, cartProduct: null });
     let vouchers = [];
     let discount = 0;
@@ -120,7 +120,7 @@ export class OdersService {
       await this.productRepository.save({ ...product });
     });
     if(productSizeCount>0){
-      console.log(productSizeCount);
+      // console.log(productSizeCount);
       throw new ErrorException(HttpStatus.NOT_FOUND, "Product is sold out");
     }
     oder.total = oderTotal - (oderTotal * discount / 100);
@@ -430,7 +430,7 @@ export class OdersService {
       await this.productRepository.save({ ...product });
     })
     if(productSizeCount>0){
-      console.log(productSizeCount);
+      // console.log(productSizeCount);
       throw new ErrorException(HttpStatus.NOT_FOUND, "Product is sold out");
     }
     oder.total = await (oder.total - (oder.total * discount / 100));

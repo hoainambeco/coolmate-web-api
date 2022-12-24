@@ -25,7 +25,7 @@ import { AuthUser } from "./decorators/auth-user.decorator";
 import { User } from "./users/entities/user.entity";
 
 export const imageFileFilter = (req, file, callback) => {
-    console.log(file);
+    // console.log(file);
     let permittedFileTypes = [
         // images
         ".jpg",
@@ -389,7 +389,7 @@ export class rss {
                     const a = value.content_html
                     // var currentPath = a.substring(a.indexOf(" src=")+6, a.indexOf("class"));
                     var currentPath = a.toString().match(/\bhttps?:\/\/\S+/);
-                    console.log(currentPath);
+                    // console.log(currentPath);
                     delete value.content_html});
                 return data
             });

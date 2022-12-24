@@ -175,9 +175,9 @@ export class AppService {
 
         var idUser = req.session.user.id;
         var avatar = req.session.user.avatar;
-        console.log(query)
-        console.log(option);
-        console.log(products);
+        // console.log(query)
+        // console.log(option);
+        // console.log(products);
         if(products.length <=0){
             res.render("./listBill", {listProduct: products,msg: "<div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">\n" +
                     "  <p style=\"margin: 0\">Trống!</p>" +
@@ -361,7 +361,7 @@ export class AppService {
     }
 
     async postUpdate(req, res, id, files: IFile[]): Promise<ProductDto> {
-        console.log(req.body);
+        // console.log(req.body);
         // @ts-ignore
         let product = await this.productRepository.findOneBy(id);
         if (!product) {
@@ -529,7 +529,7 @@ export class AppService {
     }
 
     async postUpdateUser(req, res , id): Promise<UserDto> {
-        console.log(req.body)
+        // console.log(req.body)
         // @ts-ignore
         let user = await this.userRepository.findOneBy(req.body.updateUserID);
 
@@ -542,7 +542,7 @@ export class AppService {
         } catch (e) {
             console.log(e);
         }
-        console.log(user)
+        // console.log(user)
         await this.userRepository.update(user.id,user);
         return res.redirect("/userInfo/"+id)
     }
@@ -689,7 +689,7 @@ export class AppService {
         switch (parseInt(query.sort)) {
             case 0:
                 option = Object.assign(option, {order: {updatedAt: "DESC"}});
-                console.log(option)
+                // console.log(option)
                 break;
             case 1:
                 option = Object.assign(option, {order: {updatedAt: "ASC"}});
@@ -833,7 +833,7 @@ export class AppService {
         notification.status = "ACTIVE" || null;
 
         const user = await this.userRepository.findOneBy(ObjectId(bill.userId));
-        console.log(user);
+        // console.log(user);
         notification.userId = user.id.toString() || null;
         getMessaging().send({
             android: {
@@ -939,7 +939,7 @@ export class AppService {
 
         if (req.body.userId) {
             const user = await this.userRepository.findOneBy(req.body.userId);
-            console.log(user);
+            // console.log(user);
             notification.userId = user.id.toString() || null;
             getMessaging().send({
                 android: {
@@ -1019,7 +1019,7 @@ export class AppService {
     async getVoucher(req, res) {
         const listVoucherFind = await this.voucherRepository.find();
         listVoucherFind.map((voucher) => {
-            console.log(voucher);
+            // console.log(voucher);
             return {
                 ...voucher,
                 id: voucher.id.toString(),
@@ -1028,7 +1028,7 @@ export class AppService {
             };
 
         });
-        console.log(listVoucherFind)
+        // console.log(listVoucherFind)
         var nameList = req.session.user.fullName.split(" ");
 
         var nameNav = "";
@@ -1044,7 +1044,7 @@ export class AppService {
     }
 
     async postAddVoucher(req, res) {
-        console.log(req.body);
+        // console.log(req.body);
         // @ts-ignore
         const oldVoucher = await this.voucherRepository.findOneBy( {where: {code: req.body.code}});
         var nameList = req.session.user.fullName.split(" ");
@@ -1123,7 +1123,7 @@ export class AppService {
     async postImgBaner(file) {
 
         const img = await imgBannerSchema.find({delete: false});
-        console.log(img);
+        // console.log(img);
         if (img.length > 0) {
             img.map(async (item) => {
                 await imgBannerSchema.findByIdAndUpdate(item._id, {

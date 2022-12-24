@@ -36,7 +36,7 @@ export class ProductService {
     //   }
     // }
     const registrationToken = [...new Set(user.map((item) => item.registrationToken))];
-    console.log(registrationToken);
+    // console.log(registrationToken);
     registrationToken.forEach((item) => {
       const message = {
         android: {
@@ -156,7 +156,7 @@ export class ProductService {
     if (!queryProductDto.feature) {
       delete options.where.features;
     }
-    console.log(options);
+    // console.log(options);
     // @ts-ignore
     const listProducts = await this.productRepository.find(options);
     return listProducts[0] ? JSON.parse(JSON.stringify(listProducts)) : 'null';
@@ -172,7 +172,7 @@ export class ProductService {
     const producttest = await this.productRepository.findBy({
       image: "string"
     });
-    console.log(producttest);
+    // console.log(producttest);
 
     return {
       ...product,
@@ -183,7 +183,7 @@ export class ProductService {
   async update(id: string, updateProductDto: UpdateProductDto): Promise<ProductDto> {
     // @ts-ignore
     const product = this.productRepository.findOneBy(id);
-    console.log(product);
+    // console.log(product);
     if (!product) {
       throw new ErrorException(HttpStatus.NOT_FOUND, "Product not found");
     }

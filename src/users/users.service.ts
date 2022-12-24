@@ -113,7 +113,7 @@ export class UsersService {
 
   async update(user: UserUpdateDto): Promise<UserDto> {
     let users = AuthService.getAuthUser();
-    console.log(user);
+    // console.log(user);
     users = await Object.assign(users, user);
     if (user.password) {
       users.password = await bcrypt.hashSync(user.password, 10);
@@ -315,7 +315,7 @@ export class UsersService {
         productId: product.id.toString()
       }
     });
-    console.log(Favorite);
+    // console.log(Favorite);
     if (Favorite) {
       throw new ErrorException(
         HttpStatus.BAD_REQUEST,
@@ -334,7 +334,7 @@ export class UsersService {
   async getFavorite(): Promise<FavoriteDto[]> {
     const user = AuthService.getAuthUser();
     const favorites = await this.favoriteRepository.findBy({ userId: user.id });
-    console.log(favorites);
+    // console.log(favorites);
     return JSON.parse(JSON.stringify(favorites));
   }
 
@@ -397,7 +397,7 @@ export class UsersService {
       product:{},
       bill:{},
     }
-    console.log(query|| {});
+    // console.log(query|| {});
     const user = await userSchema.aggregate([
       {
         $group: {
@@ -490,7 +490,7 @@ export class UsersService {
   async FavoriteVoucherCreate(voucherId: string) {
     const dataUser = AuthService.getAuthUser();
     const user = await this.userRepository.findOneBy(dataUser.id);
-    console.log(user);
+    // console.log(user);
     const favorite = await this.favoriteVoucherRepository.findOneBy({
       userId: ObjectId(dataUser.id),
       voucherId: voucherId
@@ -522,7 +522,7 @@ export class UsersService {
   async FavoriteVoucherCreateByCode(code: string) {
     const dataUser = AuthService.getAuthUser();
     const user = await this.userRepository.findOneBy(dataUser.id);
-    console.log(user);
+    // console.log(user);
     const voucher = await this.voucherRepository.findOneBy({code: code});
     if (!voucher) {
       throw new ErrorException(
@@ -578,19 +578,10 @@ export class UsersService {
 
   async FavoriteVoucherList() {
     const dataUser = AuthService.getAuthUser();
-    console.log(dataUser);
+    // console.log(dataUser);
     const user = await this.userRepository.findOneBy({ id: dataUser.id.toString() });
     const favorite = await this.favoriteVoucherRepository.findBy({ userId: user.id });
     return JSON.parse(JSON.stringify(favorite));
-  }
-  async turnOver() {
-    const dataUser = AuthService.getAuthUser();
-    const user = await this.userRepository.findOneBy({ id: dataUser.id });
-    const bill = await this.billRepository.findBy({ userId: user.id });
-    const turnOver = bill.reduce((total, item) => {
-      return total + item.total;
-    }, 0);
-    return turnOver;
   }
   async getBillInMonth(month){
     const year = new Date().getFullYear();
@@ -606,5 +597,16 @@ export class UsersService {
       })
     }
     return 0;
+  }
+  async getQuanOrder(){
+    const user = AuthService.getAuthUser();
+    const favorite = await this.favoriteRepository.findAndCountBy({ userId: user.id.toString() });
+    const voucher = await this.favoriteVoucherRepository.findAndCountBy({ userId: user.id.toString() });
+    const bill = await this.billRepository.findAndCountBy({ userId: user.id.toString() });
+    return {
+      favorite: favorite[1],
+      voucher: voucher[1],
+      bill: bill[1]
+    };
   }
 }
