@@ -366,29 +366,55 @@ export class OdersService {
       console.log(productSizeCount);
       throw new ErrorException(HttpStatus.NOT_FOUND, "Product is sold out");
     }
-    console.log(this.oderTotal(oder.id.toString()));
     oder.total = await (oder.total - (oder.total * discount / 100));
     return await this.oderRepository.save({
       ...oder,
+      total: await this.oderTotal(oder.id.toString(), discount),
       numberPro: oder.cartProduct.length,
       idPayment:oder.idPayment || '',
       shippingStatus: [{ shippingStatus: ShippingStatus.CHO_XAC_NHAN, note: "", createdAt: new Date() }]
     });
   }
-  async oderTotal(id:string){
+  async oderTotal(id:string, discount?:number){
+    let oderTotal = 0;
+    let CountProduct = 0;
+    let productSizeCount = 0;
     // @ts-ignore
     const oder = await this.oderRepository.findOneBy(id);
-    let oderTotal = oder.cartProduct.map(async (item) => {
+    const products = oder.cartProduct;
+    for (const item of products) {
       // @ts-ignore
       const product = await this.productRepository.findOneBy(item.productId);
       if (!product) {
         throw new ErrorException(HttpStatus.NOT_FOUND, "Product not found");
       }
-      const sellingPrice = product.sellingPrice;
+      if (product.productCount <= 0) {
+        throw new ErrorException(HttpStatus.NOT_FOUND, "Product is sold out");
+      }
+      const promotionalPrice = product.promotionalPrice;
       const quantity = item.quantity;
-      return oderTotal += await(oderTotal + (sellingPrice * quantity));
-      // oder.total += oderTotal;
-    })
-    return JSON.parse(JSON.stringify(oderTotal));
+      oderTotal = await(oderTotal + (promotionalPrice * quantity));
+      oder.total += oderTotal;
+      CountProduct += quantity;
+      product.productCount = product.productCount - quantity;
+      product.quantitySold = product.quantitySold + quantity;
+      product.color.map(async (color) => {
+        // @ts-ignore
+        if (color.name === product.colorName) {
+          color.size.map((size) => {
+            // @ts-ignore
+            if (size.name === product.sizeName) {
+              if(size.productCount>0){
+                size.productCount -= quantity;
+              }
+              else{
+                productSizeCount = size.productCount;
+              }
+            }
+          });
+        }
+      })
+    }
+    return (oderTotal - (oderTotal * discount / 100));
   }
 }
