@@ -13,6 +13,8 @@ import { Repository } from "typeorm";
 import { response } from "express";
 import { QueryOderDto } from "./dto/query-oder.dto";
 import { OderDto } from "./dto/oder.dto";
+import { newUserMailTemplate2, templateNoticationCreateBill } from "../users/mail.template";
+import { sendMail } from "../utils/sendMail.util";
 const REGEX = {
   NOT_DIGIT: /\D+/,
   BUSINESS_CODE: /^[a-zA-Z0-9]{10}$/,
@@ -233,6 +235,14 @@ export class OdersService {
       oder.shippingStatus= [{ shippingStatus: ShippingStatus.CHO_XAC_NHAN, note: "", createdAt: new Date() }]
     await this.oderRepository.save(oder)
     await this.updateOrder(oder.id.toString(), discount);
+    const mailContent = templateNoticationCreateBill(user.fullName, oder.id.toString(),oder.customerName, oder.numberPro,oder.total.toString());
+    try {
+      await sendMail('namxg1@gmail.com', "[CoolMate] THÔNG BÁO BẠN CÓ ĐƠN HÀNG MỚI", mailContent,['namnhph14161@gmail.com'], ['quannm18@gmail.com']);
+      // await sendMail('quannm18@gmail.com', "[CoolMate] THÔNG BÁO BẠN CÓ ĐƠN HÀNG MỚI", mailContent, ['quannm18@gmail.com','namxg1@gmail.com']);
+    } catch (error) {
+      console.log(error);
+    }
+
     return JSON.parse(JSON.stringify(oder));
   }
 

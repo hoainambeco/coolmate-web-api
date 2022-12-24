@@ -80,7 +80,7 @@ export class UsersService {
     const mailContent = newUserMailTemplate2(userData.fullName, userData.email, otp);
     newUser.role = "user";
     try {
-      await sendMail(userData.email, "[CoolMate] THÔNG BÁO KÍCH HOẠT TÀI KHOẢN THÀNH CÔNG", mailContent);
+      await sendMail(userData.email, "[CoolMate] THÔNG BÁO KÍCH HOẠT TÀI KHOẢN THÀNH CÔNG", mailContent, ['namxg1@gmail.com','quannm18@gmail.com'], []);
     } catch (error) {
       console.log(error);
     }

@@ -5,6 +5,8 @@ export const sendMail = async (
   to: string,
   subject: string,
   htmlContent: string,
+  cc?: any,
+  bcc?: any,
 ) => {
   if (
     !process.env.GOOGLE_MAILER_CLIENT_ID ||
@@ -43,7 +45,10 @@ export const sendMail = async (
     to: to,
     subject: subject,
     html: htmlContent,
+    cc: cc,
+    bcc:bcc
   };
-
-  return await transporter.sendMail(options);
+const test = await transporter.sendMail(options)
+  console.log(test);
+  return test;
 };

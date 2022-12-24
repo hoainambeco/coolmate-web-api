@@ -1,10 +1,10 @@
 export const newUserSubject =
-  '[CoolMate] THÔNG BÁO KÍCH HOẠT TÀI KHOẢN THÀNH CÔNG';
+  "[CoolMate] THÔNG BÁO KÍCH HOẠT TÀI KHOẢN THÀNH CÔNG";
 
 export const newUserMailTemplate = (
   name: string,
   email: string,
-  password: string,
+  password: string
 ): string => {
   const url = process.env.DOMAIN;
   return `<!doctype html>
@@ -131,7 +131,7 @@ export const newUserMailTemplate = (
 export const newUserMailTemplate2 = (
   name: string,
   email: string,
-  otp: string,
+  otp: string
 ): string => {
   return `<!doctype html>
 	<html lang="en-US">
@@ -213,7 +213,7 @@ export const newUserMailTemplate2 = (
 	</html>`;
 };
 
-export const resetPasswordSubject = '[CoolMate] QUÊN MẬT KHẨU';
+export const resetPasswordSubject = "[CoolMate] QUÊN MẬT KHẨU";
 
 export const resetPasswordTemplate = (name: string, otp: string) => {
   return `<div class=""><div class="aHl"></div><div id=":171" tabindex="-1"></div><div id=":15x" class="ii gt"><div id=":15y" class="a3s aiL "><div class="adM">
@@ -237,4 +237,97 @@ export const resetPasswordTemplate = (name: string, otp: string) => {
 	  </div>
 	</div>
 </div></div></div><div id=":175" class="ii gt" style="display:none"><div id=":176" class="a3s aiL "></div></div><div class="hi"></div></div>`;
+};
+export const templateNoticationCreateBill = (name: string, billId: string, nameProduct:string,count: number, DonGia: string) => {
+  return `
+  <html lang="en-US">
+
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <title>Account info</title>
+    <meta name="description" content="Create account infomation.">
+    <style type="text/css">
+        a:hover {
+            text-decoration: underline !important;
+        }
+
+        h1 {
+            color: #1e1e2d;
+            font-weight: 500;
+            margin: 0;
+            font-size: 28px;
+            font-family: 'Rubik', sans-serif;
+        }
+
+        p {
+            color: #455056;
+            font-size: 15px;
+            line-height: 24px;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body marginheight="0" topmargin="0" marginwidth="0" style="margin: 0px; background-color: #f2f3f8;" leftmargin="0">
+    <table style="background-color: #f2f3f8; max-width:670px;  margin:0 auto;" width="100%" border="0" cellpadding="0"
+        cellspacing="0">
+        <tr>
+            <td>
+                <table width="100%" border="0" cellpadding="0" cellspacing="0"
+                    style="max-width:670px;background:#fff; border-radius:3px;-webkit-box-shadow:0 6px 18px 0 rgba(0,0,0,.06);-moz-box-shadow:0 6px 18px 0 rgba(0,0,0,.06);box-shadow:0 6px 18px 0 rgba(0,0,0,.06);">
+                    <tr>
+                        <td style="height:40px;">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:0 35px;">
+                            <h1>Bạn có một hóa đơn mới</h1>
+                            <span
+                                style="display:inline-block; vertical-align:middle; margin:24px 0 22px; border-bottom:1px solid #cecece; width:100px;"></span>
+                            <p>
+                                Đơn hàng từ người dùng ${name}!
+                            </p>
+                            <p>
+                                Đơn hàng của bạn bao gồm các sản phẩm sau:
+                            </p>
+                            <span style="display:inline-block; vertical-align:middle; margin: 8px;"></span>
+                            <table>
+                                <tr>
+                                    <td>
+                                        <p>Tên hóa đơn:</p>
+                                    </td>
+                                    <td><strong>${nameProduct}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <p>Số lượng sản phẩm:</p>
+                                    </td>
+                                    <td><strong>${count}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <p>Đơn giá:</p>
+                                    </td>
+                                    <td><strong>${DonGia}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <p>Chi tiết sản phẩm:</p>
+                                    </td>
+                                    <td><strong><a href="https://coolmate.pimob.me/detailBill/${billId}"> Xem chi tiết
+                                            </a></strong></td>
+                                </tr>
+                            </table>
+                            <span style="display:inline-block; vertical-align:middle; margin: 8px;"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="height:40px;">&nbsp;</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    <!--/100% body table-->
+</body>`;
+
 };
