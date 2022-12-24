@@ -475,9 +475,10 @@ export class UsersService {
 
   async FavoriteVoucherCreate(voucherId: string) {
     const dataUser = AuthService.getAuthUser();
-    const user = await this.userRepository.findOneBy({ id: dataUser.id });
+    const user = await this.userRepository.findOneBy(dataUser.id);
+    console.log(user);
     const favorite = await this.favoriteVoucherRepository.findOneBy({
-      userId: user.id,
+      userId: ObjectId(dataUser.id),
       voucherId: voucherId
     });
     if (favorite) {
@@ -486,10 +487,49 @@ export class UsersService {
         "FAVORITE_VOUCHER_EXISTED"
       );
     }
+    const voucher = await this.voucherRepository.findOneBy(voucherId);
+    if (!voucher) {
+      throw new ErrorException(
+        HttpStatus.BAD_REQUEST,
+        "VOUCHER_NOT_FOUND"
+      );
+    }
     const newFavorite = await this.favoriteVoucherRepository.create({
       userId: user.id,
       voucherId: voucherId,
-      voucher: await this.voucherRepository.findOneBy({ id: ObjectId(voucherId) }),
+      voucher: voucher,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      deletedAt: null
+    });
+    await this.favoriteVoucherRepository.save(newFavorite);
+    return JSON.parse(JSON.stringify(newFavorite));
+  }
+  async FavoriteVoucherCreateByCode(code: string) {
+    const dataUser = AuthService.getAuthUser();
+    const user = await this.userRepository.findOneBy(dataUser.id);
+    console.log(user);
+    const favorite = await this.favoriteVoucherRepository.findOneBy({
+      userId: ObjectId(dataUser.id),
+      code: code
+    });
+    if (favorite) {
+      throw new ErrorException(
+        HttpStatus.BAD_REQUEST,
+        "FAVORITE_VOUCHER_EXISTED"
+      );
+    }
+    const voucher = await this.voucherRepository.findOneBy(code);
+    if (!voucher) {
+      throw new ErrorException(
+        HttpStatus.BAD_REQUEST,
+        "VOUCHER_NOT_FOUND"
+      );
+    }
+    const newFavorite = await this.favoriteVoucherRepository.create({
+      userId: user.id,
+      voucherId: voucher.id.toString(),
+      voucher: voucher,
       createdAt: new Date(),
       updatedAt: new Date(),
       deletedAt: null
