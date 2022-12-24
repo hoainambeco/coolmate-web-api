@@ -225,7 +225,7 @@
                                     <input name="soluong" class="input-noti" value="0"
                                            min="0" required type="number" pattern="\S+.*">
                                 </div>
-                                <div class="row-noti" style="height: 65px;margin-top: 14px;margin-bottom: 20px">
+                                <div class="row-noti" style="height: 65px;margin-top: 14px;margin-bottom: 20px; display: none">
                                     <label for="inputState" class="labelSelect">Trạng thái</label>
                                     <select id="inputState" class="fieldSelect" name="status">
                                         <option value="Còn mã">Còn mã</option>
@@ -243,42 +243,45 @@
                                     <input name="endDate" class="input-noti" value="0"
                                            min="0" required type="datetime-local" pattern="\S+.*">
                                 </div>
-                                <div class="row align-items-center"
-                                     style="margin-top: 12px;margin-left: 16px;align-items: center;margin-bottom: 12px">
-                                    <input type="radio" id="all" name="fav_language" checked onclick="showInputChecked()"
-                                           style="width: auto;">
-                                    <label for="all" style="width: auto;">Gửi cho toàn bộ khách hàng</label><br>
-                                    <input type="radio" id="checkRebate" name="fav_language" onclick="showInputChecked()"
-                                           style="width: auto;">
-                                    <label for="checkRebate" style="width: auto;">Gửi riêng cho khách hàng</label><br>
-                                </div>
-                                <!--              <from method="get" action="/getUser" id="user" style="display: none">-->
-                                <div class="row-noti" id="user"style="display: none">
-                                    <p class="title-input-noti" style="margin-bottom: 0px">Người nhận</p>
-                                    <label for="email" id="error"></label><br>
-                                    <input class="input-noti" type="email" id="email" placeholder="Điền email người nhận thông báo"
-                                           name="email">
-                                    <input class="input-noti" type="text" id="userId"
-                                           name="userId" hidden="true">
-                                    <div class=" col-12">
-                                        <table class="table table">
-                                            <thead>
-                                            <tr>
-                                                <th scope="col">Email</th>
-                                                <th scope="col">Tên</th>
-                                                <th scope="col">Số điện thoại</th>
-                                                <th scope="col">Địa chỉ</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody id="table">
-                                            <th id="emailUser"></th>
-                                            <th id="nameUser"></th>
-                                            <th id="phoneUser"></th>
-                                            <th id="addressUser"></th>
-                                            </tbody>
-                                        </table>
+                                <div style="display: none">
+
+                                    <div class="row align-items-center"
+                                         style="margin-top: 12px;margin-left: 16px;align-items: center;margin-bottom: 12px">
+                                        <input type="radio" id="all" name="fav_language" checked onclick="showInputChecked()"
+                                               style="width: auto;">
+                                        <label for="all" style="width: auto;">Gửi cho toàn bộ khách hàng</label><br>
+                                        <input type="radio" id="checkRebate" name="fav_language" onclick="showInputChecked()"
+                                               style="width: auto;">
+                                        <label for="checkRebate" style="width: auto;">Gửi riêng cho khách hàng</label><br>
+                                    </div>
+                                    <div class="row-noti" id="user"style="display: none">
+                                        <p class="title-input-noti" style="margin-bottom: 0px">Người nhận</p>
+                                        <label for="email" id="error"></label><br>
+                                        <input class="input-noti" type="email" id="email" placeholder="Điền email người nhận thông báo"
+                                               name="email">
+                                        <input class="input-noti" type="text" id="userId"
+                                               name="userId" hidden="true">
+                                        <div class=" col-12">
+                                            <table class="table table">
+                                                <thead>
+                                                <tr>
+                                                    <th scope="col">Email</th>
+                                                    <th scope="col">Tên</th>
+                                                    <th scope="col">Số điện thoại</th>
+                                                    <th scope="col">Địa chỉ</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody id="table">
+                                                <th id="emailUser"></th>
+                                                <th id="nameUser"></th>
+                                                <th id="phoneUser"></th>
+                                                <th id="addressUser"></th>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
+
                                 <button class="btn-push-noti" type="submit" id="submit"
                                         style="border-radius: 56px;width: 258px;height: 54px; font-size: 20px">
                                     Tạo mã giảm giá
@@ -293,12 +296,13 @@
                                 <table class="table table-bordered" style="align-items: center;text-align: center">
                                     <thead>
                                     <tr>
-                                        <th class="col-2" scope="col">ID</th>
+                                        <th class="col-1" scope="col">ID</th>
                                         <th class="col-2" scope="col">Điều kiện </th>
                                         <th class="col-2" scope="col">Giảm giá</th>
-                                        <th class="col-4" scope="col">Hạn sử dụng</th>
+                                        <th class="col-1" scope="col">SLSD/SL</th>
+                                        <th class="col-3" scope="col">Hạn sử dụng</th>
                                         <th class="col-2" scope="col">Trạng thái</th>
-                                        <th class="col-2" scope="col"></th>
+                                        <th class="col-1" scope="col"></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -307,6 +311,7 @@
                                             <th scope="col">{{this.code}}</th>
                                             <th scope="col">{{this.condition}}</th>
                                             <th scope="col">{{this.discount}}</th>
+                                            <th scope="col">{{this.used}} / {{this.value}}</th>
                                             <th scope="col"><p>{{this.startDate}}</p> <p style="margin-bottom: 0">{{this.endDate}}</p></th>
                                             <th scope="col">{{this.status}}</th>
                                             <th scope="col">
