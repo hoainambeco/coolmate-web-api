@@ -112,4 +112,9 @@ export class FavoriteVoucherCreate{
   @IsNotEmpty()
   @ApiProperty()
   voucherId: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty()
+  code : string;
 }

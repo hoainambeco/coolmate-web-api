@@ -165,6 +165,12 @@ export class FavoriteVoucherController {
   async FavoriteVoucherCreate(@Body() favoriteDto: FavoriteVoucherCreate){
     return await this.usersService.FavoriteVoucherCreate(favoriteDto.voucherId);
   }
+  @Post('code')
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({ status: 200, description: "The found record", type: FavoriteVoucherCreate })
+  async FavoriteVoucherCreateByCode(@Body() favoriteDto: FavoriteVoucherCreate){
+    return await this.usersService.FavoriteVoucherCreateByCode(favoriteDto.code);
+  }
   @Get()
   @UseGuards(JwtAuthGuard)
   @ApiResponse({ status: 200, description: "The found record", type: [FavoriteVoucherCreate] })
