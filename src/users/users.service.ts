@@ -507,7 +507,7 @@ export class UsersService {
   }
   async FavoriteVoucherCreateByCode(code: string) {
     const dataUser = AuthService.getAuthUser();
-    const user = await this.userRepository.findOneBy(dataUser.id);
+    const user = await this.userRepository.findOneBy(dataUser.id.toString());
     console.log(user);
     const favorite = await this.favoriteVoucherRepository.findOneBy({
       userId: ObjectId(dataUser.id),
