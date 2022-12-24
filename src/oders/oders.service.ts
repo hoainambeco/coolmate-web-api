@@ -15,6 +15,8 @@ import { QueryOderDto } from "./dto/query-oder.dto";
 import { OderDto } from "./dto/oder.dto";
 import { newUserMailTemplate2, templateNoticationCreateBill } from "../users/mail.template";
 import { sendMail } from "../utils/sendMail.util";
+import { StatusProductEnum } from "../enum/product";
+
 const REGEX = {
   NOT_DIGIT: /\D+/,
   BUSINESS_CODE: /^[a-zA-Z0-9]{10}$/,
@@ -107,10 +109,9 @@ export class OdersService {
           color.size.map((size) => {
             // @ts-ignore
             if (size.name === item.products.sizeName) {
-              if(size.productCount>0){
+              if (size.productCount > 0) {
                 size.productCount -= quantity;
-              }
-              else{
+              } else {
                 productSizeCount = size.productCount;
               }
             }
@@ -119,7 +120,7 @@ export class OdersService {
       });
       await this.productRepository.save({ ...product });
     });
-    if(productSizeCount>0){
+    if (productSizeCount > 0) {
       // console.log(productSizeCount);
       throw new ErrorException(HttpStatus.NOT_FOUND, "Product is sold out");
     }
@@ -131,8 +132,8 @@ export class OdersService {
       ...oder,
       carts: cart,
       voucherId: createOderDto.voucherId || [],
-      idPayment: createOderDto.idPayment || '',
-      vouchers: vouchers  || [],
+      idPayment: createOderDto.idPayment || "",
+      vouchers: vouchers || [],
       shippingStatus: [{ shippingStatus: ShippingStatus.CHO_XAC_NHAN, note: "", createdAt: new Date() }]
     });
     return createOderDto;
@@ -181,9 +182,9 @@ export class OdersService {
     // }
     // console.log(cart);
     oder.userId = user.id;
-      oder.idPayment=createOderDto.idPayment || '';
-      oder.shippingStatus= [{ shippingStatus: ShippingStatus.CHO_XAC_NHAN, note: "", createdAt: new Date() }]
-    await this.oderRepository.save(oder)
+    oder.idPayment = createOderDto.idPayment || "";
+    oder.shippingStatus = [{ shippingStatus: ShippingStatus.CHO_XAC_NHAN, note: "", createdAt: new Date() }];
+    await this.oderRepository.save(oder);
     return JSON.parse(JSON.stringify(oder));
   }
 
@@ -198,17 +199,18 @@ export class OdersService {
     let vouchers = [];
     let discount = 0;
     if (createOderDto.voucherId) {
+      let errorVoucher;
       createOderDto.voucherId.map(async (voucherId) => {
         if (!RegExp(REGEX.OBJECT_ID).test(voucherId)) {
-          throw new ErrorException(HttpStatus.FORBIDDEN, "Voucher id not match");
+          errorVoucher = "Voucher id not match";
         }
         // @ts-ignore
         const voucher = await this.voucherRepository.findOneBy(voucherId);
         if (!voucher) {
-          throw new ErrorException(HttpStatus.NOT_FOUND, "Voucher not found");
+          errorVoucher = "Voucher not found";
         }
         if (voucher.value <= 0) {
-          throw new ErrorException(HttpStatus.NOT_FOUND, "Voucher is used");
+          errorVoucher = "Voucher is used";
         } else {
           voucher.value -= 1;
           voucher.used += 1;
@@ -217,32 +219,19 @@ export class OdersService {
         vouchers.push(voucher);
         discount += voucher.discount;
       });
-
+      if (errorVoucher) {
+        throw new ErrorException(HttpStatus.NOT_FOUND, errorVoucher);
+      }
       // @ts-ignore
       oder.vouchers = vouchers;
     }
-    // if(!createOderDto.cartId){
-    //   throw new ErrorException(HttpStatus.NOT_FOUND, "CartID not found");
-    // }
-    // // @ts-ignore
-    // const cart = await this.cartRepository.findOneBy(createOderDto.cartId);
-    // if (!cart) {
-    //   throw new ErrorException(HttpStatus.NOT_FOUND, "Cart not found");
-    // }
-    // console.log(cart);
     oder.userId = user.id;
-      oder.idPayment=createOderDto.idPayment || '';
-      oder.shippingStatus= [{ shippingStatus: ShippingStatus.CHO_XAC_NHAN, note: "", createdAt: new Date() }]
-    await this.oderRepository.save(oder)
+    oder.idPayment = createOderDto.idPayment || "";
+    oder.shippingStatus = [{ shippingStatus: ShippingStatus.CHO_XAC_NHAN, note: "", createdAt: new Date() }];
+    await this.oderRepository.save(oder);
     await this.updateOrder(oder.id.toString(), discount);
-    const mailContent = templateNoticationCreateBill(user.fullName, oder.id.toString(),oder.customerName, oder.numberPro,oder.total.toString());
-    try {
-      await sendMail('namxg1@gmail.com', "[CoolMate] THÔNG BÁO BẠN CÓ ĐƠN HÀNG MỚI", mailContent,['admin@coolmate.com'], ['quannmph14304@fpt.edu.vn','hoainambeco@pimob.onmicrosoft.com']);
-      // await sendMail('quannm18@gmail.com', "[CoolMate] THÔNG BÁO BẠN CÓ ĐƠN HÀNG MỚI", mailContent, ['quannm18@gmail.com','namxg1@gmail.com']);
-    } catch (error) {
-      console.log(error);
-    }
-
+    // @ts-ignore
+    await this.sendMail(user, await this.oderRepository.findOneBy(oder.id.toString()));
     return JSON.parse(JSON.stringify(oder));
   }
 
@@ -250,20 +239,20 @@ export class OdersService {
     const user = AuthService.getAuthUser();
     let option = {
       where: {
-        userId: user.id,
+        userId: user.id
       },
       order: {}
-    }
+    };
     if (query.pay) {
-      option = Object.assign(option, {where: {...option.where, status: query.pay}})
+      option = Object.assign(option, { where: { ...option.where, status: query.pay } });
     }
     if (query.ship) {
       option = Object.assign(option, {
         where: {
           ...option.where,
-          shippingStatus: {$elemMatch: {shippingStatus: query.ship}}
+          shippingStatus: { $elemMatch: { shippingStatus: query.ship } }
         },
-        project:{shippingStatus:{$slice: -1}}
+        project: { shippingStatus: { $slice: -1 } }
       });
     }
 
@@ -289,14 +278,15 @@ export class OdersService {
     // console.log(listOders);
     let ListBill: OderDto[];
     ListBill = JSON.parse(JSON.stringify(listOders));
-    if(query.ship){
+    if (query.ship) {
       ListBill = JSON.parse(JSON.stringify(listOders.map(option => {
         //@ts-ignore
-        if (option.shippingStatus[option.shippingStatus.length-1].shippingStatus == query.ship) {
-          return option
-        }})));
+        if (option.shippingStatus[option.shippingStatus.length - 1].shippingStatus == query.ship) {
+          return option;
+        }
+      })));
     }
-    var filtered = ListBill.filter(function (el) {
+    var filtered = ListBill.filter(function(el) {
       return el != null;
     });
     return JSON.parse(JSON.stringify(filtered));
@@ -343,9 +333,9 @@ export class OdersService {
         voucher.used -= 1;
         voucher.value += 1;
         await this.voucherRepository.save(voucher);
-        const mailContent = templateNoticationCreateBill(user.fullName, oder.id.toString(),oder.customerName, oder.numberPro,oder.total.toString());
+        const mailContent = templateNoticationCreateBill(user.fullName, oder.id.toString(), oder.customerName, oder.numberPro, oder.total.toString());
         try {
-          await sendMail('namxg1@gmail.com', "[CoolMate] THÔNG BÁO BẠN CÓ ĐƠN HÀNG MỚI CẬP NHẬT", mailContent,['admin@coolmate.com'], ['quannmph14304@fpt.edu.vn','hoainambeco@pimob.onmicrosoft.com']);
+          await sendMail("namxg1@gmail.com", "[CoolMate] THÔNG BÁO BẠN CÓ ĐƠN HÀNG MỚI CẬP NHẬT", mailContent, ["admin@coolmate.com"], ["quannmph14304@fpt.edu.vn", "hoainambeco@pimob.onmicrosoft.com"]);
         } catch (error) {
           console.log(error);
         }
@@ -385,25 +375,29 @@ export class OdersService {
     return JSON.parse(JSON.stringify(oder));
   }
 
-  async updateOrder (id:string, discount){
+  async updateOrder(id: string, discount) {
     // @ts-ignore
     const oder = await this.oderRepository.findOneBy(id);
     let oderTotal = 0;
     let CountProduct = 0;
     let productSizeCount = 0;
+    let errorProduct;
     oder.cartProduct.map(async (item) => {
       // @ts-ignore
       const product = await this.productRepository.findOneBy(item.productId);
       // console.log(product);
-      // if (!product) {
-      //   throw new ErrorException(HttpStatus.NOT_FOUND, "Product not found");
-      // }
-      // if (product.productCount <= 0) {
-      //   throw new ErrorException(HttpStatus.NOT_FOUND, "Product is sold out");
-      // }
+      if (!product) {
+        errorProduct = "Product not found";
+      }
+      if (product.status === StatusProductEnum.HET_HANG) {
+        errorProduct = "Product out of stock";
+      }
+      if (product.productCount <= 0) {
+        errorProduct = "Product out of stock";
+      }
       const sellingPrice = product.sellingPrice;
       const quantity = item.quantity;
-      oderTotal = await(oderTotal + (sellingPrice * quantity));
+      oderTotal = await (oderTotal + (sellingPrice * quantity));
       oder.total += oderTotal;
       // console.log(oderTotal);
       CountProduct += quantity;
@@ -415,11 +409,10 @@ export class OdersService {
           color.size.map((size) => {
             // @ts-ignore
             if (size.name === product.sizeName) {
-              if(size.productCount>0){
+              if (size.productCount > 0) {
                 size.productCount -= quantity;
-              }
-              else{
-                productSizeCount = size.productCount;
+              } else {
+                errorProduct = ("Product out of stock");
               }
             }
           });
@@ -428,21 +421,23 @@ export class OdersService {
       // @ts-ignore
       item.product = await JSON.parse(JSON.stringify(product));
       await this.productRepository.save({ ...product });
-    })
-    if(productSizeCount>0){
-      // console.log(productSizeCount);
-      throw new ErrorException(HttpStatus.NOT_FOUND, "Product is sold out");
+    });
+    if (errorProduct) {
+      console.log(errorProduct);
+      await this.oderRepository.delete(id);
+      throw new ErrorException(HttpStatus.NOT_FOUND, errorProduct);
     }
     oder.total = await (oder.total - (oder.total * discount / 100));
     return await this.oderRepository.save({
       ...oder,
       total: await this.oderTotal(oder.id.toString(), discount),
       numberPro: oder.cartProduct.length,
-      idPayment:oder.idPayment || '',
+      idPayment: oder.idPayment || "",
       shippingStatus: [{ shippingStatus: ShippingStatus.CHO_XAC_NHAN, note: "", createdAt: new Date() }]
     });
   }
-  async oderTotal(id:string, discount?:number){
+
+  async oderTotal(id: string, discount?: number) {
     let oderTotal = 0;
     let CountProduct = 0;
     let productSizeCount = 0;
@@ -460,7 +455,7 @@ export class OdersService {
       }
       const promotionalPrice = product.promotionalPrice;
       const quantity = item.quantity;
-      oderTotal = await(oderTotal + (promotionalPrice * quantity));
+      oderTotal = await (oderTotal + (promotionalPrice * quantity));
       oder.total += oderTotal;
       CountProduct += quantity;
       product.productCount = product.productCount - quantity;
@@ -471,17 +466,26 @@ export class OdersService {
           color.size.map((size) => {
             // @ts-ignore
             if (size.name === product.sizeName) {
-              if(size.productCount>0){
+              if (size.productCount > 0) {
                 size.productCount -= quantity;
-              }
-              else{
+              } else {
                 productSizeCount = size.productCount;
               }
             }
           });
         }
-      })
+      });
     }
     return (oderTotal - (oderTotal * discount / 100));
+  }
+
+  async sendMail(user, oder) {
+    const mailContent = templateNoticationCreateBill(user.fullName, oder.id.toString(), oder.customerName, oder.numberPro, oder.total.toString());
+    try {
+      await sendMail("namxg1@gmail.com", "[CoolMate] THÔNG BÁO BẠN CÓ ĐƠN HÀNG MỚI", mailContent, ["admin@coolmate.com"], ["quannmph14304@fpt.edu.vn", "hoainambeco@pimob.onmicrosoft.com"]);
+      // await sendMail('quannm18@gmail.com', "[CoolMate] THÔNG BÁO BẠN CÓ ĐƠN HÀNG MỚI", mailContent, ['quannm18@gmail.com','namxg1@gmail.com']);
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

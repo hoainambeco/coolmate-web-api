@@ -767,8 +767,11 @@ export class AppService {
         });
         // @ts-ignore
         bill.shippingStatus = list;
-        // @ts-ignore
-        let voucher= await this.voucherRepository.findOneBy(bill.voucherId[0])
+        let voucher
+        if(bill.voucherId[0]){
+            // @ts-ignore
+            voucher = await this.voucherRepository.findOneBy(bill.voucherId[0])
+        }
 
 
 
