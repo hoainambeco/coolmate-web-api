@@ -188,6 +188,7 @@ export class OdersService {
     const oder = await this.oderRepository.create({
       ...createOderDto,
       cartProduct: createOderDto.cartProduct,
+      total: 0,
       shippingStatus: [{ shippingStatus: ShippingStatus.CHO_XAC_NHAN, note: "", createdAt: new Date() }]
     });
     let vouchers = [];
@@ -229,6 +230,7 @@ export class OdersService {
       oder.idPayment=createOderDto.idPayment || '';
       oder.shippingStatus= [{ shippingStatus: ShippingStatus.CHO_XAC_NHAN, note: "", createdAt: new Date() }]
     await this.oderRepository.save(oder)
+    await this.updateOrder(oder.id.toString(), discount);
     return JSON.parse(JSON.stringify(oder));
   }
 
@@ -314,5 +316,79 @@ export class OdersService {
     oder.shippingStatus = [...oder.shippingStatus];
     await this.oderRepository.save(oder);
     return JSON.parse(JSON.stringify(oder));
+  }
+
+  async updateOrder (id:string, discount){
+    // @ts-ignore
+    const oder = await this.oderRepository.findOneBy(id);
+    let oderTotal = 0;
+    let CountProduct = 0;
+    let productSizeCount = 0;
+    oder.cartProduct.map(async (item) => {
+      // @ts-ignore
+      const product = await this.productRepository.findOneBy(item.productId);
+      // console.log(product);
+      // if (!product) {
+      //   throw new ErrorException(HttpStatus.NOT_FOUND, "Product not found");
+      // }
+      // if (product.productCount <= 0) {
+      //   throw new ErrorException(HttpStatus.NOT_FOUND, "Product is sold out");
+      // }
+      const sellingPrice = product.sellingPrice;
+      const quantity = item.quantity;
+      oderTotal = await(oderTotal + (sellingPrice * quantity));
+      oder.total += oderTotal;
+      // console.log(oderTotal);
+      CountProduct += quantity;
+      product.productCount = product.productCount - quantity;
+      product.quantitySold = product.quantitySold + quantity;
+      product.color.map(async (color) => {
+        // @ts-ignore
+        if (color.name === product.colorName) {
+          color.size.map((size) => {
+            // @ts-ignore
+            if (size.name === product.sizeName) {
+              if(size.productCount>0){
+                size.productCount -= quantity;
+              }
+              else{
+                productSizeCount = size.productCount;
+              }
+            }
+          });
+        }
+      });
+      // @ts-ignore
+      item.product = await JSON.parse(JSON.stringify(product));
+      // await this.productRepository.save({ ...product });
+    })
+    if(productSizeCount>0){
+      console.log(productSizeCount);
+      throw new ErrorException(HttpStatus.NOT_FOUND, "Product is sold out");
+    }
+    console.log(this.oderTotal(oder.id.toString()));
+    oder.total = await (oder.total - (oder.total * discount / 100));
+    return await this.oderRepository.save({
+      ...oder,
+      numberPro: oder.cartProduct.length,
+      idPayment:oder.idPayment || '',
+      shippingStatus: [{ shippingStatus: ShippingStatus.CHO_XAC_NHAN, note: "", createdAt: new Date() }]
+    });
+  }
+  async oderTotal(id:string){
+    // @ts-ignore
+    const oder = await this.oderRepository.findOneBy(id);
+    let oderTotal = oder.cartProduct.map(async (item) => {
+      // @ts-ignore
+      const product = await this.productRepository.findOneBy(item.productId);
+      if (!product) {
+        throw new ErrorException(HttpStatus.NOT_FOUND, "Product not found");
+      }
+      const sellingPrice = product.sellingPrice;
+      const quantity = item.quantity;
+      return oderTotal += await(oderTotal + (sellingPrice * quantity));
+      // oder.total += oderTotal;
+    })
+    return JSON.parse(JSON.stringify(oderTotal));
   }
 }

@@ -33,7 +33,7 @@ export class OdersController {
   }
   @Post('create-by-item-carts-v2')
   createByProductIdV2(@Body() createOderDto: CreateOderByProductDto) {
-    return this.odersService.createByProductId(createOderDto);
+    return this.odersService.createByProductIdV2(createOderDto);
   }
 
   @Get()
