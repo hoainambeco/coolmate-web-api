@@ -192,12 +192,11 @@ export class AppController {
     }
 
     @Post("userInfo/:id")
-    postUpdateUser(@Req() req, @Res() res
-    ) {
+    postUpdateUser(@Req() req, @Res() res,@Param("id") param) {
         if (!req.session.user) {
             res.redirect('/login')
         }
-        return this.appService.postUpdateUser(req, res);
+        return this.appService.postUpdateUser(req, res,param);
     }
 
     @Post("/searchUser")

@@ -525,9 +525,10 @@ export class AppService {
         return res.render("./profile", {user: user, nameNav: nameNav, idUser: idUser, avatar: avatar});
     }
 
-    async postUpdateUser(req, res): Promise<UserDto> {
+    async postUpdateUser(req, res , id): Promise<UserDto> {
+        console.log(req.body)
         // @ts-ignore
-        let user = await this.userRepository.findOneBy(req.body.id);
+        let user = await this.userRepository.findOneBy(req.body.updateUserID);
 
         if (!user) {
             throw new ErrorException(HttpStatus.NOT_FOUND, "user not found");
@@ -538,8 +539,9 @@ export class AppService {
         } catch (e) {
             console.log(e);
         }
-        await this.userRepository.save(user);
-        return res.render("./profile", {user: user});
+        console.log(user)
+        await this.userRepository.update(user.id,user);
+        return res.redirect("/userInfo/"+id)
     }
 
     async postSearchUser(req, res) {
