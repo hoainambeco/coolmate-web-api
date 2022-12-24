@@ -98,7 +98,7 @@ export class ProductService {
         productName: { $regex: queryProductDto.productName, $options: "i" },
         status: queryProductDto.status,
         brand: { $regex: queryProductDto.brand, $options: "i" },
-        price: {
+        sellingPrice: {
           $gte: queryProductDto.priceTo,
           $lte: queryProductDto.priceFrom
         },
@@ -133,13 +133,13 @@ export class ProductService {
       delete options.where.brand;
     }
     if (!queryProductDto.priceFrom) {
-      delete options.where.price.$lte;
+      delete options.where.sellingPrice.$lte;
     }
     if (!queryProductDto.priceTo) {
-      delete options.where.price.$gte;
+      delete options.where.sellingPrice.$gte;
     }
     if (!queryProductDto.priceFrom && !queryProductDto.priceTo) {
-      delete options.where.price;
+      delete options.where.sellingPrice;
     }
     if (!queryProductDto.rating) {
       delete options.where.ratingAvg;
