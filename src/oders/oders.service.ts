@@ -11,6 +11,8 @@ import { Product } from "../product/entities/product.entity";
 import { ObjectId } from "mongodb";
 import { Repository } from "typeorm";
 import { response } from "express";
+import { QueryOderDto } from "./dto/query-oder.dto";
+import { OderDto } from "./dto/oder.dto";
 const REGEX = {
   NOT_DIGIT: /\D+/,
   BUSINESS_CODE: /^[a-zA-Z0-9]{10}$/,
@@ -234,12 +236,60 @@ export class OdersService {
     return JSON.parse(JSON.stringify(oder));
   }
 
-  async findAll() {
-    const listOders = await this.oderRepository.find({
-      order: { updatedAt: "ASC" }
+  async findAll(query: QueryOderDto) {
+    const user = AuthService.getAuthUser();
+    let option = {
+      where: {
+        userId: user.id,
+      },
+      order: {}
+    }
+    if (query.pay) {
+      option = Object.assign(option, {where: {...option.where, status: query.pay}})
+    }
+    if (query.ship) {
+      option = Object.assign(option, {
+        where: {
+          ...option.where,
+          shippingStatus: {$elemMatch: {shippingStatus: query.ship}}
+        },
+        project:{shippingStatus:{$slice: -1}}
+      });
+    }
+
+    // switch (parseInt(query.sort)) {
+    //   case 0:
+    //     option = Object.assign(option, {order: {updatedAt: "DESC"}});
+    //     console.log(option)
+    //     break;
+    //   case 1:
+    //     option = Object.assign(option, {order: {updatedAt: "ASC"}});
+    //     break;
+    //   case 2:
+    //     option = Object.assign(option, {order: {createdAt: "DESC"}});
+    //     break;
+    //   case 3:
+    //     option = Object.assign(option, {order: {createdAt: "ASC"}});
+    //     break;
+    //   default:
+    //     break;
+    // }
+    // console.log(option);
+    const listOders = await this.oderRepository.find(option);
+    // console.log(listOders);
+    let ListBill: OderDto[];
+    ListBill = JSON.parse(JSON.stringify(listOders));
+    if(query.ship){
+      ListBill = JSON.parse(JSON.stringify(listOders.map(option => {
+        //@ts-ignore
+        if (option.shippingStatus[option.shippingStatus.length-1].shippingStatus == query.ship) {
+          return option
+        }})));
+    }
+    var filtered = ListBill.filter(function (el) {
+      return el != null;
     });
-    console.log(listOders);
-    return JSON.parse(JSON.stringify(listOders));
+    return JSON.parse(JSON.stringify(filtered));
   }
 
   async findOne(id: string) {
