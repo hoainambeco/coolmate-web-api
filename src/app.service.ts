@@ -765,11 +765,13 @@ export class AppService {
 
             };
         });
-
-
         // @ts-ignore
         bill.shippingStatus = list;
-        console.log(bill.shippingStatus);
+        // @ts-ignore
+        let voucher= await this.voucherRepository.findOneBy(bill.voucherId[0])
+
+
+
         var nameList = req.session.user.fullName.split(" ");
 
         var nameNav = "";
@@ -778,10 +780,9 @@ export class AppService {
         } else {
             nameNav = nameList[0];
         }
-
         var idUser = req.session.user.id;
         var avatar = req.session.user.avatar;
-        return res.render("./detailBill", {bill: bill, nameNav: nameNav, idUser: idUser, avatar: avatar});
+        return res.render("./detailBill", {bill: bill,voucher: voucher, nameNav: nameNav, idUser: idUser, avatar: avatar});
     }
 
     async postUpdateStatusBill(req, res, id): Promise<OderDto> {
@@ -825,7 +826,7 @@ export class AppService {
         notification.title = "Cập nhật trạg thái đơn hàng";
         notification.content = "Đơn hàng:" + id+". Của bạn: "+ bill.status+" lúc" + format(new Date(bill.updatedAt), "dd-MM-yyyy");
         notification.userId = null;
-        notification.file = 'https://www.google.com/url?sa=i&url=https%3A%2F%2Ftiki.vn%2Fcua-hang%2Fbasic-wear-4men&psig=AOvVaw2UbkNT0wgGKxXmj3oJDhdY&ust=1671632690571000&source=images&cd=vfe&ved=0CBAQjRxqFwoTCJjX75eziPwCFQAAAAAdAAAAABAS';
+        notification.file = 'https://coolmate.pimob.me/image/logo-app.svg';
         notification.createdAt = new Date() || null;
         notification.updatedAt = new Date() || null;
         notification.deletedAt = null;
@@ -837,9 +838,9 @@ export class AppService {
         getMessaging().send({
             android: {
                 notification: {
-                    title: notification.title,
-                    body: notification.content,
-                    imageUrl: notification.file.split("\\").join("/")
+                    title: "Cập nhật trạng thái đơn hàng",
+                    body: "Đơn hàng có mã:\n" + id+" của bạn\n"+ bill.status+" vào lúc " + format(new Date(bill.updatedAt), "dd-MM-yyyy"),
+                    imageUrl:'https://coolmate.pimob.me/image/logo-app.svg'
                 }
             },
             token: user.registrationToken
@@ -1016,17 +1017,18 @@ export class AppService {
 
     //voucher
     async getVoucher(req, res) {
-        const listVoucher = await this.voucherRepository.find();
-        listVoucher.map((voucher) => {
+        const listVoucherFind = await this.voucherRepository.find();
+        listVoucherFind.map((voucher) => {
+            console.log(voucher);
             return {
                 ...voucher,
                 id: voucher.id.toString(),
-                startDate: format(new Date(voucher.startDate), "HH:mm dd-MM-yyyy"),
-                endDate: format(new Date(voucher.endDate), "HH:mm dd-MM-yyyy"),
-
-
+                startDate: format( new Date(voucher.startDate), "HH:mm dd-MM-yyyy"),
+                endDate: format( new Date(voucher.endDate), "HH:mm dd-MM-yyyy"),
             };
+
         });
+        console.log(listVoucherFind)
         var nameList = req.session.user.fullName.split(" ");
 
         var nameNav = "";
@@ -1038,7 +1040,7 @@ export class AppService {
 
         var idUser = req.session.user.id;
         var avatar = req.session.user.avatar;
-        res.render("./voucher", {listVoucher, nameNav: nameNav, idUser: idUser, avatar: avatar});
+        res.render("./voucher", {listVoucher :listVoucherFind, nameNav: nameNav, idUser: idUser, avatar: avatar});
     }
 
     async postAddVoucher(req, res) {
@@ -1078,10 +1080,6 @@ export class AppService {
 
             });
         }
-
-
-
-
         const user = await this.userRepository.findOneBy({where: {email: req.body.email}});
         const voucher = this.voucherRepository.create({
             code: req.body.code,
@@ -1089,9 +1087,9 @@ export class AppService {
             discount: parseInt(req.body.value),
             description: req.body.description,
             value: req.body.soluong,
-            status: req.body.status,
-            startDate: req.body.startDate,
-            endDate: req.body.endDate,
+            status: "Còn mã",
+            startDate: new Date(req.body.startDate) ,
+            endDate: new Date(req.body.endDate) ,
             type: req.body.type || "",
             isMonopoly: !!req.body.email || !!req.body.userId || false,
             used: 0,

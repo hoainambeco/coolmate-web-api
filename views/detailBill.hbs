@@ -135,8 +135,8 @@
                         </div>
                         <div class="col-3">
 
-                            <div><span> Voucher:</span> <span style="color: black;font-weight: 700">001 </span></div>
-                            <div><span> Giảm :</span> <span style="color: black;font-weight: 700">...</span></div>
+                            <div><span> Voucher:</span> <span style="color: black;font-weight: 700">{{voucher.code}} </span></div>
+                            <div><span> Giảm :</span> <span style="color: black;font-weight: 700">{{voucher.discount}} VNĐ</span></div>
                             <div><span> Tổng thanh toán:</span> <span
                                     style="color: black;font-weight: 700" id="total_bill"> </span>
 
@@ -163,9 +163,8 @@
                 <!-- Button trigger modal -->
                 <div style="width: 95%;padding: 0;height: 52px;margin-left: 20px">
                     <button class="btn btn-outline-primary btn-lg" data-bs-toggle="modal"
-                            style="width: 280px;height: 50px;font-size: 16px"
-                            data-bs-target="#updateUser" onclick="editUser('{{bill.status}}')">Chỉnh sửa trạng thái
-                        thanh toán
+                            style="width: 280px;height: 50px;font-size: 16px;display: none"
+                            data-bs-target="#updateUser" onclick="editUser('{{bill.status}}')">Chỉnh sửa trạng thái thanh toán
                     </button>
                     <button class="btn btn-outline-primary btn-lg" data-bs-toggle="modal"
                             style="width: 280px;height: 50px;font-size: 16px; margin-left: 20px"
@@ -189,25 +188,25 @@
                             </thead>
                             <tbody id="product_list_color">
 
-                            {{#each bill.carts.carts}}
+                            {{#each bill.cartProduct}}
                                 <tr>
                                     <th>
                                         <p id="stt_{{@index}}"></p>
                                     </th>
 
                                     <th>
-                                        <p>{{this.products.product.productName}}</p>
+                                        <p>{{this.product.productName}}</p>
 
                                     </th>
                                     <th>
-                                        <p>{{this.products.quantity}}</p>
+                                        <p>{{this.quantity}}</p>
                                     </th>
 
                                     <th>
-                                        <p>{{this.products.colorName}} - {{this.products.sizeName}}</p>
+                                        <p>{{this.colorName}} - {{this.sizeName}}</p>
                                     </th>
                                     <th>
-                                        <p>{{this.products.product.promotionalPrice}}</p>
+                                        <p>{{this.product.promotionalPrice}}</p>
                                     </th>
 
                                 </tr>
@@ -306,7 +305,7 @@
 </div>
 </div>
 <script>
-        {{#each bill.carts.carts}}
+        {{#each bill.cartProduct}}
         document.getElementById("stt_{{@index}}").innerHTML = Number({{@index}}) + 1;
         {{/each}}
     function editUser(status) {
