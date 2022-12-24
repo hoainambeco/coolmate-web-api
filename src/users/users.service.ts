@@ -509,16 +509,6 @@ export class UsersService {
     const dataUser = AuthService.getAuthUser();
     const user = await this.userRepository.findOneBy(dataUser.id);
     console.log(user);
-    const favorite = await this.favoriteVoucherRepository.findOneBy({
-      userId: ObjectId(dataUser.id),
-      code: code
-    });
-    if (favorite) {
-      throw new ErrorException(
-        HttpStatus.BAD_REQUEST,
-        "FAVORITE_VOUCHER_EXISTED"
-      );
-    }
     const voucher = await this.voucherRepository.findOneBy({code: code});
     if (!voucher) {
       throw new ErrorException(
@@ -526,6 +516,17 @@ export class UsersService {
         "VOUCHER_NOT_FOUND"
       );
     }
+    const favorite = await this.favoriteVoucherRepository.findOneBy({
+      userId: ObjectId(dataUser.id),
+      voucherId: voucher.id.toString(),
+    });
+    if (favorite) {
+      throw new ErrorException(
+        HttpStatus.BAD_REQUEST,
+        "FAVORITE_VOUCHER_EXISTED"
+      );
+    }
+
     const newFavorite = await this.favoriteVoucherRepository.create({
       userId: user.id,
       voucherId: voucher.id.toString(),
