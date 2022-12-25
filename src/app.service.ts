@@ -772,6 +772,7 @@ export class AppService {
             // @ts-ignore
             voucher = await this.voucherRepository.findOneBy(bill.voucherId[0])
         }
+        let User = await this.userRepository.findOneBy(bill.userId);
 
 
 
@@ -785,7 +786,7 @@ export class AppService {
         }
         var idUser = req.session.user.id;
         var avatar = req.session.user.avatar;
-        return res.render("./detailBill", {bill: bill,voucher: voucher, nameNav: nameNav, idUser: idUser, avatar: avatar});
+        return res.render("./detailBill", {bill: bill,user:User,voucher: voucher, nameNav: nameNav, idUser: idUser, avatar: avatar});
     }
 
     async postUpdateStatusBill(req, res, id): Promise<OderDto> {
@@ -844,8 +845,6 @@ export class AppService {
                     }
                     await this.productRepository.update(product.id, product);
                 });
-
-
             }
         } catch (e) {
             console.log(e);
