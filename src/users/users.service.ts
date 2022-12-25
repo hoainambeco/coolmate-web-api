@@ -1,7 +1,7 @@
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Favorite, FavoriteVoucher, User } from "./entities/user.entity";
-import { MongoRepository, Repository } from "typeorm";
+import { IsNull, MongoRepository, Repository } from "typeorm";
 import { FavoriteDto, UserDto } from "./dto/user.dto";
 import { ErrorException } from "../exceptions/error.exception";
 import * as bcrypt from "bcrypt";
@@ -25,7 +25,6 @@ import { ObjectId } from "mongodb";
 import { format } from "date-fns";
 
 export const userSchema = mongoose.model("users", new mongoose.Schema(User));
-// export const billSchema = mongoose.model("bills", new mongoose.Schema(Oder));
 
 @Injectable()
 export class UsersService {
@@ -491,11 +490,9 @@ export class UsersService {
     const dataUser = AuthService.getAuthUser();
     const user = await this.userRepository.findOneBy(dataUser.id);
     // console.log(user);
-    const favorite = await this.favoriteVoucherRepository.findOneBy({
-      userId: ObjectId(dataUser.id),
-      voucherId: voucherId
-    });
-    if (favorite) {
+    const favorite = await this.favoriteVoucherRepository.findBy({userId: user.id, voucherId: voucherId });
+    // console.log(favorite);
+    if (favorite.length > 0) {
       throw new ErrorException(
         HttpStatus.BAD_REQUEST,
         "FAVORITE_VOUCHER_EXISTED"
@@ -514,7 +511,8 @@ export class UsersService {
       voucher: voucher,
       createdAt: new Date(),
       updatedAt: new Date(),
-      deletedAt: null
+      deletedAt: null,
+      status: 'ACTIVE'
     });
     await this.favoriteVoucherRepository.save(newFavorite);
     return JSON.parse(JSON.stringify(newFavorite));
@@ -547,7 +545,8 @@ export class UsersService {
       voucher: voucher,
       createdAt: new Date(),
       updatedAt: new Date(),
-      deletedAt: null
+      deletedAt: null,
+      status: 'ACTIVE'
     });
     await this.favoriteVoucherRepository.save(newFavorite);
     return JSON.parse(JSON.stringify(newFavorite));
@@ -557,22 +556,16 @@ export class UsersService {
     const dataUser = AuthService.getAuthUser();
     const user = await this.userRepository.findOneBy({ id: dataUser.id });
     const favorite = await this.favoriteVoucherRepository.findOneBy({
-      userId: user.id,
+      userId: ObjectId(dataUser.id),
       voucherId: voucherId
-    }) || await this.favoriteVoucherRepository.findOneBy({
-      userId: user.id,
-      voucherId: ObjectId(voucherId)
-    }) || await this.favoriteVoucherRepository.findOneBy({
-      userId: user.id,
-      _id: ObjectId(voucherId)
-    });
+    })
     if (!favorite) {
       throw new ErrorException(
         HttpStatus.BAD_REQUEST,
         "FAVORITE_VOUCHER_NOT_EXISTED"
       );
     }
-    await this.favoriteVoucherRepository.delete(favorite.id);
+    await this.favoriteVoucherRepository.update(favorite.id,{status: 'INACTIVE'});
     return JSON.parse(JSON.stringify(favorite));
   }
 
@@ -580,7 +573,7 @@ export class UsersService {
     const dataUser = AuthService.getAuthUser();
     // console.log(dataUser);
     const user = await this.userRepository.findOneBy({ id: dataUser.id.toString() });
-    const favorite = await this.favoriteVoucherRepository.findBy({ userId: user.id });
+    const favorite = await this.favoriteVoucherRepository.findBy({ userId: ObjectId(dataUser.id.toString()), status: 'ACTIVE' });
     return JSON.parse(JSON.stringify(favorite));
   }
   async getBillInMonth(month){

@@ -196,7 +196,7 @@ export class QuanController {
 
   @Get("quan-order")
   @UseGuards(JwtAuthGuard)
-  @ApiResponse({ status: 200, description: "Quân yêu cầu thêm DM nó"})
+  @ApiResponse({ status: 200, description: "Hiện thị số lượng hóa đơn"})
   async getQuanOrder() {
     return await this.usersService.getQuanOrder();
   }
