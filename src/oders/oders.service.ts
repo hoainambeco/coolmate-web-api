@@ -362,7 +362,7 @@ export class OdersService {
     // }
     const mailContent = templateNoticationCreateBill(user.fullName, oder.id.toString(), oder.id.toString(), oder.numberPro, oder.total.toString());
     try {
-      await sendMail("namxg1@gmail.com", "[CoolMate] THÔNG BÁO BẠN CÓ ĐƠN HÀNG MỚI CẬP NHẬT", mailContent, ["admin@coolmate.com"], ["quannmph14304@fpt.edu.vn", "hoainambeco@pimob.onmicrosoft.com"]);
+      await sendMail("coolmate.mail@gmail.com", "[CoolMate] THÔNG BÁO BẠN CÓ ĐƠN HÀNG MỚI CẬP NHẬT", mailContent, ["namxg1@gmail.com"], ["quannmph14304@fpt.edu.vn", "hoainambeco@pimob.onmicrosoft.com"]);
     } catch (error) {
       console.log(error);
     }
@@ -483,7 +483,7 @@ export class OdersService {
   async sendMail(user, oder) {
     const mailContent = templateNoticationCreateBill(user.fullName, oder.id.toString(), oder.id.toString(), oder.numberPro, oder.total.toString());
     try {
-      await sendMail("namxg1@gmail.com", "[CoolMate] THÔNG BÁO BẠN CÓ ĐƠN HÀNG MỚI", mailContent, ["admin@coolmate.com"], ["quannmph14304@fpt.edu.vn", "hoainambeco@pimob.onmicrosoft.com"]);
+      await sendMail("coolmate.mail@gmail.com", "[CoolMate] THÔNG BÁO BẠN CÓ ĐƠN HÀNG MỚI", mailContent, ["namxg1@gmail.com"], ["quannmph14304@fpt.edu.vn", "hoainambeco@pimob.onmicrosoft.com"]);
       // await sendMail('quannm18@gmail.com', "[CoolMate] THÔNG BÁO BẠN CÓ ĐƠN HÀNG MỚI", mailContent, ['quannm18@gmail.com','namxg1@gmail.com']);
     } catch (error) {
       console.log(error);
