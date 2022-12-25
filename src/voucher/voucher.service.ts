@@ -65,13 +65,13 @@ export class VoucherService {
         }
       });
     }
-    console.log(options);
+    // console.log(options);
     const listVoucher = await this.voucherRepository.find(options);
     return JSON.parse(JSON.stringify(listVoucher));
   }
 
   async findOne(id: string):Promise<ProductDto> {
-    console.log(id);
+    // console.log(id);
     // @ts-ignore
     const voucher = await this.voucherRepository.findOneBy(id);
     if (!voucher) {

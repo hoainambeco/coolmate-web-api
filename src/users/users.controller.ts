@@ -185,3 +185,19 @@ export class FavoriteVoucherController {
     return await this.usersService.FavoriteVoucherDelete(voucherId);
   }
 }
+@Controller("quan")
+@ApiTags("quan")
+@UseInterceptors(AuthUserInterceptor)
+@ApiBearerAuth()
+export class QuanController {
+  constructor(private readonly usersService: UsersService) {
+  }
+
+
+  @Get("quan-order")
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({ status: 200, description: "Hiện thị số lượng hóa đơn"})
+  async getQuanOrder() {
+    return await this.usersService.getQuanOrder();
+  }
+}

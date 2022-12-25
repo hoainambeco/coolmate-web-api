@@ -81,4 +81,5 @@ export class FavoriteVoucher {
   @UpdateDateColumn() updatedAt: Date;
   @DeleteDateColumn() deletedAt: Date;
   @Column() voucher: Voucher;
+  @Column() status: string;
 }

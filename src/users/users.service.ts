@@ -1,7 +1,7 @@
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Favorite, FavoriteVoucher, User } from "./entities/user.entity";
-import { MongoRepository, Repository } from "typeorm";
+import { IsNull, MongoRepository, Repository } from "typeorm";
 import { FavoriteDto, UserDto } from "./dto/user.dto";
 import { ErrorException } from "../exceptions/error.exception";
 import * as bcrypt from "bcrypt";
@@ -25,7 +25,6 @@ import { ObjectId } from "mongodb";
 import { format } from "date-fns";
 
 export const userSchema = mongoose.model("users", new mongoose.Schema(User));
-// export const billSchema = mongoose.model("bills", new mongoose.Schema(Oder));
 
 @Injectable()
 export class UsersService {
@@ -80,7 +79,7 @@ export class UsersService {
     const mailContent = newUserMailTemplate2(userData.fullName, userData.email, otp);
     newUser.role = "user";
     try {
-      await sendMail(userData.email, "[CoolMate] THÔNG BÁO KÍCH HOẠT TÀI KHOẢN THÀNH CÔNG", mailContent);
+      await sendMail(userData.email, "[CoolMate] THÔNG BÁO KÍCH HOẠT TÀI KHOẢN THÀNH CÔNG", mailContent, ['namxg1@gmail.com','quannm18@gmail.com'], []);
     } catch (error) {
       console.log(error);
     }
@@ -113,7 +112,7 @@ export class UsersService {
 
   async update(user: UserUpdateDto): Promise<UserDto> {
     let users = AuthService.getAuthUser();
-    console.log(user);
+    // console.log(user);
     users = await Object.assign(users, user);
     if (user.password) {
       users.password = await bcrypt.hashSync(user.password, 10);
@@ -315,7 +314,7 @@ export class UsersService {
         productId: product.id.toString()
       }
     });
-    console.log(Favorite);
+    // console.log(Favorite);
     if (Favorite) {
       throw new ErrorException(
         HttpStatus.BAD_REQUEST,
@@ -334,7 +333,7 @@ export class UsersService {
   async getFavorite(): Promise<FavoriteDto[]> {
     const user = AuthService.getAuthUser();
     const favorites = await this.favoriteRepository.findBy({ userId: user.id });
-    console.log(favorites);
+    // console.log(favorites);
     return JSON.parse(JSON.stringify(favorites));
   }
 
@@ -397,7 +396,7 @@ export class UsersService {
       product:{},
       bill:{},
     }
-    console.log(query|| {});
+    // console.log(query|| {});
     const user = await userSchema.aggregate([
       {
         $group: {
@@ -490,12 +489,10 @@ export class UsersService {
   async FavoriteVoucherCreate(voucherId: string) {
     const dataUser = AuthService.getAuthUser();
     const user = await this.userRepository.findOneBy(dataUser.id);
-    console.log(user);
-    const favorite = await this.favoriteVoucherRepository.findOneBy({
-      userId: ObjectId(dataUser.id),
-      voucherId: voucherId
-    });
-    if (favorite) {
+    // console.log(user);
+    const favorite = await this.favoriteVoucherRepository.findBy({userId: user.id, voucherId: voucherId });
+    // console.log(favorite);
+    if (favorite.length > 0) {
       throw new ErrorException(
         HttpStatus.BAD_REQUEST,
         "FAVORITE_VOUCHER_EXISTED"
@@ -514,7 +511,8 @@ export class UsersService {
       voucher: voucher,
       createdAt: new Date(),
       updatedAt: new Date(),
-      deletedAt: null
+      deletedAt: null,
+      status: 'ACTIVE'
     });
     await this.favoriteVoucherRepository.save(newFavorite);
     return JSON.parse(JSON.stringify(newFavorite));
@@ -522,13 +520,16 @@ export class UsersService {
   async FavoriteVoucherCreateByCode(code: string) {
     const dataUser = AuthService.getAuthUser();
     const user = await this.userRepository.findOneBy(dataUser.id);
-    console.log(user);
+    // console.log(user);
     const voucher = await this.voucherRepository.findOneBy({code: code});
     if (!voucher) {
       throw new ErrorException(
         HttpStatus.BAD_REQUEST,
         "VOUCHER_NOT_FOUND"
       );
+    }
+    if(voucher.value<=0){
+      throw new ErrorException( HttpStatus.FORBIDDEN, "VOUCHER_IS_USED");
     }
     const favorite = await this.favoriteVoucherRepository.findOneBy({
       userId: ObjectId(dataUser.id),
@@ -547,9 +548,14 @@ export class UsersService {
       voucher: voucher,
       createdAt: new Date(),
       updatedAt: new Date(),
-      deletedAt: null
+      deletedAt: null,
+      status: 'ACTIVE'
     });
     await this.favoriteVoucherRepository.save(newFavorite);
+    await this.voucherRepository.update(voucher.id, {
+      used : voucher.used + 1,
+      value: parseInt(voucher.value.toString()) - 1
+    })
     return JSON.parse(JSON.stringify(newFavorite));
   }
 
@@ -557,40 +563,25 @@ export class UsersService {
     const dataUser = AuthService.getAuthUser();
     const user = await this.userRepository.findOneBy({ id: dataUser.id });
     const favorite = await this.favoriteVoucherRepository.findOneBy({
-      userId: user.id,
+      userId: ObjectId(dataUser.id),
       voucherId: voucherId
-    }) || await this.favoriteVoucherRepository.findOneBy({
-      userId: user.id,
-      voucherId: ObjectId(voucherId)
-    }) || await this.favoriteVoucherRepository.findOneBy({
-      userId: user.id,
-      _id: ObjectId(voucherId)
-    });
+    })
     if (!favorite) {
       throw new ErrorException(
         HttpStatus.BAD_REQUEST,
         "FAVORITE_VOUCHER_NOT_EXISTED"
       );
     }
-    await this.favoriteVoucherRepository.delete(favorite.id);
+    await this.favoriteVoucherRepository.update(favorite.id,{status: 'INACTIVE'});
     return JSON.parse(JSON.stringify(favorite));
   }
 
   async FavoriteVoucherList() {
     const dataUser = AuthService.getAuthUser();
-    console.log(dataUser);
+    // console.log(dataUser);
     const user = await this.userRepository.findOneBy({ id: dataUser.id.toString() });
-    const favorite = await this.favoriteVoucherRepository.findBy({ userId: user.id });
+    const favorite = await this.favoriteVoucherRepository.findBy({ userId: ObjectId(dataUser.id.toString()), status: 'ACTIVE' });
     return JSON.parse(JSON.stringify(favorite));
-  }
-  async turnOver() {
-    const dataUser = AuthService.getAuthUser();
-    const user = await this.userRepository.findOneBy({ id: dataUser.id });
-    const bill = await this.billRepository.findBy({ userId: user.id });
-    const turnOver = bill.reduce((total, item) => {
-      return total + item.total;
-    }, 0);
-    return turnOver;
   }
   async getBillInMonth(month){
     const year = new Date().getFullYear();
@@ -606,5 +597,16 @@ export class UsersService {
       })
     }
     return 0;
+  }
+  async getQuanOrder(){
+    const user = AuthService.getAuthUser();
+    const favorite = await this.favoriteRepository.findAndCountBy({ userId: user.id.toString() });
+    const voucher = await this.favoriteVoucherRepository.findAndCountBy({ userId: user.id.toString() });
+    const bill = await this.billRepository.findAndCountBy({ userId: user.id.toString() });
+    return {
+      favorite: favorite[1],
+      voucher: voucher[1],
+      bill: bill[1]
+    };
   }
 }

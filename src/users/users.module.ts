@@ -1,6 +1,6 @@
 import { forwardRef, Module } from "@nestjs/common";
 import { UsersService } from './users.service';
-import { FavoriteVoucherController, UsersController } from "./users.controller";
+import { FavoriteVoucherController, QuanController, UsersController } from "./users.controller";
 import { Favorite, User, Notification, FavoriteVoucher } from "./entities/user.entity";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { PassportModule } from "@nestjs/passport";
@@ -16,6 +16,6 @@ import { Voucher } from "../voucher/entities/voucher.entity";
   ],
   providers: [UsersService],
   exports: [TypeOrmModule, UsersService],
-  controllers: [UsersController,FavoriteVoucherController],
+  controllers: [UsersController,FavoriteVoucherController,QuanController],
 })
 export class UsersModule {}

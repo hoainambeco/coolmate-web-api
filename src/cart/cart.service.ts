@@ -261,8 +261,8 @@ export class CartService {
       // @ts-ignore
       cartSchema.findOneAndUpdate({ where: { userId: user.id , status:"active" } }, cart.carts.splice(cart.carts.findIndex(item => item.id == id), 1), function(err, res) {
         if (err) throw err;
-        console.log(res);
-        console.log("1 document updated");
+        // console.log(res);
+        // console.log("1 document updated");
 
       });
     });
@@ -272,7 +272,7 @@ export class CartService {
 
   async findAllItemCarts() {
     const user = AuthService.getAuthUser();
-    console.log(user);
+    // console.log(user);
     // @ts-ignore
     const carts = await this.itemCartsRepository.findBy({userId: user.id});
     if (!carts) {
