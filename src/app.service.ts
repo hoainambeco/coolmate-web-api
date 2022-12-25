@@ -796,6 +796,9 @@ export class AppService {
         }
         try {
             bill.status = req.body.status;
+
+
+
         } catch (e) {
             console.log(e);
         }
@@ -819,7 +822,31 @@ export class AppService {
                     note: "",
                     createdAt: new Date()
                 }
-            )
+            );
+            if(req.body.status === "Đang chuẩn bị hàng"){
+                bill.cartProduct.map(async (item) => {
+                    // @ts-ignore
+                    const product = await this.productRepository.findOneBy(item.productId);
+                    for (let i = 0; i < product.color.length; i++) {
+                        // @ts-ignore
+                        if(item.colorName === product.color[i].name){
+                            for (let j = 0; j < product.color[i].size.length; j++) {
+                                // @ts-ignore
+                                if(product.color[i].size[j].name === item.sizeName){
+                                    // @ts-ignore
+                                    product.color[i].size[j].productCount -= parseInt(item.quantity);
+                                    // @ts-ignore
+                                    product.quantitySold += item.quantity;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    await this.productRepository.update(product.id, product);
+                });
+
+
+            }
         } catch (e) {
             console.log(e);
         }
