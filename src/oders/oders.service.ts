@@ -420,7 +420,7 @@ export class OdersService {
         }
       });
       // @ts-ignore
-      // item.product = await JSON.parse(JSON.stringify(product));
+      item.product = await JSON.parse(JSON.stringify(product));
       // await this.productRepository.save({ ...product });
     });
     if (errorProduct) {
