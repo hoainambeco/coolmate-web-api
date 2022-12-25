@@ -476,7 +476,7 @@ export class OdersService {
         }
       });
     }
-    return (oderTotal - (oderTotal * discount / 100));
+    return (oderTotal - discount);
   }
 
   async sendMail(user, oder) {
