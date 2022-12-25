@@ -1089,7 +1089,7 @@ export class AppService {
             condition: req.body.condition,
             discount: parseInt(req.body.value),
             description: req.body.description,
-            value: req.body.soluong,
+            value: parseInt(req.body.value),
             status: "Còn mã",
             startDate: new Date(req.body.startDate) ,
             endDate: new Date(req.body.endDate) ,

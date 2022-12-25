@@ -528,6 +528,9 @@ export class UsersService {
         "VOUCHER_NOT_FOUND"
       );
     }
+    if(voucher.value<=0){
+      throw new ErrorException( HttpStatus.FORBIDDEN, "VOUCHER_IS_USED");
+    }
     const favorite = await this.favoriteVoucherRepository.findOneBy({
       userId: ObjectId(dataUser.id),
       voucherId: voucher.id.toString(),
@@ -549,6 +552,10 @@ export class UsersService {
       status: 'ACTIVE'
     });
     await this.favoriteVoucherRepository.save(newFavorite);
+    await this.voucherRepository.update(voucher.id, {
+      used : voucher.used + 1,
+      value: parseInt(voucher.value.toString()) - 1
+    })
     return JSON.parse(JSON.stringify(newFavorite));
   }
 
