@@ -198,32 +198,51 @@ export class OdersService {
     });
     let vouchers = [];
     let discount = 0;
+    // if (createOderDto.voucherId) {
+    //   let errorVoucher;
+    //   createOderDto.voucherId.map(async (voucherId) => {
+    //     if (!RegExp(REGEX.OBJECT_ID).test(voucherId)) {
+    //       errorVoucher = "Voucher id not match";
+    //     }
+    //     // @ts-ignore
+    //     const voucher = await this.voucherRepository.findOneBy(voucherId);
+    //     if (!voucher) {
+    //       errorVoucher = "Voucher not found";
+    //     }
+    //     if (voucher.value <= 0) {
+    //       errorVoucher = "Voucher is used";
+    //     } else {
+    //       voucher.value -= 1;
+    //       voucher.used += 1;
+    //     }
+    //     await this.voucherRepository.save(voucher);
+    //     vouchers.push(voucher);
+    //     discount += voucher.discount;
+    //   });
+    //   if (errorVoucher) {
+    //     throw new ErrorException(HttpStatus.NOT_FOUND, errorVoucher);
+    //   }
+    //   // @ts-ignore
+    //   oder.vouchers = vouchers;
+    // }
     if (createOderDto.voucherId) {
-      let errorVoucher;
-      createOderDto.voucherId.map(async (voucherId) => {
-        if (!RegExp(REGEX.OBJECT_ID).test(voucherId)) {
-          errorVoucher = "Voucher id not match";
-        }
-        // @ts-ignore
-        const voucher = await this.voucherRepository.findOneBy(voucherId);
-        if (!voucher) {
-          errorVoucher = "Voucher not found";
-        }
-        if (voucher.value <= 0) {
-          errorVoucher = "Voucher is used";
-        } else {
-          voucher.value -= 1;
-          voucher.used += 1;
-        }
-        await this.voucherRepository.save(voucher);
-        vouchers.push(voucher);
-        discount += voucher.discount;
-      });
-      if (errorVoucher) {
-        throw new ErrorException(HttpStatus.NOT_FOUND, errorVoucher);
+      if (!RegExp(REGEX.OBJECT_ID).test(createOderDto.voucherId[0])) {
+        throw new ErrorException(HttpStatus.FORBIDDEN, "Voucher id not match");
       }
       // @ts-ignore
-      oder.vouchers = vouchers;
+      const voucher = await this.voucherRepository.findOneBy(createOderDto.voucherId[0]);
+      if (!voucher) {
+        throw new ErrorException(HttpStatus.NOT_FOUND, "Voucher not found");
+      }
+      if (voucher.value <= 0) {
+        throw new ErrorException(HttpStatus.NOT_FOUND, "Voucher is used");
+      } else {
+        voucher.value -= 1;
+        voucher.used += 1;
+      }
+      await this.voucherRepository.save(voucher);
+      oder.vouchers = [voucher];
+      discount += voucher.discount;
     }
     oder.userId = user.id;
     oder.idPayment = createOderDto.idPayment || "";
