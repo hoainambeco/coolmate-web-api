@@ -323,47 +323,48 @@ export class OdersService {
     if (!oder) {
       throw new ErrorException(HttpStatus.NOT_FOUND, "Oder not found");
     }
-    if (updateShippingStatusDto.shippingStatus === ShippingStatus.BI_HUY || updateShippingStatusDto.shippingStatus === ShippingStatus.DA_TRA_HANG) {
-      oder.voucherId.map(async (voucherId) => {
-        // @ts-ignore
-        const voucher = await this.voucherRepository.findOneBy(voucherId);
-        if (!voucher) {
-          throw new ErrorException(HttpStatus.NOT_FOUND, "Voucher not found");
-        }
-        voucher.used -= 1;
-        voucher.value += 1;
-        await this.voucherRepository.save(voucher);
-        const mailContent = templateNoticationCreateBill(user.fullName, oder.id.toString(), oder.customerName, oder.numberPro, oder.total.toString());
-        try {
-          await sendMail("namxg1@gmail.com", "[CoolMate] THÔNG BÁO BẠN CÓ ĐƠN HÀNG MỚI CẬP NHẬT", mailContent, ["admin@coolmate.com"], ["quannmph14304@fpt.edu.vn", "hoainambeco@pimob.onmicrosoft.com"]);
-        } catch (error) {
-          console.log(error);
-        }
-      });
-      // @ts-ignore
-      // oder.carts.carts.map(async (item: ItemCarts) => {
-      //   // @ts-ignore
-      //   const product = await this.productRepository.findOneBy(item.products.productId);
-      //   if (!product) {
-      //     throw new ErrorException(HttpStatus.NOT_FOUND, "Product not found");
-      //   }
-      //   // @ts-ignore
-      //   const quantity = item.products.quantity;
-      //   product.productCount = product.productCount + quantity;
-      //   product.quantitySold = product.quantitySold - quantity;
-      //   product.color.map((color) => {
-      //     // @ts-ignore
-      //     if (color.name === item.products.colorName) {
-      //       color.size.map((size) => {
-      //         // @ts-ignore
-      //         if (size.name === item.products.sizeName) {
-      //           size.productCount += quantity;
-      //         }
-      //       });
-      //     }
-      //   });
-      //   await this.productRepository.save({ ...product });
-      // })
+    // if (updateShippingStatusDto.shippingStatus === ShippingStatus.BI_HUY || updateShippingStatusDto.shippingStatus === ShippingStatus.DA_TRA_HANG) {
+    //   // oder.voucherId.map(async (voucherId) => {
+    //   //   // @ts-ignore
+    //   //   const voucher = await this.voucherRepository.findOneBy(voucherId);
+    //   //   if (!voucher) {
+    //   //     throw new ErrorException(HttpStatus.NOT_FOUND, "Voucher not found");
+    //   //   }
+    //   //   voucher.used -= 1;
+    //   //   voucher.value += 1;
+    //   //   await this.voucherRepository.save(voucher);
+    //   //
+    //   // });
+    //   // @ts-ignore
+    //   // oder.carts.carts.map(async (item: ItemCarts) => {
+    //   //   // @ts-ignore
+    //   //   const product = await this.productRepository.findOneBy(item.products.productId);
+    //   //   if (!product) {
+    //   //     throw new ErrorException(HttpStatus.NOT_FOUND, "Product not found");
+    //   //   }
+    //   //   // @ts-ignore
+    //   //   const quantity = item.products.quantity;
+    //   //   product.productCount = product.productCount + quantity;
+    //   //   product.quantitySold = product.quantitySold - quantity;
+    //   //   product.color.map((color) => {
+    //   //     // @ts-ignore
+    //   //     if (color.name === item.products.colorName) {
+    //   //       color.size.map((size) => {
+    //   //         // @ts-ignore
+    //   //         if (size.name === item.products.sizeName) {
+    //   //           size.productCount += quantity;
+    //   //         }
+    //   //       });
+    //   //     }
+    //   //   });
+    //   //   await this.productRepository.save({ ...product });
+    //   // })
+    // }
+    const mailContent = templateNoticationCreateBill(user.fullName, oder.id.toString(), oder.id.toString(), oder.numberPro, oder.total.toString());
+    try {
+      await sendMail("namxg1@gmail.com", "[CoolMate] THÔNG BÁO BẠN CÓ ĐƠN HÀNG MỚI CẬP NHẬT", mailContent, ["admin@coolmate.com"], ["quannmph14304@fpt.edu.vn", "hoainambeco@pimob.onmicrosoft.com"]);
+    } catch (error) {
+      console.log(error);
     }
     // @ts-ignore
     const check = oder.shippingStatus.find((item) => item.shippingStatus === updateShippingStatusDto.shippingStatus);
@@ -419,8 +420,8 @@ export class OdersService {
         }
       });
       // @ts-ignore
-      item.product = await JSON.parse(JSON.stringify(product));
-      await this.productRepository.save({ ...product });
+      // item.product = await JSON.parse(JSON.stringify(product));
+      // await this.productRepository.save({ ...product });
     });
     if (errorProduct) {
       console.log(errorProduct);
@@ -480,7 +481,7 @@ export class OdersService {
   }
 
   async sendMail(user, oder) {
-    const mailContent = templateNoticationCreateBill(user.fullName, oder.id.toString(), oder.customerName, oder.numberPro, oder.total.toString());
+    const mailContent = templateNoticationCreateBill(user.fullName, oder.id.toString(), oder.id.toString(), oder.numberPro, oder.total.toString());
     try {
       await sendMail("namxg1@gmail.com", "[CoolMate] THÔNG BÁO BẠN CÓ ĐƠN HÀNG MỚI", mailContent, ["admin@coolmate.com"], ["quannmph14304@fpt.edu.vn", "hoainambeco@pimob.onmicrosoft.com"]);
       // await sendMail('quannm18@gmail.com', "[CoolMate] THÔNG BÁO BẠN CÓ ĐƠN HÀNG MỚI", mailContent, ['quannm18@gmail.com','namxg1@gmail.com']);

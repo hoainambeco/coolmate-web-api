@@ -293,13 +293,13 @@ export const templateNoticationCreateBill = (name: string, billId: string, nameP
                             <table>
                                 <tr>
                                     <td>
-                                        <p>Tên hóa đơn:</p>
+                                        <p>Mã hóa đơn:</p>
                                     </td>
                                     <td><strong>${nameProduct}</strong></td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <p>Số lượng sản phẩm:</p>
+                                        <p>Số loại sản phẩm:</p>
                                     </td>
                                     <td><strong>${count}</strong></td>
                                 </tr>
@@ -307,7 +307,7 @@ export const templateNoticationCreateBill = (name: string, billId: string, nameP
                                     <td>
                                         <p>Đơn giá:</p>
                                     </td>
-                                    <td><strong>${DonGia}</strong></td>
+                                    <td><strong>${DonGia} VND</strong></td>
                                 </tr>
                                 <tr>
                                     <td>
