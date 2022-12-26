@@ -225,7 +225,7 @@ export class OdersService {
     //   // @ts-ignore
     //   oder.vouchers = vouchers;
     // }
-    if (createOderDto.voucherId) {
+    if (createOderDto.voucherId.length > 0) {
       if (!RegExp(REGEX.OBJECT_ID).test(createOderDto.voucherId[0])) {
         throw new ErrorException(HttpStatus.FORBIDDEN, "Voucher id not match");
       }
