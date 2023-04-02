@@ -107,11 +107,11 @@ async function bootstrap() {
   app.use(passport.session());
 
   await app.listen(process.env.PORT || 3000);
-  await mongoose.connect('mongodb+srv://hoainambeco:01684490544Fe@cluster0.f6gva.mongodb.net/db').then(r => {
-    console.log('connect success');
-  }).catch(err => {
-    console.log(err);
-  });
+  // await mongoose.connect('mongodb+srv://hoainambeco:01684490544Fe@cluster0.f6gva.mongodb.net/db').then(r => {
+  //   console.log('connect success');
+  // }).catch(err => {
+  //   console.log(err);
+  // });
   Logger.debug(`Application is running on: ${await app.getUrl()}`, "Main");
 }
 
