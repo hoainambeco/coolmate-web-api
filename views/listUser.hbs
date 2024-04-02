@@ -182,7 +182,11 @@
 
                                 <td>{{this.gender}}</td>
                                 <td>{{this.birthday}}</td>
+                              {{#if this.phone}}
                                 <td>{{this.phone}}</td>
+                              {{else}}
+                                <td>Chưa có số điện thoại</td>
+                              {{/if}}
                                 <td>{{this.status}}</td>
                                 <td>
                                     <a class="btn btn-outline-primary" href="userInfo/{{this.id}}">Chi tiết</a>
